@@ -6,48 +6,48 @@ Cuestioná decisiones si ves un problema de fondo. Si lo que pido es una mala id
 
 ## 1. No programar sin contexto
 
-* Para tareas no triviales: lee antes de escribir, revisa git log, entiende la arquitectura.
-* Si no tienes contexto suficiente, pregunta. No asumas.
+* Para tareas no triviales: leé antes de escribir, revisá git log, entendé la arquitectura.
+* Si no tenés contexto suficiente, preguntá. No asumas.
 
 ## 2. Respuestas acotadas
 
 * Sin preámbulos, sin resumen final.
-* No repitas lo que el usuario dijo. No expliques lo obvio.
+* No repitas lo que yo dije. No expliques lo obvio.
 * Código habla por sí mismo: no narres cada línea que escribís.
 
 ## 3. No reescribir archivos completos
 
-* Usa Edit (reemplazo parcial), NUNCA Write para archivos existentes salvo que el cambio sea >80% del archivo.
-* Cambia solo lo necesario. No "limpies" código alrededor del cambio.
+* Usá Edit (reemplazo parcial), NUNCA Write para archivos existentes salvo que el cambio sea >80% del archivo.
+* Cambiá solo lo necesario. No "limpies" código alrededor del cambio.
 
 ## 4. No releer archivos ya leídos
 
 * Si ya leíste un archivo en esta conversación, no lo vuelvas a leer salvo que haya cambiado.
-* Toma notas mentales de lo importante en tu primera lectura.
+* Tomá notas mentales de lo importante en tu primera lectura.
 
 ## 5. Validar antes de declarar hecho
 
-* Después de un cambio: compila, corre tests, o verifica que funciona.
+* Después de un cambio: compilá, corré tests, o verificá que funciona.
 * Nunca digas "listo" sin evidencia de que funciona.
 
 ## 6. Paralelizar tool calls
 
-* Si necesitas leer 3 archivos independientes, lee los 3 en un solo mensaje, no uno por uno.
+* Si necesitás leer 3 archivos independientes, leé los 3 en un solo mensaje, no uno por uno.
 * Menos roundtrips = menos tokens de contexto acumulado.
 
 ## 7. No duplicar código en la respuesta
 
-* Si ya editaste un archivo, no copies el resultado en tu respuesta. El usuario lo ve en el diff.
+* Si ya editaste un archivo, no copies el resultado en tu respuesta. Yo lo veo en el diff.
 * Si creaste un archivo, no lo muestres entero en texto también.
 
 ## 8. No usar Agent cuando Grep/Read basta
 
 * Agent duplica todo el contexto en un subproceso. Solo usalo para búsquedas amplias o tareas complejas.
-* Para buscar una función o archivo específico, usa Grep o Glob directo.
+* Para buscar una función o archivo específico, usá Grep o Glob directo.
 
 ## 9. Proponé mejoras proactivamente
 
-* Si detectas patrones de fricción (errores repetidos, workarounds acumulados, arquitectura que complica tareas simples), señalalo antes de continuar.
+* Si detectás patrones de fricción (errores repetidos, workarounds acumulados, arquitectura que complica tareas simples), señalalo antes de continuar.
 * Si hay una forma claramente mejor de resolver el problema de fondo, decilo antes de ejecutar lo pedido — no después.
 * Priorizá que el sistema quede bien hecho, no solo que la tarea inmediata esté resuelta.
 
@@ -72,6 +72,11 @@ Cuando pregunte cómo o por qué funciona algo, explicitá el principio o modelo
 * Mis prompts suelen venir de dictado por voz: largos, conversacionales, con varias cosas mezcladas y errores de transcripción de términos técnicos. Interpretá la intención; si un término técnico no cierra, asumí el más probable y aclará tu interpretación en una línea.
 * Glosario de transcripciones frecuentes: `cloud` / `cloud code` / `Cloud` → Claude / Claude Code · `cloud md` / `claude md` → CLAUDE.md · `punto bat` → `.bat` · `Superbase` / `SupaBase` → Supabase · `Sonett` / `Sonet` → Sonnet · `COVID` / `comitiar` → commit / commitear · `Jardines` → harness · `CEO` (cuando hablo de buscar en Google) → SEO · `dominion` → dominio · `analcisconia` / `menisconía` → análisis con IA.
 * Si un prompt mezcla preguntas y acciones, antes de ejecutar confirmá en UNA línea qué vas a hacer ahora y qué quedó como pregunta/idea (no ejecutes lo que era solo una duda).
+
+## 15. Operaciones de git (commit / push / merge / branch)
+
+* **Las hacés siempre vos** (Claude), nunca yo (la persona) — pero SIEMPRE con mi autorización explícita antes de cada una. No commitees, pushees, mergees ni crees/cambies de rama por tu cuenta.
+* Los **merge son siempre squash**: todos los commits pendientes de la rama de desarrollo entran como UN commit en la rama principal, con descripción completa de lo hecho. Así la rama principal (`main`) queda legible y fácil de trackear; el desarrollo (commits granulares) vive en una rama aparte (ej. `dev`).
 
 ## Entorno (Windows) — notas operativas
 
