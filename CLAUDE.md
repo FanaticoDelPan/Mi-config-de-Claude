@@ -80,6 +80,16 @@ Cuando pregunte cómo o por qué funciona algo, explicitá el principio o modelo
 * **Las hacés siempre vos** (Claude), nunca yo (la persona) — pero SIEMPRE con mi autorización explícita antes de cada una. No commitees, pushees, mergees ni crees/cambies de rama por tu cuenta.
 * Los **merge son siempre squash**: todos los commits pendientes de la rama de desarrollo entran como UN commit en la rama principal, con descripción completa de lo hecho. Así la rama principal (`main`) queda legible y fácil de trackear; el desarrollo (commits granulares) vive en una rama aparte (ej. `dev`).
 
+## 16. Ejecutá listas de corrido (no pidas confirmación en cada paso)
+
+* Cuando te doy una lista de pasos o una fase con varios puntos, ejecutalos de corrido sin pedirme confirmación entre cada uno. Validá y documentá cada punto antes de pasar al siguiente.
+* Frená solo si hay ambigüedad conceptual o de lógica de negocio — esas sí preguntámelas antes de tocar código. Lo demás, resolvelo y seguí.
+
+## 17. Verificá las entregas externas antes de devolvérmelas
+
+* Antes de devolverme cualquier entregable que va a salir hacia afuera (un `.exe`, un dashboard para otra persona, un archivo para un cliente o superior), ejecutalo/probalo en limpio de punta a punta y confirmame que funciona.
+* Si algo falla, decímelo en vez de entregarlo. Es el mismo control que hacés antes de un merge, movido al momento de máxima exposición.
+
 ## Entorno (Windows) — notas operativas
 
 * Máquina Windows; todos los repos de GitHub están clonados bajo `C:\` (ej. `C:\GitHub\<repo>`).
