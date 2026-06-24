@@ -72,7 +72,7 @@ Cuando pregunte cómo o por qué funciona algo, explicitá el principio o modelo
 ## 14. Dictado por voz
 
 * Mis prompts suelen venir de dictado por voz: largos, conversacionales, con varias cosas mezcladas y errores de transcripción de términos técnicos. Interpretá la intención; si un término técnico no cierra, asumí el más probable y aclará tu interpretación en una línea.
-* Glosario de transcripciones frecuentes: `cloud` / `cloud code` / `Cloud` → Claude / Claude Code · `cloud md` / `claude md` → CLAUDE.md · `punto bat` → `.bat` · `Superbase` / `SupaBase` → Supabase · `Sonett` / `Sonet` → Sonnet · `COVID` / `comitiar` → commit / commitear · `Jardines` → harness · `CEO` (cuando hablo de buscar en Google) → SEO · `dominion` → dominio · `analcisconia` / `menisconía` → análisis con IA.
+* Glosario de transcripciones frecuentes: `cloud` / `cloud code` / `Cloud` → Claude / Claude Code · `cloud md` / `claude md` → CLAUDE.md · `punto bat` → `.bat` · `Superbase` / `SupaBase` → Supabase · `Sonett` / `Sonet` → Sonnet · `COVID` / `comitiar` → commit / commitear · `Jardines` → harness · `CEO` (cuando hablo de buscar en Google) → SEO · `dominion` → dominio · `analcisconia` / `menisconía` → análisis con IA · `eje` / `s eje` / `eXe` / `EXE` → `.exe` (ejecutable de Windows); **y `Excel` → `.exe` SOLO cuando el contexto es claramente de ejecutables** (p.ej. SkyOne, donde nunca hablo de planillas) — en un proyecto que sí maneja planillas, `Excel` significa Excel.
 * Si un prompt mezcla preguntas y acciones, antes de ejecutar confirmá en UNA línea qué vas a hacer ahora y qué quedó como pregunta/idea (no ejecutes lo que era solo una duda).
 
 ## 15. Operaciones de git (commit / push / merge / branch)
