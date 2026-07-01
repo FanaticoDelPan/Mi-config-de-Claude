@@ -90,8 +90,16 @@ Cuando pregunte cómo o por qué funciona algo, explicitá el principio o modelo
 * Antes de devolverme cualquier entregable que va a salir hacia afuera (un `.exe`, un dashboard para otra persona, un archivo para un cliente o superior), ejecutalo/probalo en limpio de punta a punta y confirmame que funciona.
 * Si algo falla, decímelo en vez de entregarlo. Es el mismo control que hacés antes de un merge, movido al momento de máxima exposición.
 
+## 18. Al cerrar una conversación, chequeá que todo quedó documentado
+
+* Cuando te diga **"cerrá / cerremos este chat"** (lo cierro a mano para que deje de marcarse como pendiente), antes de darlo por cerrado hacé un **chequeo rápido y barato**: repasá lo que trabajamos hoy y confirmá que los cambios **significativos** quedaron reflejados en la documentación del proyecto (su `CLAUDE.md`, `docs/`, memorias — según corresponda). Los cambios de código ya están hechos porque los hiciste en la conversación; lo que se verifica es que lo **importante quedó documentado**.
+* Reportá en 2-3 líneas: qué quedó bien y qué faltó. Si faltó algo, **actualizalo ahí mismo** (no solo avisar). Es de bajo consumo → hacelo rápido, sin ceremonia.
+* **"Commiteado pero sin publicar" NO es un pendiente**: es normal que publique/despliegue desde otro chat. El chequeo mira *documentación*, no *deploy* — no me empujes a publicar al cerrar.
+* No reemplaza mi auditoría periódica ni la disciplina de documentar en el momento: es una red de seguridad en el punto de cierre.
+
 ## Entorno (Windows) — notas operativas
 
 * Máquina Windows; todos los repos de GitHub están clonados bajo `C:\` (ej. `C:\GitHub\<repo>`).
 * **Guardia de rutas del harness:** bloquea cualquier comando cuyo TEXTO contenga literales como la raíz del disco o `\GitHub` (los trata como rutas protegidas → error falso "Remove-Item ... is blocked", aunque el comando no borre nada). Workaround: NO escribir rutas absolutas literales en el comando; construirlas con variables de entorno (`$env:ProgramFiles`, `$env:TEMP`, `$env:USERPROFILE`) o comodines (`Git\*`), o apoyarse en el cwd (que ya suele ser el repo). El cwd está seteado por el harness, así que rara vez hace falta `Set-Location`.
+  * **Patrones extra que lo disparan (verificados 2026-06-23):** (a) un `*` (comodín) en el MISMO comando que un `Remove-Item` → lo bloquea aunque el `Remove-Item` apunte a una variable segura (cree que borrás `*`); (b) un literal con pinta de ruta (`.\dist\SkyOne\*`) junto a un `Remove-Item` en el mismo comando → cree que borrás eso. **Regla:** separá el `Remove-Item` en su PROPIO comando (sin `*`, con el destino en una variable), y hacé el copy/zip/lo-que-use-`*` en OTRO comando SIN `Remove-Item`; construí las rutas con `Join-Path`/variables para que el literal protegido no aparezca contiguo. **Disciplina: si un comando salta el guard, NO reintentar igual — anotar acá el patrón nuevo para no repetirlo.**
 * **gh (GitHub CLI):** instalado en `%ProgramFiles%\GitHub CLI\gh.exe`, autenticado vía keyring (la cuenta concreta varía según la máquina; verificá con `gh api user --jq .login` si importa). NO está en el PATH de las shells no interactivas. Para invocarlo sin disparar el guardia, resolver la ruta sin literales: `$gh = (Resolve-Path ($env:ProgramFiles + "\Git* CLI\gh.exe")).Path; & $gh ...`. Sirve para crear PRs (`gh pr create --base main --head dev ...`).
