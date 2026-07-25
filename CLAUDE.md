@@ -97,6 +97,14 @@ Cuando pregunte cómo o por qué funciona algo, explicitá el principio o modelo
 * **"Commiteado pero sin publicar" NO es un pendiente**: es normal que publique/despliegue desde otro chat. El chequeo mira *documentación*, no *deploy* — no me empujes a publicar al cerrar.
 * No reemplaza mi auditoría periódica ni la disciplina de documentar en el momento: es una red de seguridad en el punto de cierre.
 
+## 19. Formatos locales y controles nativos: revisalos antes de entregarme una pantalla
+
+* Antes de dar por terminada cualquier interfaz, repasá: **fecha en día/mes/año** (nunca mes/día/año), **hora en 24 h**, coma decimal, punto de miles, moneda explícita ("$" solo no alcanza), textos en español (los mensajes del navegador y los `placeholder` son los que más se escapan), **cómo se ven los controles que dibuja el navegador y no la página** (calendario de un campo de fecha, flecha de un desplegable, barras de scroll) **en modo oscuro y en modo claro**, y **cómo se ve todo en un celular**.
+* **Por qué:** es una familia de errores que el entorno de quien programa resuelve solo y que yo veo siempre. No fallan, no tiran error, no los agarra ningún test: la pantalla simplemente queda mal.
+* **El formato sale del dato, no del navegador de quien mira.** Un registro tiene que leerse igual para todos; si depende del idioma que cada uno tenga configurado, el mismo dato dice 07/03 para uno y 03/07 para otro.
+* Centralizá el formateo en un módulo, nunca uno por pantalla. `color-scheme` en `:root` y `lang` específico (`es-AR`, no `es`) arreglan los controles nativos. Lo que el navegador no deja controlar —el orden de los campos de un `datetime-local`— se resuelve **leyendo de vuelta** lo que escribí, en formato local y con el día de la semana, en vez de reemplazar el control nativo.
+* En un proyecto con interfaz, escribí esta lista en su propia documentación y ampliala con lo que ese proyecto tenga de particular. Nada de esto lo agarra un test: lo único que lo agarra es una lista.
+
 ## Entorno (Windows) — notas operativas
 
 * Máquina Windows; todos los repos de GitHub están clonados bajo `C:\` (ej. `C:\GitHub\<repo>`).
