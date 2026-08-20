@@ -52,38 +52,28 @@ Cuestioná decisiones si ves un problema de fondo. Si lo que pido es una mala id
   en paralelo, no uno atrás del otro.
 * **Lo que NO se delega:** buscar una función, leer un archivo que ya sé cuál es, un cambio de una línea.
   Para eso, Grep/Glob/Read directo — el subagente ahí es más lento y más caro, sin ganancia.
-* 💳 **Plan Max de 200 dólares (dueño, 2026-08-19): el costo NO es un criterio.** No preguntes si conviene
-  gastar, ni recortes cobertura para ahorrar.
-  **El presupuesto de paralelismo: hasta 3 subagentes a la vez es lo normal y no se consulta; de 8 a 15
-  cuando el trabajo LO AMERITA** (barrer un repo, auditar, revisión previa a publicar). La ráfaga grande
-  se decide, no es la rutina: **de 100 a 200 la ventana de pocas horas se cuadruplicó, pero el techo
-  SEMANAL apenas se duplicó** → quince agentes en cada chat no pegan contra la ventana, pegan contra el
-  semanal. Si dudo entre 3 y 10, la pregunta no es «¿alcanza el plan?» sino **«¿esto se parte de verdad
-  en 10 pedazos independientes?»** — casi siempre no, y ahí 10 es peor: más lento de arrancar y con más
-  ruido para sintetizar.
-* 📉 **Una decisión vieja cuyo motivo ESCRITO era el costo está vencida** (vengo subiendo de plan: 20 → 100
-  → 200 en pocos meses) → se rehace con el criterio de hoy, no se hereda. ⚠ **Solo ésa:** si el motivo era
-  otro (no agravar un problema ajeno para medirlo, preferir lento y revisado), sigue vigente igual que
-  antes — el plan no lo toca.
-* ⚠ **Lo que SÍ sigue siendo finito no es la plata: es la VENTANA de uso** (el cupo que se renueva cada
-  pocas horas, más el semanal). Y lo que la quema no es tanto la cantidad de agentes como **con qué modelo**
-  corre cada uno: **el modelo grande y el chico gastan de bolsillos SEPARADOS**, y el chico está casi sin
-  usar (medido el 2026-08-19 sobre mis propias conversaciones: 4 de cada 5 fichas gastadas son del grande).
-  Por eso la palanca correcta es la de siempre — **peón (buscar, barrer, leer y reportar) en Sonnet; juicio
-  sobre algo que va a producción, en el modelo grande** —, no delegar menos. Diez peones en Sonnet salen
-  más baratos que tres agentes grandes.
-* ⚠ **Un subagente NO ahorra tokens: gasta más.** Lo que compra es **tiempo de reloj** (corren a la vez)
-  y **contexto limpio** (el ruido de la búsqueda queda afuera del hilo principal). Eso es lo que se
-  está comprando con este plan.
+* 💳 **Plan Max de 200 dólares (dueño, 2026-08-19): el costo NO es criterio.** No preguntar si conviene
+  gastar ni recortar cobertura para ahorrar. **Presupuesto: hasta 3 subagentes a la vez es lo normal y no
+  se consulta; de 8 a 15 cuando el trabajo LO AMERITA** (barrer un repo, auditar, revisar antes de
+  publicar) — ráfaga que se decide, no rutina: de 100 a 200 la ventana de pocas horas se cuadruplicó y el
+  techo SEMANAL apenas se duplicó. **Al dudar entre 3 y 10 la pregunta no es «¿alcanza el plan?» sino
+  «¿esto se parte de verdad en 10 pedazos independientes?»** — casi siempre no, y ahí 10 es peor: más
+  lento de arrancar y más ruido para sintetizar.
+* 📉 **Una decisión vieja cuyo motivo ESCRITO era el costo está vencida** (fui de 20 a 100 a 200 en pocos
+  meses): se rehace con el criterio de hoy. ⚠ **Solo ésa** — si el motivo era otro (no agravar un problema
+  ajeno para medirlo, preferir lento y revisado), sigue viva.
+* ⚠ **Lo finito no es la plata: es la VENTANA de uso** (la de pocas horas y la semanal), y la quema el
+  MODELO más que la cantidad. **El grande y el chico gastan de bolsillos SEPARADOS y el chico está casi
+  sin usar** → **peón (buscar, barrer, leer y reportar) en Sonnet; juicio sobre algo que va a producción,
+  en el grande**. Diez peones chicos salen más baratos que tres grandes.
+* ⚠ **Un subagente NO ahorra tokens: gasta más.** Compra **tiempo de reloj** y **contexto limpio** — eso es
+  lo que se está pagando con este plan.
 * El subagente devuelve un **veredicto o un dato**, no un relato. Vos leés su salida y me contás la
   conclusión: yo no veo lo que devolvió.
-* 🔴 **Orquestación multiagente (workflows) AUTORIZADA de forma permanente** (dueño, 2026-08-19, junto con
-  el plan Max): no hace falta que la pida por chat. Es la forma de delegar cuando el trabajo, además de
-  partirse, tiene ETAPAS (barrer → verificar cada hallazgo → sintetizar) o es demasiado grande para un
-  solo hilo: migraciones, auditorías de un repo entero, revisiones exhaustivas. Para un puñado de piezas
-  independientes y sin etapas, alcanza con lanzar los subagentes sueltos en un mismo mensaje — más
-  simple y más rápido de arrancar. **Si el entorno igual la bloquea, decírselo en una línea**: se destraba
-  con un interruptor de la aplicación, no desde acá.
+* 🔴 **Workflows (orquestación multiagente) AUTORIZADOS de forma permanente** (2026-08-19): no hace falta
+  pedirlos. Van cuando el trabajo, además de partirse, tiene ETAPAS (barrer → verificar → sintetizar) o no
+  entra en un hilo: migraciones, auditoría de un repo entero. Sin etapas alcanza con subagentes sueltos.
+  Si el entorno igual los bloquea, decirlo: se destraba con un interruptor de la aplicación.
 * Los subagentes NO escriben en el mismo archivo a la vez. Si dos tienen que tocar lo mismo, o va
   uno solo, o cada uno en su worktree.
 
@@ -147,16 +137,42 @@ Cuando pregunte cómo o por qué funciona algo, explicitá el principio o modelo
 
 ## Entorno (Windows) — notas operativas
 
-* Máquina Windows; todos los repos de GitHub están clonados bajo `C:\` (ej. `C:\GitHub\<repo>`).
-* **Guardia de rutas del harness:** bloquea cualquier comando cuyo TEXTO contenga literales como la raíz del disco o `\GitHub` (los trata como rutas protegidas → error falso "Remove-Item ... is blocked", aunque el comando no borre nada). Workaround: NO escribir rutas absolutas literales en el comando; construirlas con variables de entorno (`$env:ProgramFiles`, `$env:TEMP`, `$env:USERPROFILE`) o comodines (`Git\*`), o apoyarse en el cwd (que ya suele ser el repo). El cwd está seteado por el harness, así que rara vez hace falta `Set-Location`.
-  * **Patrones extra que lo disparan (verificados 2026-06-23):** (a) un `*` (comodín) en el MISMO comando que un `Remove-Item` → lo bloquea aunque el `Remove-Item` apunte a una variable segura (cree que borrás `*`); (b) un literal con pinta de ruta (`.\dist\SkyOne\*`) junto a un `Remove-Item` en el mismo comando → cree que borrás eso. **Regla:** separá el `Remove-Item` en su PROPIO comando (sin `*`, con el destino en una variable), y hacé el copy/zip/lo-que-use-`*` en OTRO comando SIN `Remove-Item`; construí las rutas con `Join-Path`/variables para que el literal protegido no aparezca contiguo. **Disciplina: si un comando salta el guard, NO reintentar igual — anotar acá el patrón nuevo para no repetirlo.**
-  * **(c) Texto con pinta de ruta DENTRO de un here-string, sin ningún `Remove-Item` en el comando (verificado 2026-07-25):** un `git commit -m @'...'@` cuyo mensaje mencionaba rutas de la aplicación (`/registro:`, `/login:`) voló con `Remove-Item on system path '/registro:' is blocked`. El guard escanea el TEXTO COMPLETO del comando, incluido el contenido de strings multilínea, y no necesita que haya ningún comando destructivo. **Workaround:** escribir el mensaje a un archivo con la herramienta Write y usar `git commit -F <archivo>` (mismo idioma que `gh --notes-file`). **Regla general: todo texto largo que pueda mencionar rutas viaja por archivo, nunca inline.**
-  * **(d) La barra suelta de `($env:SystemDrive + '\')` dentro de un `Join-Path` (verificado 2026-08-07):** voló con `Remove-Item on system path ''\'' is blocked` en un comando SIN ningún `Remove-Item` (solo `Copy-Item`/`Set-Content`). Le alcanzó la barra entrecomillada: **armar la raíz del disco a mano cuenta como literal protegido.** **Workaround: derivar la ruta del cwd, que ya está adentro de un repo** — `Join-Path (Split-Path (Get-Location)) '<repo-hermano>'` llega a otro repo del mismo padre sin escribir ninguna barra ni nombre de carpeta protegido.
-  * **(e) CÓDIGO dentro de un here-string: tres tokens inocentes que el guard lee como ruta (verificado 2026-08-18).** Al mandarle un script de consulta a `python.exe` por la entrada estándar (`$code | & $py -`), voló tres veces seguidas SIN ningún `Remove-Item` en el comando: **(1)** el `*` de un `SELECT COUNT(*)` → `system path '*' is blocked`; **(2)** el `/128.0,` de una división en SQL → lo toma por ruta absoluta; **(3)** el `as c:` de un `with ... as c:` de Python → lo toma por la raíz del disco `c:`. **Workarounds, en orden:** `COUNT_BIG(1)` en vez de `COUNT(*)`; no dividir con `/` en el texto (o pasar el divisor por variable); **y nunca una variable de UNA letra antes de `:`** — `as conexion:`. Y `.Split('=',2)` en vez de una expresión regular con `(.*)`. **Regla: el guard escanea el código igual que un comando; escribir el script con la herramienta Write y ejecutarlo por su ruta es más barato que esquivar tokens uno por uno.**
-* **`/dev/null` como ARGUMENTO desde Git Bash crea un archivo `nul` en el repo, y ese archivo rompe `git add` (verificado 2026-07-25).** Git Bash traduce la ruta, el programa de Windows la toma como nombre de archivo y escribe ahí. Después **`git add -A` falla** con *"short read while indexing nul"* y no se puede commitear nada hasta borrarlo. Y `nul` es un nombre reservado de Windows: ni `rm` ni `fs.unlinkSync` normales lo tocan — hay que ir por el prefijo de ruta extendida, `unlinkSync('\\\\?\\' + join(process.cwd(), 'nul'))`. **Regla:** para descartar la salida de un comando, redirigir con `> /dev/null` (eso lo maneja la shell y no crea nada); nunca pasar `/dev/null` como argumento de un `.exe`.
-* **Un `.cmd` de `node_modules\.bin` no se puede lanzar con `execFileSync`/`spawnSync` sin `shell: true`: falla con `EINVAL` (verificado 2026-07-25).** Windows no sabe ejecutar un `.cmd` como si fuera un binario. Pasó al escribir un script de pruebas que compilaba TypeScript al vuelo con `tsc.cmd`. **Workaround (mejor que `shell: true`, que además abre inyección de shell):** invocar el `.js` real del paquete con el mismo Node — `execFileSync(process.execPath, [join(ROOT, 'node_modules', 'typescript', 'bin', 'tsc'), ...args])`. Vale para cualquier herramienta de `.bin` (`eslint`, `prettier`, `next`).
-* **`Invoke-WebRequest` no llega a direcciones públicas de internet, y falla sin decirlo (verificado 2026-07-25).** Al verificar un despliegue, las tres URLs pedidas devolvieron "sin respuesta" con `$_.Exception.Response` en `null` — ni siquiera hubo respuesta HTTP que mirar. El sitio estaba perfecto: el navegador (herramientas `mcp__Claude_Browser__*`) llegó sin problema, y el `vercel` CLI —que sale por Node— había subido el despliegue segundos antes. **Regla: para verificar algo contra una URL publicada, usar el navegador, no PowerShell.** Cuidado además con el `catch`: si asume que hay `Response` y le pide `.Headers[...]`, tira un error de "matriz nula" que despista sobre la causa real.
-* **Un `.exe` de INTERFAZ GRÁFICA lanzado desde la herramienta Bash no escribe nada en la salida, y devuelve 0 igual (verificado 2026-08-07).** `chequeo-pantallas.py` de SkyOne dio **0 de 45 pantallas OK** con "el navegador no abrió el documento" — y era mentira: las fotos PNG salían perfectas, lo que volvía vacío era el `--dump-dom` de Edge, que es de donde el control lee el veredicto. Desde la herramienta PowerShell las mismas 45 dan OK. Es que `msedge.exe` está compilado como programa de ventanas (sin consola) y en ese entorno su salida estándar se pierde. **Regla: cualquier control que LEA la salida de un `.exe` gráfico (navegador headless y afines) se corre con PowerShell, no con Bash.** Ojo con el diagnóstico: la falla se disfraza de "la pantalla está rota" y manda a buscar el problema al lugar equivocado.
-* **gh (GitHub CLI):** instalado en `%ProgramFiles%\GitHub CLI\gh.exe`, autenticado vía keyring (la cuenta concreta varía según la máquina; verificá con `gh api user --jq .login` si importa). NO está en el PATH de las shells no interactivas. Para invocarlo sin disparar el guardia, resolver la ruta sin literales NI comodines: `$gh = Join-Path (Join-Path $env:ProgramFiles 'GitHub CLI') 'gh.exe'; & $gh ...` (`'GitHub CLI'` como componente suelto no lleva la barra de `\GitHub` → no matchea el literal protegido). Sirve para crear PRs (`gh pr create --base main --head dev ...`).
-  * ⚠ **El idioma viejo `(Resolve-Path ($env:ProgramFiles + "\Git* CLI\gh.exe"))` quedó OBSOLETO (verificado 2026-07-15):** el guard AHORA lo bloquea (`Remove-Item on system path '"\Git*' is blocked`) **aunque el comando no tenga ningún `Remove-Item`** — el patrón `\Git*` alcanza por sí solo. Y no es determinístico: el mismo idioma pasó en un comando corto y voló en uno largo → no confiar en que "a veces sale".
-  * **Texto multilínea a `gh` (verificado 2026-07-15):** NO por `--notes "$var"` — PowerShell lo parte y `gh` toma las palabras sueltas como globs de archivo (`no matches found for 'el'`). Usar `--notes-file <archivo>`.
+* Máquina Windows; todos los repos de GitHub están clonados bajo la raíz del disco (ej. `C:\GitHub\<repo>`).
+* **Guardia de rutas del harness:** bloquea un comando cuyo TEXTO contenga un literal con pinta de ruta
+  protegida (`Remove-Item on system path '…' is blocked`). ⚠ **Escanea TODO el texto —here-strings y código
+  incluidos— y no necesita que el comando borre nada**: los falsos positivos son la regla, no la excepción.
+  * **Workaround general:** nunca escribir rutas absolutas literales — armarlas con `$env:ProgramFiles` /
+    `$env:TEMP` / `$env:USERPROFILE`, `Join-Path`, o apoyarse en el cwd (que ya es el repo). Para llegar a
+    un repo hermano: `Join-Path (Split-Path (Get-Location)) '<repo>'`. **Todo texto largo viaja por archivo**
+    (`git commit -F`, `gh --notes-file`), nunca inline. **Un script se escribe con Write y se ejecuta por su
+    ruta:** sale más barato que esquivar tokens de a uno.
+  * **Lo que lo dispara (verificado):** un `*` en el mismo comando que un `Remove-Item`; un literal tipo
+    `.\dist\App\*` junto a un `Remove-Item`; rutas mencionadas dentro de un here-string (un mensaje de commit
+    con `/registro:` alcanzó); la barra suelta de `($env:SystemDrive + '\')` dentro de un `Join-Path`; y,
+    dentro de CÓDIGO, `COUNT(*)`, una división `/128.0` y el `as c:` de un `with` de Python.
+  * **Reglas que salen de eso:** el `Remove-Item` va en su PROPIO comando, sin `*` y con el destino en una
+    variable; `COUNT_BIG(1)` en vez de `COUNT(*)`; divisores por variable; **nunca una variable de UNA letra
+    antes de `:`**; `.Split('=',2)` en vez de una expresión regular con `(.*)`.
+  * ⚠ **No es determinístico** (el mismo idioma pasó en un comando corto y voló en uno largo), y el idioma
+    viejo `Resolve-Path ($env:ProgramFiles + "\Git* CLI\gh.exe")` ya **no** pasa. **Si un comando salta el
+    guard, NO reintentar igual: anotar acá el patrón nuevo.**
+* **`/dev/null` como ARGUMENTO desde Git Bash** crea un archivo `nul` en el repo y a partir de ahí
+  **`git add -A` falla** (*short read while indexing nul*). Es nombre reservado de Windows: solo lo borra el
+  prefijo de ruta extendida (`unlinkSync('\\\\?\\' + join(process.cwd(), 'nul'))`). Redirigir con
+  `> /dev/null` es seguro (lo maneja la shell); pasarlo como argumento de un `.exe`, nunca.
+* **Un `.cmd` de `node_modules\.bin` no se puede lanzar con `execFileSync`/`spawnSync`** (falla con `EINVAL`).
+  Invocar el `.js` real del paquete con el mismo Node — `execFileSync(process.execPath, [join(ROOT,
+  'node_modules', 'typescript', 'bin', 'tsc'), ...args])` — es mejor que `shell: true`, que además abre
+  inyección de shell. Vale para cualquier herramienta de `.bin`.
+* **`Invoke-WebRequest` no llega a direcciones públicas de internet, y falla sin decirlo** (ni siquiera hay
+  respuesta HTTP: `$_.Exception.Response` en `null`). Para verificar algo contra una URL publicada, usar el
+  navegador. ⚠ Un `catch` que asume que hay `Response` tira un error de "matriz nula" que despista.
+* **Un `.exe` de INTERFAZ GRÁFICA lanzado desde Bash no escribe nada en la salida y devuelve 0 igual** (está
+  compilado sin consola y su stdout se pierde). Todo control que LEA la salida de un `.exe` gráfico
+  (navegador headless y afines) se corre con PowerShell. ⚠ La falla se disfraza de "la pantalla está rota" y
+  manda a buscar el problema al lugar equivocado.
+* **gh (GitHub CLI):** en `%ProgramFiles%\GitHub CLI\gh.exe`, autenticado por keyring (la cuenta varía por
+  máquina: `gh api user --jq .login`), **no** está en el PATH de las shells no interactivas. Invocarlo sin
+  literales ni comodines: `$gh = Join-Path (Join-Path $env:ProgramFiles 'GitHub CLI') 'gh.exe'; & $gh …`.
+  Texto multilínea **siempre** por `--notes-file`: con `--notes "$var"` PowerShell lo parte y gh toma las
+  palabras sueltas como globs de archivo.
