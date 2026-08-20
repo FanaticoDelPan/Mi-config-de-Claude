@@ -53,12 +53,25 @@ Cuestioná decisiones si ves un problema de fondo. Si lo que pido es una mala id
 * **Lo que NO se delega:** buscar una función, leer un archivo que ya sé cuál es, un cambio de una línea.
   Para eso, Grep/Glob/Read directo — el subagente ahí es más lento y más caro, sin ganancia.
 * 💳 **Plan Max de 200 dólares (dueño, 2026-08-19): el costo NO es un criterio.** No preguntes si conviene
-  gastar, ni recortes cobertura para ahorrar. Con trabajo que se parte, **10 a 15 subagentes en paralelo
-  en un mismo mensaje es normal**, no una excepción que se consulta.
+  gastar, ni recortes cobertura para ahorrar.
+  **El presupuesto de paralelismo: hasta 3 subagentes a la vez es lo normal y no se consulta; de 8 a 15
+  cuando el trabajo LO AMERITA** (barrer un repo, auditar, revisión previa a publicar). La ráfaga grande
+  se decide, no es la rutina: **de 100 a 200 la ventana de pocas horas se cuadruplicó, pero el techo
+  SEMANAL apenas se duplicó** → quince agentes en cada chat no pegan contra la ventana, pegan contra el
+  semanal. Si dudo entre 3 y 10, la pregunta no es «¿alcanza el plan?» sino **«¿esto se parte de verdad
+  en 10 pedazos independientes?»** — casi siempre no, y ahí 10 es peor: más lento de arrancar y con más
+  ruido para sintetizar.
+* 📉 **Una decisión vieja cuyo motivo ESCRITO era el costo está vencida** (vengo subiendo de plan: 20 → 100
+  → 200 en pocos meses) → se rehace con el criterio de hoy, no se hereda. ⚠ **Solo ésa:** si el motivo era
+  otro (no agravar un problema ajeno para medirlo, preferir lento y revisado), sigue vigente igual que
+  antes — el plan no lo toca.
 * ⚠ **Lo que SÍ sigue siendo finito no es la plata: es la VENTANA de uso** (el cupo que se renueva cada
-  pocas horas, más el semanal). Y lo que la quema no es la cantidad de agentes: es **con qué modelo**
-  corre cada uno. La palanca correcta es la de siempre — **peón (buscar, barrer, leer y reportar) en
-  Sonnet; juicio sobre algo que va a producción, en el modelo grande** —, no delegar menos.
+  pocas horas, más el semanal). Y lo que la quema no es tanto la cantidad de agentes como **con qué modelo**
+  corre cada uno: **el modelo grande y el chico gastan de bolsillos SEPARADOS**, y el chico está casi sin
+  usar (medido el 2026-08-19 sobre mis propias conversaciones: 4 de cada 5 fichas gastadas son del grande).
+  Por eso la palanca correcta es la de siempre — **peón (buscar, barrer, leer y reportar) en Sonnet; juicio
+  sobre algo que va a producción, en el modelo grande** —, no delegar menos. Diez peones en Sonnet salen
+  más baratos que tres agentes grandes.
 * ⚠ **Un subagente NO ahorra tokens: gasta más.** Lo que compra es **tiempo de reloj** (corren a la vez)
   y **contexto limpio** (el ruido de la búsqueda queda afuera del hilo principal). Eso es lo que se
   está comprando con este plan.
