@@ -102,7 +102,7 @@ Cuando pregunte cómo o por qué funciona algo, explicitá el principio o modelo
 ## 14. Dictado por voz
 
 * Mis prompts suelen venir de dictado por voz: largos, conversacionales, con varias cosas mezcladas y errores de transcripción de términos técnicos. Interpretá la intención; si un término técnico no cierra, asumí el más probable y aclará tu interpretación en una línea.
-* Glosario de transcripciones frecuentes: `cloud` / `cloud code` / `Cloud` → Claude / Claude Code · `cloud md` / `claude md` → CLAUDE.md · `punto bat` → `.bat` · `Superbase` / `SupaBase` → Supabase · `Sonett` / `Sonet` → Sonnet · `COVID` / `comitiar` → commit / commitear · `Jardines` → harness · `CEO` (cuando hablo de buscar en Google) → SEO · `dominion` → dominio · `analcisconia` / `menisconía` → análisis con IA · `eje` / `s eje` / `eXe` / `EXE` → `.exe` (ejecutable de Windows); **y `Excel` → `.exe` SOLO cuando el contexto es claramente de ejecutables** (p.ej. SkyOne, donde nunca hablo de planillas) — en un proyecto que sí maneja planillas, `Excel` significa Excel.
+* Glosario de transcripciones frecuentes: `cloud` / `cloud code` / `Cloud` → Claude / Claude Code · `cloud md` / `claude md` / `cloud MLA` / `Claude MLA` → CLAUDE.md · `punto bat` → `.bat` · `Superbase` / `SupaBase` → Supabase · `Sonett` / `Sonet` → Sonnet · `COVID` / `comitiar` / `ComityAy Puya` → commit / commitear (esta última es "commiteá y pusheá") · `landscape` → Tailscale · `Jardines` → harness · `CEO` (cuando hablo de buscar en Google) → SEO · `dominion` → dominio · `analcisconia` / `menisconía` → análisis con IA · `eje` / `s eje` / `eXe` / `EXE` → `.exe` (ejecutable de Windows); **y `Excel` → `.exe` SOLO cuando el contexto es claramente de ejecutables** (p.ej. SkyOne, donde nunca hablo de planillas) — en un proyecto que sí maneja planillas, `Excel` significa Excel.
 * Si un prompt mezcla preguntas y acciones, antes de ejecutar confirmá en UNA línea qué vas a hacer ahora y qué quedó como pregunta/idea (no ejecutes lo que era solo una duda).
 
 ## 15. Operaciones de git (commit / push / merge / branch)
@@ -164,6 +164,11 @@ Cuando pregunte cómo o por qué funciona algo, explicitá el principio o modelo
   Invocar el `.js` real del paquete con el mismo Node — `execFileSync(process.execPath, [join(ROOT,
   'node_modules', 'typescript', 'bin', 'tsc'), ...args])` — es mejor que `shell: true`, que además abre
   inyección de shell. Vale para cualquier herramienta de `.bin`.
+* **Un script escrito en el scratchpad que importe una dependencia del proyecto** falla con
+  `ERR_MODULE_NOT_FOUND`: Node resuelve los paquetes desde la ubicación del ARCHIVO, no desde el directorio
+  de trabajo, y el scratchpad no tiene `node_modules`. Copiarlo a la raíz del repo, correrlo ahí y borrarlo
+  al terminar. El scratchpad sirve para archivos sueltos y salidas intermedias, no para código que importa
+  dependencias del proyecto.
 * **`Invoke-WebRequest` no llega a direcciones públicas de internet, y falla sin decirlo** (ni siquiera hay
   respuesta HTTP: `$_.Exception.Response` en `null`). Para verificar algo contra una URL publicada, usar el
   navegador. ⚠ Un `catch` que asume que hay `Response` tira un error de "matriz nula" que despista.
