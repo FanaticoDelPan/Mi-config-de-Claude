@@ -150,6 +150,9 @@ Cuando pregunte cómo o por qué funciona algo, explicitá el principio o modelo
     `.\dist\App\*` junto a un `Remove-Item`; rutas mencionadas dentro de un here-string (un mensaje de commit
     con `/registro:` alcanzó); la barra suelta de `($env:SystemDrive + '\')` dentro de un `Join-Path`; y,
     dentro de CÓDIGO, `COUNT(*)`, una división `/128.0` y el `as c:` de un `with` de Python.
+    **(2026-08-24)** **una barra suelta dentro de una cadena entrecomillada**, aunque no sea una
+    ruta: voló con el `'\Information...'` de un `Get-Counter`, con un `\$` y hasta con un ` / `
+    dentro de un `-f`. Para contadores: `Get-CimInstance Win32_PerfFormattedData_*`.
   * **Reglas que salen de eso:** el `Remove-Item` va en su PROPIO comando, sin `*` y con el destino en una
     variable; `COUNT_BIG(1)` en vez de `COUNT(*)`; divisores por variable; **nunca una variable de UNA letra
     antes de `:`**; `.Split('=',2)` en vez de una expresión regular con `(.*)`.
