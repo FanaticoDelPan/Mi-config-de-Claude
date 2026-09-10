@@ -8,6 +8,18 @@ El archivo real vive acá, en [`CLAUDE.md`](CLAUDE.md). En cada máquina, el glo
 (`~/.claude/CLAUDE.md`) es un **symlink** que apunta a este archivo. Editar uno es
 editar el otro: son el mismo archivo.
 
+## Son DOS archivos, y el segundo NO se enlaza
+
+- **[`CLAUDE.md`](CLAUDE.md)** — las reglas. Se carga entero en cada sesión, por eso es corto.
+- **[`entorno-windows.md`](entorno-windows.md)** — las trampas de Windows y de la consola, más el
+  detalle largo que sostiene algunas reglas. **No se carga solo:** el `CLAUDE.md` ordena leerlo
+  antes de tocar la consola y lo cita **por su ruta en este repo**.
+
+⚠️ **Por eso, acá la ruta del clon NO es libre.** El symlink se ubica solo, pero esa cita está escrita
+a mano adentro del `CLAUDE.md`: si clonás en otra carpeta, el puntero no resuelve y esas notas dejan de
+leerse **sin que nada falle**. Clonar en `C:\GitHub\1-Mi-config-de-Claude`, o corregir la ruta adentro
+del `CLAUDE.md`. Lo verifica `check-symlink.ps1`, que ahora falla si la ruta citada no existe.
+
 ## Cómo funciona el symlink (en 30 segundos)
 
 Un symlink es una redirección a nivel del sistema de archivos. No es un acceso directo
