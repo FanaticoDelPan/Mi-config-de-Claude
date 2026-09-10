@@ -44,36 +44,34 @@ Cuestioná decisiones si ves un problema de fondo. Si lo que pido es una mala id
 
 ## 8. Delegar en subagentes cuando el trabajo se puede partir
 
-* **Esta regla ES la autorización permanente para usar subagentes: no me la pidas por chat.** Vale para
-  todos mis proyectos, salvo que en ese momento te diga lo contrario.
-* **El criterio es si el trabajo se PARTE, no cuánto cuesta.** Si hay varias piezas independientes
-  (revisar N módulos, auditar doc + código + tests, explorar tres hipótesis de un bug, barrer un repo
-  que no conocés), delegá — y lanzá todos los subagentes **en un mismo mensaje** para que corran
-  en paralelo, no uno atrás del otro.
+* **Esta regla ES la autorización permanente: no me la pidas por chat.** Vale para todos mis proyectos,
+  salvo que ahí te diga lo contrario. **El criterio es si el trabajo se PARTE, no cuánto cuesta:** con
+  varias piezas independientes (revisar N módulos, auditar doc + código + tests, tres hipótesis de un
+  bug, barrer un repo que no conocés) delegá, **todos en un mismo mensaje** para que corran en paralelo.
 * **Lo que NO se delega:** buscar una función, leer un archivo que ya sé cuál es, un cambio de una línea.
   Para eso, Grep/Glob/Read directo — el subagente ahí es más lento y más caro, sin ganancia.
-* 💳 **Plan Max de 200 dólares (dueño, 2026-08-19): el costo NO es criterio.** No preguntar si conviene
-  gastar ni recortar cobertura para ahorrar. **Presupuesto: hasta 3 subagentes a la vez es lo normal y no
-  se consulta; de 8 a 15 cuando el trabajo LO AMERITA** (barrer un repo, auditar, revisar antes de
-  publicar) — ráfaga que se decide, no rutina: de 100 a 200 la ventana de pocas horas se cuadruplicó y el
-  techo SEMANAL apenas se duplicó. **Al dudar entre 3 y 10 la pregunta no es «¿alcanza el plan?» sino
-  «¿esto se parte de verdad en 10 pedazos independientes?»** — casi siempre no, y ahí 10 es peor: más
-  lento de arrancar y más ruido para sintetizar.
-* 📉 **Una decisión vieja cuyo motivo ESCRITO era el costo está vencida** (fui de 20 a 100 a 200 en pocos
-  meses): se rehace con el criterio de hoy. ⚠ **Solo ésa** — si el motivo era otro (no agravar un problema
-  ajeno para medirlo, preferir lento y revisado), sigue viva.
-* ⚠ **Lo finito no es la plata: es la VENTANA de uso** (la de pocas horas y la semanal), y la quema el
-  MODELO más que la cantidad. **El grande y el chico gastan de bolsillos SEPARADOS y el chico está casi
-  sin usar** → **peón (buscar, barrer, leer y reportar) en Sonnet; juicio sobre algo que va a producción,
-  en el grande**. Diez peones chicos salen más baratos que tres grandes.
-* ⚠ **Un subagente NO ahorra tokens: gasta más.** Compra **tiempo de reloj** y **contexto limpio** — eso es
-  lo que se está pagando con este plan.
+* 🔴 **Lo que se raciona es la FRECUENCIA, no el tamaño de la tanda** (dueño, 2026-09-10). **Hasta 5 por
+  tanda sin consultar** (un workflow, hasta 20). Lo que molesta no es una tanda grande, es **mandar agentes
+  seguido**: una tanda por cada pregunta que aparece. → **UNA tanda por FASE del trabajo** (barrer,
+  verificar, revisar), nunca por curiosidad; **si la segunda tanda del chat no es otra fase, resolvelo
+  vos acá**. ⚠ Y nunca recortes cobertura para entrar en el techo: si hacen falta ocho ángulos, pedime
+  los ocho.
+* ⚠ **Lo finito es la ventana SEMANAL** (la de pocas horas sobra): contra ella no pega la tanda grande de
+  una vez, pega **el goteo**. **Bajar de modelo NO es la palanca — se probó y funciona peor** (mismo
+  encargo: 32 hallazgos contra 4, y lo grave lo vio solo el grande) → **todo agente que EMITA UN JUICIO va
+  en el grande**; el chico, solo para barrido mecánico verificable. ⚠ Y **un subagente NO ahorra tokens:
+  gasta más.** Compra tiempo de reloj y contexto limpio — eso es lo que se paga con este plan.
+* 💳 **El costo NO es criterio** (Plan Max de 200): no preguntes si conviene gastar ni recortes para
+  ahorrar. 📉 Y **una decisión vieja cuyo motivo ESCRITO era el costo está vencida** (fui de 20 a 100 a 200
+  en pocos meses): se rehace con el criterio de hoy. ⚠ **Solo ésa** — si el motivo era otro (no agravar un
+  problema ajeno para medirlo, preferir lento y revisado), sigue viva.
 * El subagente devuelve un **veredicto o un dato**, no un relato. Vos leés su salida y me contás la
   conclusión: yo no veo lo que devolvió.
 * 🔴 **Workflows (orquestación multiagente) AUTORIZADOS de forma permanente** (2026-08-19): no hace falta
   pedirlos. Van cuando el trabajo, además de partirse, tiene ETAPAS (barrer → verificar → sintetizar) o no
-  entra en un hilo: migraciones, auditoría de un repo entero. Sin etapas alcanza con subagentes sueltos.
-  Si el entorno igual los bloquea, decirlo: se destraba con un interruptor de la aplicación.
+  entra en un hilo: migraciones, auditoría de un repo entero. **Hasta 20 agentes sin consultar** (si hace
+  falta más, lo pedís y listo: el tamaño no me molesta, la frecuencia sí). Sin etapas alcanza con
+  subagentes sueltos. Si el entorno igual los bloquea, decirlo: se destraba con un interruptor de la app.
 * Los subagentes NO escriben en el mismo archivo a la vez. Si dos tienen que tocar lo mismo, o va
   uno solo, o cada uno en su worktree.
 
