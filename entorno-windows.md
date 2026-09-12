@@ -29,6 +29,15 @@ incluidos— y no necesita que el comando borre nada**: los falsos positivos son
   **(2026-08-24)** **una barra suelta dentro de una cadena entrecomillada**, aunque no sea una
   ruta: voló con el `'\Information...'` de un `Get-Counter`, con un `\$` y hasta con un ` / `
   dentro de un `-f`. Para contadores: `Get-CimInstance Win32_PerfFormattedData_*`.
+  **(2026-09-12)** dos veces en la MISMA sesión, las dos con un `Remove-Item` de **limpieza** al final de un
+  comando largo que armaba un banco de pruebas descartable: (a) un `Copy-Item 'scripts\git-hooks\*' $destino`
+  — el `*` vuela aunque el `Remove-Item` apunte a otra cosa, a una carpeta de `$env:TEMP` —; (b) un
+  `'/c','echo hola'` dentro de un arreglo de argumentos, o sea **una barra suelta en una cadena que no es
+  ninguna ruta** (el `cmd /c` de toda la vida).
+  🔑 **El patrón de fondo, ya con tres casos:** no dispara lo que el comando HACE, sino que un `Remove-Item`
+  COINCIDA en el mismo texto con cualquier `*` o `/`, sea de quien sea. De ahí sale una regla práctica que
+  no estaba escrita: **armar un banco de pruebas y desarmarlo en una sola corrida es justo lo que no
+  conviene** — la limpieza va sola, en su propio comando, al final.
 * **Reglas que salen de eso:** el `Remove-Item` va en su PROPIO comando, sin `*` y con el destino en una
   variable; `COUNT_BIG(1)` en vez de `COUNT(*)`; divisores por variable; **nunca una variable de UNA letra
   antes de `:`**; `.Split('=',2)` en vez de una expresión regular con `(.*)`.
