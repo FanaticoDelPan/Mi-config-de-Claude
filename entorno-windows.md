@@ -79,17 +79,21 @@ Lo que sostiene una regla, cuando el porqué no entra en el renglón que la enun
 
 ### Subagentes: de dónde salen los números
 
-* **El techo de 5 por tanda y la cadencia de una tanda por fase** (dueño, 2026-09-10) reemplazan al tramo
-  viejo de «8 a 15 cuando el trabajo lo amerita». Lo que molesta no es una tanda grande sino **mandar
-  agentes seguido**: contra la ventana SEMANAL —la que importa— no pega la ráfaga de una vez, pega el goteo.
-  De 100 a 200 dólares de plan, la ventana de pocas horas se cuadruplicó y el techo semanal apenas se
-  duplicó: por eso la de pocas horas sobra y la semanal es la que se cuida.
+* **El techo de 3 agentes por CHAT (total) y los workflows siempre con OK** (dueño, 2026-09-12) reemplazan
+  al de «5 por tanda, una tanda por fase» del 2026-09-10. Con ese techo la cuota semanal llegó al 60 % a
+  mitad de semana: contar por tanda dejaba abierto tres, después tres, después tres, que cuesta lo mismo
+  que nueve juntos. El costo de un agente es casi todo FIJO (arranque, instrucciones, relectura), así que
+  lo único que ahorra es lanzar menos. Excepciones que no cuentan: revisión antes de escribir en una base
+  y el cierre de chat.
+* La ventana que se cuida es la SEMANAL: de 100 a 200 dólares de plan, la de pocas horas se cuadruplicó y
+  el techo semanal apenas se duplicó.
 * **Por qué no se baja de modelo:** se midió. Mismo encargo, mismo código: **32 hallazgos contra 4**, y las
   dos cosas graves las vio solo el modelo grande (2026-09-02). El chico queda para barrido mecánico
   verificable (listar, contar, encontrar), nunca para un juicio.
 * **Un subagente no ahorra tokens: gasta más.** Compra tiempo de reloj y contexto limpio.
 * **Un juicio que no fue refutado no es un resultado, es una impresión:** de 23 hallazgos marcados graves,
-  la refutación adversarial dejó 3.
+  la refutación adversarial dejó 3. Desde el 2026-09-12 esa refutación con agente queda para lo crítico
+  (un adversario para toda la lista); en lo demás la verificación contra el código la hace el chat.
 
 ### Formatos locales: por qué es una lista y no un criterio
 

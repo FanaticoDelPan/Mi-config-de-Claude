@@ -30,14 +30,16 @@ Después de un cambio: compilá, corré tests, o verificá que funciona. Nunca d
 
 ## 5. Delegar en subagentes
 
-* **Autorización permanente: no me la pidas por chat.** Vale para todos mis proyectos, salvo que ahí te diga lo contrario. **El criterio es si el trabajo se PARTE:** con piezas independientes (revisar N módulos, auditar doc + código + tests, tres hipótesis de un bug, barrer un repo que no conocés) delegá, todos en un mismo mensaje para que corran en paralelo.
-* **Lo que NO se delega:** buscar una función, leer un archivo que ya sé cuál es, un cambio de una línea. Ahí el subagente es más lento y más caro, sin ganancia.
-* 🔴 **Se raciona la FRECUENCIA, no el tamaño: hasta 5 por tanda SIN CONSULTAR** (un workflow, hasta 20 sin consultar) **y UNA tanda por FASE del trabajo** — barrer, verificar, revisar —, nunca una por cada pregunta que aparece. Lo que molesta es mandar agentes seguido: contra la ventana semanal pega el goteo, no la tanda grande. **Si la segunda tanda del chat no es otra fase, resolvelo vos.**
-* ⚠ **Arriba del techo se PIDE, no se recorta:** si hacen falta ocho ángulos, pedime los ocho en una línea y esperá el OK. Elegir "los cinco más importantes" en silencio está prohibido — el tamaño no me molesta, la frecuencia sí.
-* **Todo agente que emita un JUICIO va en el modelo grande** (bajar de modelo se probó y funciona peor); el chico, solo para barrido mecánico verificable.
+* 🔴 **Por defecto lo hacés VOS, en el chat** (decisión del 2026-09-12, con la cuota semanal al 60 % a mitad de semana). Prefiero lento y con calidad antes que rápido y caro. Un agente va solo cuando leerlo acá llenaría el chat, o cuando hace falta una mirada INDEPENDIENTE de verdad. "El trabajo se parte" ya NO alcanza como motivo para paralelizar.
+* **Por qué:** cada agente arranca de cero —instrucciones, herramientas, relee lo que vos ya leíste— y no aprovecha el caché del chat. Ese costo fijo se paga por agente, así que **lo que gasta es CUÁNTOS se lanzan, no cuántos corren juntos**: tres y después otros tres cuesta lo mismo que seis a la vez.
+* 🔴 **Techo: 3 agentes por CHAT, contando el TOTAL** (no por tanda). Para uno más, frená y pedime OK en una línea diciendo para qué. Arriba del techo se PIDE, no se recorta en silencio.
+* **No cuentan contra el techo** (van sin preguntar): la revisión antes de ESCRIBIR en una base de datos y el chequeo de cierre de chat.
+* 🔴 **Workflows (orquestación multiagente): SIEMPRE con mi autorización explícita**, en ese turno, diciendo cuántos agentes estimás.
+* **Lo que NO se delega:** buscar una función, leer un archivo que ya sé cuál es, un cambio de una línea.
+* **Todo agente que emita un JUICIO va en el modelo grande de siempre** (bajar de modelo se probó y funciona peor; Sonnet está descartado); el chico, solo para barrido mecánico verificable. **El modelo tope (Fable) solo para lo crítico**: revisión antes de publicar o de escribir en una base.
+* **La refutación adversarial también es solo para lo crítico** (lo que sale hacia afuera, lo que escribe datos, lo que se publica). Y cuando va, es **UN adversario para la lista entera**, nunca uno por hallazgo. En lo demás, verificá vos los hallazgos contra el código.
 * El subagente devuelve un **veredicto o un dato**, no un relato: yo no veo lo que devolvió, me lo contás vos. No ven la charla → el encargo va autocontenido. Y **no escriben el mismo archivo a la vez**: o va uno solo, o cada uno en su worktree.
-* 💳 **El costo NO es criterio** (Plan Max de 200): no preguntes si conviene gastar. 📉 Y una decisión vieja cuyo motivo ESCRITO era el costo está vencida — se rehace con el criterio de hoy. ⚠ **Solo ésa:** si el motivo era otro (no agravar un problema ajeno para medirlo, preferir lento y revisado), sigue viva.
-* 🔴 **Workflows (orquestación multiagente) AUTORIZADOS de forma permanente: no hace falta pedirlos.** Van cuando el trabajo, además de partirse, tiene ETAPAS (barrer → verificar → sintetizar) o no entra en un hilo: migraciones, auditoría de un repo entero. Sin etapas alcanza con subagentes sueltos. Si el entorno igual los bloquea, decilo: se destraba con un interruptor de la aplicación.
+* 💳 **El costo SÍ es criterio en agentes** (cambió el 2026-09-12). Lo que se escribió antes con "el costo no es criterio" para lanzar más agentes quedó vencido.
 * Las mediciones que sostienen todo esto: `C:\GitHub\1-Mi-config-de-Claude\entorno-windows.md`.
 
 ## 6. Proponé mejoras y explicitá tu criterio
