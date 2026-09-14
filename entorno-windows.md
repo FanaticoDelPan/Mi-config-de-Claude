@@ -38,6 +38,9 @@ incluidos— y no necesita que el comando borre nada**: los falsos positivos son
   COINCIDA en el mismo texto con cualquier `*` o `/`, sea de quien sea. De ahí sale una regla práctica que
   no estaba escrita: **armar un banco de pruebas y desarmarlo en una sola corrida es justo lo que no
   conviene** — la limpieza va sola, en su propio comando, al final.
+  **(2026-09-13)** voló un comando **SIN ningún `Remove-Item`** («system path '/'»): una lista larga de rutas
+  relativas con `\` dentro de un arreglo, más un `Join-Path $c 'docs\*.md'`. El mismo código pasó escrito en un
+  `.ps1` del scratchpad y ejecutado por su ruta, que es el workaround general de arriba.
 * **Reglas que salen de eso:** el `Remove-Item` va en su PROPIO comando, sin `*` y con el destino en una
   variable; `COUNT_BIG(1)` en vez de `COUNT(*)`; divisores por variable; **nunca una variable de UNA letra
   antes de `:`**; `.Split('=',2)` en vez de una expresión regular con `(.*)`.
