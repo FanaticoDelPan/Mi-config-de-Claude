@@ -82,6 +82,9 @@ Lo que sostiene una regla, cuando el porqué no entra en el renglón que la enun
 
 ### Subagentes: de dónde salen los números
 
+* **Historia del techo** (lo vigente está en `CLAUDE.md` §5): el 2026-09-15 pasó de 3 a 4 por chat y el
+  2026-09-16 la permisividad pasó a depender del medidor (línea de ritmo de 13 %/día). Lo que sigue es el
+  porqué del techo por chat, que no se venció.
 * **El techo de 3 agentes por CHAT (total) y los workflows siempre con OK** (dueño, 2026-09-12) reemplazan
   al de «5 por tanda, una tanda por fase» del 2026-09-10. Con ese techo la cuota semanal llegó al 60 % a
   mitad de semana: contar por tanda dejaba abierto tres, después tres, después tres, que cuesta lo mismo
