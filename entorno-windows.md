@@ -94,6 +94,13 @@ Lo que sostiene una regla, cuando el porqué no entra en el renglón que la enun
   dos cosas graves las vio solo el modelo grande (2026-09-02). El chico queda para barrido mecánico
   verificable (listar, contar, encontrar), nunca para un juicio.
 * **Un subagente no ahorra tokens: gasta más.** Compra tiempo de reloj y contexto limpio.
+* **De dónde sale el presupuesto semanal** (2026-09-16, ventana 9/9 19:00 → 16/9 19:00, todos los proyectos,
+  ~97 % de cuota usada): 3.200 USD equivalentes, 4.713M tokens (98 % caché), 292 subagentes = 37 % del
+  gasto (~4 USD c/u). SkyOne 76 pts, QA de SkyIA Web 22. Se fue de miércoles a sábado (19-26 pts por día).
+  Por tipo de chat en SkyOne: consulta 0,1 pt · chico 0,5 · mediano 1,4 (4,7 agentes) · grande 5,3 (13
+  agentes; 8 chats = más de la mitad) · publicación 3-4,7. El umbral para delegar sale de: leer en el chat
+  cuesta la escritura de caché (6,25 USD/M) una vez + 0,5 USD/M por turno; contra ~4 USD fijos del agente.
+  El ritmo se mide con `get_usage` (la app devuelve % semanal y hora de reinicio).
 * **Un juicio que no fue refutado no es un resultado, es una impresión:** de 23 hallazgos marcados graves,
   la refutación adversarial dejó 3. Desde el 2026-09-12 esa refutación con agente queda para lo crítico
   (un adversario para toda la lista); en lo demás la verificación contra el código la hace el chat.
