@@ -3,7 +3,7 @@
 Uso:  python medir-consumo-semanal.py 2026-09-16 [porcentaje_usado]
       (la fecha es el miércoles del REINICIO que abre la semana; el reinicio es a las 19:00 de Argentina)
 
-Sale: total en USD y puntos, por día, por proyecto, subagentes y los chats por tamaño.
+Sale: total en USD y puntos, por tramo de 24 h desde el reinicio, por proyecto, subagentes y los chats por tamaño.
 Con el porcentaje final de la semana recalibra cuántos USD/tokens vale un punto.
 La línea de base (semana 9/9 -> 16/9, 97 %): 33 USD y 48,6M tokens por punto; 292 subagentes (37 %);
 chats (todos los proyectos): consulta n=30 0,09 pt · chico n=42 0,44 · mediano n=19 1,46 (4,1 agentes)
@@ -40,6 +40,7 @@ def main():
     vistos = set()
     total = tokens = 0.0
     por_dia, por_proy = defaultdict(float), defaultdict(float)
+    tramo_tok, tramo_sub = defaultdict(float), defaultdict(float)
     chats = defaultdict(lambda: {"chat": 0.0, "sub": 0.0, "subs": set(), "ini": None, "ctx": 0})
     for f in glob.glob(os.path.join(RAIZ, "**", "*.jsonl"), recursive=True):
         if os.path.getmtime(f) < t0.timestamp():
@@ -69,7 +70,11 @@ def main():
             usd = (a * p[0] + b * p[1] + r * p[2] + o * p[3]) / 1e6
             total += usd
             tokens += a + b + r + o
-            por_dia[ts.date()] += usd
+            n = int((ts - t0) // timedelta(days=1))  # tramo de 24 h contado desde el reinicio
+            por_dia[n] += usd
+            tramo_tok[n] += a + b + r + o
+            if es_sub:
+                tramo_sub[n] += usd
             por_proy[proy] += usd
             c = chats[(proy, sesion)]
             if es_sub:
@@ -84,9 +89,17 @@ def main():
     print(f"Semana {t0:%d/%m %H:%M} -> {t1:%d/%m %H:%M}: {total:.0f} USD = {pt(total):.1f} pts, {tokens/1e6:.0f}M tokens")
     if pct:
         print(f"  Recalibrado con {pct} %: {total/pct:.1f} USD/pt, {tokens/pct/1e6:.1f}M tokens/pt")
-    print("\nPor día:")
-    for dia in sorted(por_dia):
-        print(f"  {dia:%a %d/%m}  {pt(por_dia[dia]):5.1f} pts")
+    # Tramos de 24 h desde el reinicio (miércoles 19:00): es la vara de la línea de ritmo (13 % por día).
+    # Con el % real, cada tramo recibe su parte proporcional al gasto; sin él, se estima con USD_POR_PUNTO.
+    print("\nPor tramo de 24 h desde el reinicio (acumulado contra la línea de 13 %/día):")
+    acum = 0.0
+    for n in sorted(por_dia):
+        ini = t0 + timedelta(days=n)
+        cuota = por_dia[n] / total * pct if pct else pt(por_dia[n])
+        acum += cuota
+        print(f"  día {n+1}  {ini:%a %d/%m %H:%M} -> {ini + timedelta(days=1):%a %d/%m %H:%M}"
+              f"  {cuota:5.1f} %  {tramo_tok[n]/1e6:4.0f}M tok  agentes {tramo_sub[n]/por_dia[n]*100:3.0f} %"
+              f"  acumulado {acum:5.1f} / línea {13*(n+1)}")
     print("\nPor proyecto (los worktrees van aparte):")
     for k, v in sorted(por_proy.items(), key=lambda x: -x[1]):
         if pt(v) >= 0.5:
