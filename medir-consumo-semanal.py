@@ -18,7 +18,7 @@ from collections import defaultdict
 from datetime import datetime, timedelta, timezone
 
 AR = timezone(timedelta(hours=-3))
-USD_POR_PUNTO = 33.0
+USD_POR_PUNTO = 35.0  # semana 16-23/09 (antes 33)
 RAIZ = os.path.expanduser("~/.claude/projects")
 
 
@@ -91,9 +91,11 @@ def main():
     print(f"Semana {t0:%d/%m %H:%M} -> {t1:%d/%m %H:%M}: {total:.0f} USD = {pt(total):.1f} pts, {tokens/1e6:.0f}M tokens")
     if pct:
         print(f"  Recalibrado con {pct} %: {total/pct:.1f} USD/pt, {tokens/pct/1e6:.1f}M tokens/pt")
-    # Tramos de 24 h desde el reinicio (miércoles 19:00): es la vara de la línea de ritmo (13 % por día).
-    # Con el % real, cada tramo recibe su parte proporcional al gasto; sin él, se estima con USD_POR_PUNTO.
-    print("\nPor tramo de 24 h desde el reinicio (acumulado contra la línea de 13 %/día):")
+    # Tramos de 24 h desde el reinicio (miércoles 19:00) contra la línea de ritmo: 16 % por día de trabajo,
+    # sábado y domingo cuentan como uno (8 + 8), 4 de margen. Con el % real, cada tramo recibe su parte
+    # proporcional al gasto; sin él, se estima con USD_POR_PUNTO.
+    linea = (16, 32, 40, 48, 64, 80, 96)
+    print("\nPor tramo de 24 h desde el reinicio (acumulado contra la línea de 16 %/día, finde = 1 día):")
     acum = 0.0
     for n in sorted(por_dia):
         ini = t0 + timedelta(days=n)
@@ -101,7 +103,7 @@ def main():
         acum += cuota
         print(f"  día {n+1}  {ini:%a %d/%m %H:%M} -> {ini + timedelta(days=1):%a %d/%m %H:%M}"
               f"  {cuota:5.1f} %  {tramo_tok[n]/1e6:4.0f}M tok  agentes {tramo_sub[n]/por_dia[n]*100:3.0f} %"
-              f"  acumulado {acum:5.1f} / línea {13*(n+1)}")
+              f"  acumulado {acum:5.1f} / línea {linea[min(n, 6)]}")
     print("\nPor proyecto (los worktrees van aparte):")
     for k, v in sorted(por_proy.items(), key=lambda x: -x[1]):
         if pt(v) >= 0.5:
