@@ -28,6 +28,8 @@ def precio(modelo):
         return (1, 1.25, 0.10, 5)
     if "sonnet" in modelo:
         return (3, 3.75, 0.30, 15)
+    if "opus-5-5" in modelo:
+        return (4, 5, 0.20, 20)
     return (5, 6.25, 0.50, 25)  # Opus (y Fable valuado como Opus: es un piso)
 
 
