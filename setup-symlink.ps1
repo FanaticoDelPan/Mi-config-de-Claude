@@ -27,6 +27,18 @@ function Enlazar ([string]$nombre) {
 
     if (-not (Test-Path $repoFile)) { throw "No encuentro $nombre en el repo ($repoFile)." }
 
+    # Si ya apunta a este repo no se toca: asi el script se re-corre sin admin para
+    # actualizar skills y settings.
+    if (Test-Path $globalFile) {
+        $prev = Get-Item $globalFile -Force
+        $pt = @($prev.Target)[0]
+        if ($prev.LinkType -eq 'SymbolicLink' -and $pt -and (Test-Path $pt) -and
+            ((Resolve-Path $pt).Path -eq (Resolve-Path $repoFile).Path)) {
+            Write-Host "OK -> $nombre ya apunta a este repo; no lo toco." -ForegroundColor Green
+            return
+        }
+    }
+
     # Si ya hay algo en el global, decidir que hacer.
     if (Test-Path $globalFile) {
         $item = Get-Item $globalFile -Force
@@ -62,6 +74,48 @@ if (Test-Path $entorno) {
     Write-Host "OK -> las notas de entorno estan en $entorno (el CLAUDE.md las cita por esa ruta)." -ForegroundColor Green
 } else {
     Write-Host "AVISO: falta entorno-windows.md en el repo. El CLAUDE.md lo cita y no lo va a encontrar." -ForegroundColor Yellow
+}
+
+# --- Skills: ~/.claude/skills pasa a ser un junction a la carpeta skills de este repo ---
+# Un junction es un link de carpeta que NO pide admin. Si ya habia una carpeta real con
+# skills, las que el repo no tenga se mueven al repo (asi se suben con el proximo commit)
+# y lo que quede se respalda como skills.backup.
+$repoSkills   = Join-Path $PSScriptRoot 'skills'
+$globalSkills = Join-Path $globalDir 'skills'
+if (-not (Test-Path $repoSkills)) { New-Item -ItemType Directory -Path $repoSkills | Out-Null }
+
+$skillsAtado = $false
+if (Test-Path $globalSkills) {
+    $gs = Get-Item $globalSkills -Force
+    if ($gs.LinkType -in @('Junction', 'SymbolicLink')) {
+        $gt = @($gs.Target)[0]
+        if ((Test-Path $gt) -and ((Resolve-Path $gt).Path -eq (Resolve-Path $repoSkills).Path)) {
+            $skillsAtado = $true
+        } else {
+            $gs.Delete()   # borra solo el link, no la carpeta a la que apuntaba
+        }
+    } else {
+        foreach ($d in @(Get-ChildItem $globalSkills -Directory)) {
+            $dest = Join-Path $repoSkills $d.Name
+            if (-not (Test-Path $dest)) {
+                Move-Item $d.FullName $dest
+                Write-Host "Skill '$($d.Name)' movida al repo." -ForegroundColor Yellow
+            }
+        }
+        if (@(Get-ChildItem $globalSkills -Force).Count -eq 0) {
+            [System.IO.Directory]::Delete($globalSkills)
+        } else {
+            $skillsBackup = Join-Path $globalDir 'skills.backup'
+            Rename-Item $globalSkills $skillsBackup
+            Write-Host "Quedaron cosas en ~/.claude/skills que el repo ya tenia: respaldadas en $skillsBackup" -ForegroundColor Yellow
+        }
+    }
+}
+if ($skillsAtado) {
+    Write-Host "OK -> ~/.claude/skills ya apunta a este repo." -ForegroundColor Green
+} else {
+    New-Item -ItemType Junction -Path $globalSkills -Target $repoSkills | Out-Null
+    Write-Host "OK -> ~/.claude/skills apunta a $repoSkills" -ForegroundColor Green
 }
 
 # --- Registrar el hook que corre check-symlink.ps1 solo en cada sesion ---
@@ -103,6 +157,15 @@ $newGroup = [pscustomobject]@{
     hooks = @( [pscustomobject]@{ type = 'command'; command = $hookCmd } )
 }
 $settings.hooks.SessionStart = @($kept) + $newGroup
+
+# Conservar el historial de conversaciones ~10 anos. Por defecto Claude Code borra las
+# conversaciones de mas de 30 dias, y con ellas se fue el historial de un proyecto entero.
+$diasHistorial = 3650
+if ($settings.PSObject.Properties.Name -contains 'cleanupPeriodDays') {
+    $settings.cleanupPeriodDays = $diasHistorial
+} else {
+    $settings | Add-Member -NotePropertyName 'cleanupPeriodDays' -NotePropertyValue $diasHistorial
+}
 
 # Escribir sin BOM (los parsers de JSON no toleran el BOM).
 $json = $settings | ConvertTo-Json -Depth 12

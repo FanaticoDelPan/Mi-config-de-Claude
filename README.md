@@ -61,6 +61,26 @@ Listo. Desde ahí, el global de esa máquina queda atado a este repo.
   ```
   El global se actualiza solo, porque apunta a este archivo. Cero copiar/pegar.
 
+## Qué más sincroniza
+
+- **Skills globales** (`skills/`): en cada máquina `~/.claude/skills` es un *junction* (link
+  de carpeta, no pide admin) a esta carpeta. Si la máquina ya tenía skills propias,
+  `setup-symlink.ps1` las mueve acá para que se suban con el próximo commit.
+- **Ajustes de `settings.json`**: el archivo NO se versiona entero (Claude Code lo reescribe
+  solo y tiene cosas propias de cada máquina). `setup-symlink.ps1` le agrega lo común: el hook
+  de control y `cleanupPeriodDays` (historial de conversaciones por ~10 años; por defecto se
+  borra a los 30 días).
+- **Control al abrir cada sesión** (`check-symlink.ps1`, lo corre el hook): además del link y
+  de la ruta de `entorno-windows.md`, avisa si las skills se desataron del repo o si hay cambios
+  sin commitear que la otra computadora no está viendo. En modo hook sale siempre con 0: Claude
+  Code solo le pasa a la sesión lo que imprime un hook que sale con 0.
+- **`guardar-secreto.ps1`**: pasarle un secreto a Claude sin chat ni TXT en el escritorio.
+  Copiás el secreto y Claude corre el script con el nombre de la variable desde la carpeta del
+  proyecto; lo escribe en el `.env` sin mostrarlo y vacía el portapapeles.
+
+`setup-symlink.ps1` se puede re-correr cuantas veces haga falta: si el link de `CLAUDE.md` ya
+está bien no lo toca (y entonces no pide admin).
+
 ## Cosas a tener en cuenta
 
 - **El link guarda la ruta de este repo.** Si movés o renombrás la carpeta del repo, el

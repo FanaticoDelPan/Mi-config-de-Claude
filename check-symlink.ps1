@@ -14,8 +14,12 @@
 #
 # Devuelve exit code 0 si esta todo bien, 1 si hay algo para arreglar.
 #
-# -Quiet : no imprime el mensaje de exito (solo avisa si hay un problema).
-#          Lo usa el hook automatico para no ensuciar cada sesion con un "OK".
+# -Quiet : modo hook. No imprime el mensaje de exito y SIEMPRE sale con 0: Claude Code solo
+#          le pasa a la sesion lo que imprime un hook que sale con 0, asi que salir con 1
+#          escondia justamente los avisos.
+#
+# Ademas controla que ~/.claude/skills este atado a la carpeta skills del repo, y que el
+# repo no tenga cambios sin commitear (la otra computadora no los ve).
 
 param([switch]$Quiet)
 
@@ -114,5 +118,33 @@ if (-not (Test-Path $entorno)) {
     }
 }
 
+# Skills globales: ~/.claude/skills tiene que ser un link a la carpeta skills de este repo.
+$repoSkills   = Join-Path $PSScriptRoot 'skills'
+$globalSkills = Join-Path $env:USERPROFILE (Join-Path '.claude' 'skills')
+if (Test-Path $repoSkills) {
+    $skillsOk = $false
+    if (Test-Path $globalSkills) {
+        $gs = Get-Item $globalSkills -Force
+        if ($gs.LinkType -in @('Junction', 'SymbolicLink')) {
+            $gt = @($gs.Target)[0]
+            if ($gt -and (Test-Path $gt) -and ((Resolve-Path $gt).Path -eq (Resolve-Path $repoSkills).Path)) { $skillsOk = $true }
+        }
+    }
+    if (-not $skillsOk) {
+        Aviso 'skills' "~/.claude/skills no esta atado a la carpeta skills del repo: las skills no viajan entre computadoras. Arreglalo con:  .\setup-symlink.ps1"
+        $fallas++
+    }
+}
+
+# Cambios sin commitear en este repo: la otra computadora trabaja con reglas viejas sin enterarse.
+if (Get-Command git -ErrorAction SilentlyContinue) {
+    $pendientes = @(& git -C $PSScriptRoot status --porcelain 2>$null)
+    if ($pendientes.Count -gt 0) {
+        Aviso 'repo' "Mi-config-de-Claude tiene $($pendientes.Count) cambio(s) sin commitear: la otra computadora no los ve. Commitealos y subilos (no hace falta preguntar)."
+        $fallas++
+    }
+}
+
+if ($Quiet) { exit 0 }
 if ($fallas -gt 0) { exit 1 }
 exit 0

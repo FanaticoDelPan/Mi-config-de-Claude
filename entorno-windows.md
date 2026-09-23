@@ -75,6 +75,26 @@ incluidos— y no necesita que el comando borre nada**: los falsos positivos son
   literales ni comodines: `$gh = Join-Path (Join-Path $env:ProgramFiles 'GitHub CLI') 'gh.exe'; & $gh …`.
   Texto multilínea **siempre** por `--notes-file`: con `--notes "$var"` PowerShell lo parte y gh toma las
   palabras sueltas como globs de archivo.
+* **Un heredoc de Python que arma texto para OTRO lenguaje pierde una capa de barra invertida, y avisa con
+  un *warning*, no con un error.** `python - <<'PY'` con un reemplazo que lleve una regex de JavaScript o un
+  `LIKE` de SQL: lo que en el heredoc va con DOS barras llega al archivo con UNA, que en el lenguaje de
+  destino ya no escapa nada. Python lo marca con `SyntaxWarning: invalid escape sequence`, que se lee como
+  ruido. ⚠ Ya produjo una condición SQL mal escapada que corrió igual (matcheaba por casualidad, con `_`
+  como comodín). **Cadenas crudas —`r"""..."""`— siempre que el reemplazo lleve barras**, y ante ese
+  warning revisar el archivo final.
+* **Un script que aplica VARIAS ediciones y aborta a mitad deja escritas las anteriores y ninguna de las
+  siguientes — después de haber impreso `ok` de las anteriores.** Se lee como "todo aplicado" y no lo está.
+  (2026-08-30, Control-de-acceso: un arreglo declarado hecho que nunca llegó al árbol.) **Después de
+  cualquier script de ediciones, verificar en el ARCHIVO** (un `grep` del texto nuevo), y escribir después
+  de cada reemplazo en vez de acumular. ⚠ Un `*/` adentro de un comentario de bloque de JS/TS lo cierra,
+  aunque esté entre comillas invertidas.
+* **Un script no se puede importar por ruta ABSOLUTA de Windows** en Node: `import ... from
+  'C:/...'` revienta con `ERR_UNSUPPORTED_ESM_URL_SCHEME` (lee `C:` como protocolo). Va ruta **relativa**
+  o `pathToFileURL()` de `node:url`.
+* **Un script de Node que sale justo después de un error puede reventar con una aserción de libuv**
+  (`Assertion failed: !(handle->flags & UV_HANDLE_CLOSING)`, de `async.c`) en vez de terminar limpio. Pasa
+  en Windows con handles abiertos al salir y **no es el bug que se busca**: el error de verdad es el que se
+  imprimió arriba. Repetir la corrida alcanza.
 
 ## El detalle largo de las reglas del `CLAUDE.md`
 
