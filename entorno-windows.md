@@ -123,7 +123,12 @@ Lo que sostiene una regla, cuando el porqué no entra en el renglón que la enun
 
 
 * **Historia del techo** (lo vigente está en `CLAUDE.md` §5): el 2026-09-15 pasó de 3 a 4 por chat y el
-  2026-09-16 la permisividad pasó a depender del medidor (línea de ritmo de 13 %/día). Lo que sigue es el
+  2026-09-16 la permisividad pasó a depender del medidor (línea de ritmo de 13 %/día). El 2026-09-22 subió
+  a 10 («el tiempo por sobre los tokens») y el 2026-09-24 bajó a **3 a la vez / 6 en total**: el primer
+  día de la semana cerró en 17,1 puntos contra 16 de línea, con los agentes en 47 % del gasto (56 agentes,
+  ~5 USD c/u) y dos chats de 8 y 10 agentes que solos sumaron 6 de esos 17 puntos. El dueño trabaja con
+  4-6 chats abiertos a la vez (pico medido: 6 el 23/09), así que el techo por chat se multiplica. El
+  disparador: un «limpiá ramas» lanzó 5 revisores (uno por rama) amparado en una excepción del proyecto. Lo que sigue es el
   porqué del techo por chat, que no se venció.
 * **El techo de 3 agentes por CHAT (total) y los workflows siempre con OK** (dueño, 2026-09-12) reemplazan
   al de «5 por tanda, una tanda por fase» del 2026-09-10. Con ese techo la cuota semanal llegó al 60 % a
