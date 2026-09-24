@@ -1,6 +1,7 @@
 """Consumo de Claude Code en una semana de cuota, a precio de lista (equivalente, no facturado).
 
-Uso:  python medir-consumo-semanal.py 2026-09-16 [porcentaje_usado]
+Uso:  python medir-consumo-semanal.py                          (la semana en curso, con la línea de HOY)
+      python medir-consumo-semanal.py 2026-09-16 [porcentaje_usado]
       (la fecha es el miércoles del REINICIO que abre la semana; el reinicio es a las 19:00 de Argentina)
 
 Sale: total en USD y puntos, por tramo de 24 h desde el reinicio, por proyecto, subagentes y los chats por tamaño.
@@ -35,8 +36,16 @@ def precio(modelo):
 
 def main():
     sys.stdout.reconfigure(encoding="utf-8")  # la consola de Windows es cp1252
-    t0 = datetime.fromisoformat(sys.argv[1]).replace(hour=19, tzinfo=AR)
+    ahora = datetime.now(AR)
+    if len(sys.argv) > 1:
+        t0 = datetime.fromisoformat(sys.argv[1]).replace(hour=19, tzinfo=AR)
+    else:  # el último reinicio: miércoles 19:00
+        t0 = (ahora - timedelta(days=(ahora.weekday() - 2) % 7)).replace(hour=19, minute=0, second=0, microsecond=0)
+        if t0 > ahora:
+            t0 -= timedelta(days=7)
     t1 = t0 + timedelta(days=7)
+    hoy0 = max(ahora.replace(hour=0, minute=0, second=0, microsecond=0), t0)
+    hoy_tok, hoy_subs = 0.0, set()
     pct = float(sys.argv[2]) if len(sys.argv) > 2 else None
 
     vistos = set()
@@ -78,6 +87,10 @@ def main():
             if es_sub:
                 tramo_sub[n] += usd
             por_proy[proy] += usd
+            if ts >= hoy0:
+                hoy_tok += a + b + r + o
+                if es_sub:
+                    hoy_subs.add(f)
             c = chats[(proy, sesion)]
             if es_sub:
                 c["sub"] += usd
@@ -89,6 +102,8 @@ def main():
 
     pt = lambda usd: usd / USD_POR_PUNTO
     print(f"Semana {t0:%d/%m %H:%M} -> {t1:%d/%m %H:%M}: {total:.0f} USD = {pt(total):.1f} pts, {tokens/1e6:.0f}M tokens")
+    if t0 <= ahora < t1:
+        print(f"  Hoy desde las {hoy0:%H:%M}: {hoy_tok/1e6:.0f}M tokens, {len(hoy_subs)} subagentes")
     if pct:
         print(f"  Recalibrado con {pct} %: {total/pct:.1f} USD/pt, {tokens/pct/1e6:.1f}M tokens/pt")
     # Tramos de 24 h desde el reinicio (miércoles 19:00) contra la línea de ritmo: 16 % por día de trabajo,
