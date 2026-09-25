@@ -19,7 +19,7 @@ from collections import defaultdict
 from datetime import datetime, timedelta, timezone
 
 AR = timezone(timedelta(hours=-3))
-USD_POR_PUNTO = 35.0  # semana 16-23/09 (antes 33)
+USD_POR_PUNTO = 25.6  # 25/09, mitad de semana al 36 %, casi todo Opus 5.5 (antes 35 y 33)
 RAIZ = os.path.expanduser("~/.claude/projects")
 
 
