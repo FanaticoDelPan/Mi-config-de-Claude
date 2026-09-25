@@ -155,6 +155,13 @@ Lo que sostiene una regla, cuando el porqué no entra en el renglón que la enun
   gasto. Tramos: 8 · 14 · 14 · **0 (fin de semana)** · 15 · 17 · 12. Los dos últimos, ya con el techo de 10
   agentes, se fueron a 56-62 % en agentes. Chats: consulta 0,05 pt · chico 0,47 · mediano 1,37 (3,1 agentes)
   · un solo grande (3,4): cerrar chats más seguido bajó el costo del chat grande. Sobraron 20 puntos.
+* **Re-medición con el medidor corregido (25/09)** — el viejo subcontaba la salida (~40 %) y la escritura de
+  caché de 1 hora: semana 9-16/9 (97 %, Opus 5) **37,5 USD y 48,7M por punto** · 16-23/9 (80 %, casi todo
+  Opus 5) **40 USD y 59,4M** · 23-30/9 a mitad (36 %, Opus 5.5) **29,8 USD y 82,3M**. Hipótesis que calza justo:
+  **la cuota cobra el token de Opus 5.5 igual que el de Opus 5** (38 × 0,8 = 30: el descuento del 20 % es de la
+  lista de la API, no del plan). Si es así, los tokens por punto subieron por la MEZCLA (más relectura de
+  contexto, que es barata), no porque el punto rinda más. Los tokens por punto no miden eficiencia: la medida
+  es cuota por TAREA, y comparar modelos pide la misma tarea corrida con los dos. Otras PC: menos del 3 % (dueño).
 * **Un juicio que no fue refutado no es un resultado, es una impresión:** de 23 hallazgos marcados graves,
   la refutación adversarial dejó 3. Desde el 2026-09-12 esa refutación con agente queda para lo crítico
   (un adversario para toda la lista); en lo demás la verificación contra el código la hace el chat.
