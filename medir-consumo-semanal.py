@@ -19,19 +19,26 @@ from collections import defaultdict
 from datetime import datetime, timedelta, timezone
 
 AR = timezone(timedelta(hours=-3))
-USD_POR_PUNTO = 25.6  # 25/09, mitad de semana al 36 %, casi todo Opus 5.5 (antes 35 y 33)
+USD_POR_PUNTO = 29.6  # 25/09, mitad de semana al 36 %, casi todo Opus 5.5 (35 y 33 de antes se midieron
+                      # con la salida subcontada y sin la escritura de caché de 1 hora: eran más)
 RAIZ = os.path.expanduser("~/.claude/projects")
 
 
 def precio(modelo):
+    """(entrada, lectura de caché, salida) en USD por millón. La escritura de caché sale de la entrada:
+    x1,25 la de 5 minutos y x2 la de 1 hora (Claude Code usa las dos)."""
     modelo = modelo or ""
     if "haiku" in modelo:
-        return (1, 1.25, 0.10, 5)
+        return (1, 0.10, 5)
+    if "sonnet-5" in modelo:
+        return (2, 0.20, 10)
     if "sonnet" in modelo:
-        return (3, 3.75, 0.30, 15)
+        return (3, 0.30, 15)
+    if "fable" in modelo or "mythos" in modelo:
+        return (10, 0.25, 50)
     if "opus-5-5" in modelo:
-        return (4, 5, 0.20, 20)
-    return (5, 6.25, 0.50, 25)  # Opus (y Fable valuado como Opus: es un piso)
+        return (4, 0.20, 20)
+    return (5, 0.50, 25)  # Opus 5 y anteriores
 
 
 def main():
@@ -48,7 +55,7 @@ def main():
     hoy_tok, hoy_subs = 0.0, set()
     pct = float(sys.argv[2]) if len(sys.argv) > 2 else None
 
-    vistos = set()
+    mensajes = {}
     total = tokens = 0.0
     por_dia, por_proy = defaultdict(float), defaultdict(float)
     tramo_tok, tramo_sub = defaultdict(float), defaultdict(float)
@@ -69,16 +76,25 @@ def main():
                 continue
             m = d.get("message") or {}
             u = m.get("usage")
-            if d.get("type") != "assistant" or not u or not d.get("timestamp") or m.get("id") in vistos:
+            if d.get("type") != "assistant" or not u or not d.get("timestamp"):
                 continue
             ts = datetime.fromisoformat(d["timestamp"].replace("Z", "+00:00")).astimezone(AR)
             if not t0 <= ts < t1:
                 continue
-            vistos.add(m.get("id"))
-            p = precio(m.get("model"))
+            # Un mismo mensaje se escribe en varias líneas (una por bloque) y las primeras traen la salida
+            # a medio contar: se queda la de salida más alta. Quedarse con la primera subcontaba ~40 %.
+            clave = m.get("id") or id(d)
+            previo = mensajes.get(clave)
+            if previo is None or (u.get("output_tokens") or 0) > (previo[0].get("output_tokens") or 0):
+                mensajes[clave] = (u, m.get("model"), ts, proy, sesion, es_sub, f)
+
+    for u, modelo, ts, proy, sesion, es_sub, f in mensajes.values():
+            p = precio(modelo)
             a, b, r, o = (u.get(k) or 0 for k in
                           ("input_tokens", "cache_creation_input_tokens", "cache_read_input_tokens", "output_tokens"))
-            usd = (a * p[0] + b * p[1] + r * p[2] + o * p[3]) / 1e6
+            cc = u.get("cache_creation") or {}
+            b1h = min(cc.get("ephemeral_1h_input_tokens") or 0, b)
+            usd = (a * p[0] + (b - b1h) * p[0] * 1.25 + b1h * p[0] * 2 + r * p[1] + o * p[2]) / 1e6
             total += usd
             tokens += a + b + r + o
             n = int((ts - t0) // timedelta(days=1))  # tramo de 24 h contado desde el reinicio
