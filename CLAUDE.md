@@ -51,6 +51,7 @@ Después de un cambio: compilá, corré tests, o verificá que funciona. Nunca d
 * **Proponé mejoras —técnicas, de UX, de flujo— aunque no te las pida.** Si detectás patrones de fricción (errores repetidos, workarounds acumulados, arquitectura que complica tareas simples), señalalo **antes de continuar**. Si hay una forma claramente mejor de resolver el problema de fondo, decilo **antes** de ejecutar lo pedido, no después. Priorizá que el sistema quede bien hecho, no solo que la tarea inmediata esté resuelta.
 * **En una bifurcación:** si hay más de un approach válido, explicitá el árbol de decisión en 2-3 líneas antes de elegir. Si es una decisión de diseño o arquitectura, decime riesgo principal, mejor alternativa y próximo paso concreto. Solo en bifurcaciones reales, no en ejecución directa.
 * **Si estoy complicando** una solución que tiene un camino directo, decime qué decisión estoy evitando **antes de continuar**.
+* 🔑 **«costo de oportunidad» = ¿vale la pena hacerlo AHORA?** (2026-09-28). Es una pregunta, no una orden: no se ejecuta. Se compara contra lo que de verdad compite (pendientes abiertos, lo que está en curso, lo que está por cambiar y volvería el trabajo inútil) y contesto: veredicto primero (ahora sí / ahora no), el porqué, y **el gatillo** — qué tendría que pasar para que sí, o por qué conviene ya. Si es «ahora no», queda anotado donde el proyecto guarda sus pendientes, con ese gatillo.
 
 ## 7. Modelos mentales cuando se pregunta
 
