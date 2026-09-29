@@ -63,9 +63,14 @@ Listo. Desde ahí, el global de esa máquina queda atado a este repo.
 
 ## Qué más sincroniza
 
-- **Skills globales** (`skills/`): en cada máquina `~/.claude/skills` es un *junction* (link
-  de carpeta, no pide admin) a esta carpeta. Si la máquina ya tenía skills propias,
-  `setup-symlink.ps1` las mueve acá para que se suban con el próximo commit.
+- **Skills globales** (`skills/`): en cada máquina, adentro de `~/.claude/skills` va un
+  *junction* (link de carpeta, no pide admin) **por cada skill** de esta carpeta. La carpeta
+  en sí NO se ata entera: la comparte la app, que guarda ahí su propia copia de las skills de
+  Anthropic (`synced`, baja sola en cada máquina) y atarla metía esa copia en git. Skill nuestra
+  = carpeta con `SKILL.md` directo adentro; lo demás es de la app y no se toca. Si la máquina
+  tiene una skill creada ahí que el repo no tiene, `setup-symlink.ps1` la mueve acá para que se
+  suba con el próximo commit. Después de sumar una skill al repo (o de un `git pull` que traiga
+  una), hay que volver a correr el script en cada máquina; el control de cada sesión lo avisa.
 - **Ajustes de `settings.json`**: el archivo NO se versiona entero (Claude Code lo reescribe
   solo y tiene cosas propias de cada máquina). `setup-symlink.ps1` le agrega lo común: el hook
   de control y `cleanupPeriodDays` (historial de conversaciones por ~10 años; por defecto se

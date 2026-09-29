@@ -76,47 +76,79 @@ if (Test-Path $entorno) {
     Write-Host "AVISO: falta entorno-windows.md en el repo. El CLAUDE.md lo cita y no lo va a encontrar." -ForegroundColor Yellow
 }
 
-# --- Skills: ~/.claude/skills pasa a ser un junction a la carpeta skills de este repo ---
-# Un junction es un link de carpeta que NO pide admin. Si ya habia una carpeta real con
-# skills, las que el repo no tenga se mueven al repo (asi se suben con el proximo commit)
-# y lo que quede se respalda como skills.backup.
+# --- Skills: un junction POR SKILL adentro de ~/.claude/skills, no la carpeta entera ---
+# ~/.claude/skills es compartida con la app: ahi guarda su propia copia de las skills de
+# Anthropic (la carpeta 'synced', que baja sola en cada maquina). Atar la carpeta entera al
+# repo metia esa copia en git, asi que la carpeta queda REAL y adentro va un junction (link de
+# carpeta, no pide admin) por cada skill del repo.
+# Skill nuestra = carpeta con SKILL.md directo adentro. Lo que no lo tenga es de la app y no
+# se toca. Una skill creada en esta maquina (carpeta real con SKILL.md) se mueve al repo, asi
+# se sube con el proximo commit.
 $repoSkills   = Join-Path $PSScriptRoot 'skills'
 $globalSkills = Join-Path $globalDir 'skills'
 if (-not (Test-Path $repoSkills)) { New-Item -ItemType Directory -Path $repoSkills | Out-Null }
 
-$skillsAtado = $false
+function Es-Skill ($dir) { Test-Path -LiteralPath (Join-Path $dir.FullName 'SKILL.md') }
+
+# Esquema viejo (la carpeta entera como junction al repo): se borra solo el link, y lo que la
+# app haya dejado adentro del repo por ese link vuelve a ~/.claude/skills.
 if (Test-Path $globalSkills) {
     $gs = Get-Item $globalSkills -Force
     if ($gs.LinkType -in @('Junction', 'SymbolicLink')) {
-        $gt = @($gs.Target)[0]
-        if ((Test-Path $gt) -and ((Resolve-Path $gt).Path -eq (Resolve-Path $repoSkills).Path)) {
-            $skillsAtado = $true
-        } else {
-            $gs.Delete()   # borra solo el link, no la carpeta a la que apuntaba
-        }
-    } else {
-        foreach ($d in @(Get-ChildItem $globalSkills -Directory)) {
-            $dest = Join-Path $repoSkills $d.Name
-            if (-not (Test-Path $dest)) {
-                Move-Item $d.FullName $dest
-                Write-Host "Skill '$($d.Name)' movida al repo." -ForegroundColor Yellow
-            }
-        }
-        if (@(Get-ChildItem $globalSkills -Force).Count -eq 0) {
-            [System.IO.Directory]::Delete($globalSkills)
-        } else {
-            $skillsBackup = Join-Path $globalDir 'skills.backup'
-            Rename-Item $globalSkills $skillsBackup
-            Write-Host "Quedaron cosas en ~/.claude/skills que el repo ya tenia: respaldadas en $skillsBackup" -ForegroundColor Yellow
-        }
+        $gs.Delete()   # borra solo el link, no la carpeta a la que apuntaba
+        Write-Host "~/.claude/skills era un link a la carpeta entera: paso a un link por skill." -ForegroundColor Yellow
     }
 }
-if ($skillsAtado) {
-    Write-Host "OK -> ~/.claude/skills ya apunta a este repo." -ForegroundColor Green
-} else {
-    New-Item -ItemType Junction -Path $globalSkills -Target $repoSkills | Out-Null
-    Write-Host "OK -> ~/.claude/skills apunta a $repoSkills" -ForegroundColor Green
+if (-not (Test-Path $globalSkills)) { New-Item -ItemType Directory -Path $globalSkills | Out-Null }
+# Lo versionado no se mueve nunca. try: con 'Stop', el stderr de git (p. ej. copia sin .git) corta el script.
+$versionado = @()
+try { $versionado = @(& git -C $PSScriptRoot ls-files -- skills 2>$null) } catch { }
+foreach ($d in @(Get-ChildItem $repoSkills -Directory -Force)) {
+    if (Es-Skill $d) { continue }
+    if (@($versionado -like "skills/$($d.Name)/*").Count -gt 0) { continue }
+    $dest = Join-Path $globalSkills $d.Name
+    if (-not (Test-Path $dest)) {
+        Move-Item $d.FullName $dest
+        Write-Host "'$($d.Name)' no es una skill nuestra (es de la app): vuelve a ~/.claude/skills." -ForegroundColor Yellow
+    }
 }
+
+# Skills creadas en esta maquina -> al repo. Si el repo ya tiene una con ese nombre, gana la
+# del repo y la local se respalda FUERA de skills (adentro la app la cargaria como otra skill).
+foreach ($d in @(Get-ChildItem $globalSkills -Directory -Force)) {
+    if ($d.LinkType -or -not (Es-Skill $d)) { continue }
+    $dest = Join-Path $repoSkills $d.Name
+    if (Test-Path $dest) {
+        $skillsBackup = Join-Path $globalDir 'skills.backup'
+        if (-not (Test-Path $skillsBackup)) { New-Item -ItemType Directory -Path $skillsBackup | Out-Null }
+        $bk = Join-Path $skillsBackup ($d.Name + '-' + (Get-Date -Format 'yyyyMMdd-HHmmss'))
+        Move-Item $d.FullName $bk
+        Write-Host "Skill '$($d.Name)' ya estaba en el repo: la copia local quedo respaldada en $bk" -ForegroundColor Yellow
+    } else {
+        Move-Item $d.FullName $dest
+        Write-Host "Skill '$($d.Name)' movida al repo (se sube con el proximo commit)." -ForegroundColor Yellow
+    }
+}
+
+# Links que ya no sirven: rotos (la skill se borro o se renombro en el repo) o apuntando a otro lado.
+foreach ($d in @(Get-ChildItem $globalSkills -Directory -Force)) {
+    if (-not $d.LinkType) { continue }
+    $t = @($d.Target)[0]
+    $propio = Join-Path $repoSkills $d.Name
+    if (-not ($t -and (Test-Path $t) -and (Test-Path $propio) -and
+              ((Resolve-Path $t).Path -eq (Resolve-Path $propio).Path))) {
+        $d.Delete()
+    }
+}
+
+$atadas = @()
+foreach ($d in @(Get-ChildItem $repoSkills -Directory -Force)) {
+    if (-not (Es-Skill $d)) { continue }
+    $link = Join-Path $globalSkills $d.Name
+    if (-not (Test-Path $link)) { New-Item -ItemType Junction -Path $link -Target $d.FullName | Out-Null }
+    $atadas += $d.Name
+}
+Write-Host "OK -> skills del repo atadas en ~/.claude/skills: $(if ($atadas) { $atadas -join ', ' } else { '(ninguna)' })" -ForegroundColor Green
 
 # --- Registrar el hook que corre check-symlink.ps1 solo en cada sesion ---
 # La ruta NO queda fija a mano: se calcula desde donde vive el repo en ESTA

@@ -118,20 +118,40 @@ if (-not (Test-Path $entorno)) {
     }
 }
 
-# Skills globales: ~/.claude/skills tiene que ser un link a la carpeta skills de este repo.
+# Skills globales: ~/.claude/skills es una carpeta REAL compartida con la app (su copia de las
+# skills de Anthropic, 'synced', no se toca) y adentro va un junction por cada skill del repo.
+# Skill nuestra = carpeta con SKILL.md directo adentro. Se avisa si a alguna del repo le falta
+# su link, si hay una creada en esta maquina que el repo no tiene, o si quedo el esquema viejo
+# (la carpeta entera atada al repo, que metia la copia de la app en git).
 $repoSkills   = Join-Path $PSScriptRoot 'skills'
 $globalSkills = Join-Path $env:USERPROFILE (Join-Path '.claude' 'skills')
 if (Test-Path $repoSkills) {
-    $skillsOk = $false
-    if (Test-Path $globalSkills) {
-        $gs = Get-Item $globalSkills -Force
-        if ($gs.LinkType -in @('Junction', 'SymbolicLink')) {
-            $gt = @($gs.Target)[0]
-            if ($gt -and (Test-Path $gt) -and ((Resolve-Path $gt).Path -eq (Resolve-Path $repoSkills).Path)) { $skillsOk = $true }
+    $problemas = @()
+    $gs = if (Test-Path $globalSkills) { Get-Item $globalSkills -Force } else { $null }
+    if ($gs -and $gs.LinkType) {
+        $problemas += 'la carpeta entera esta atada al repo (esquema viejo)'
+    } else {
+        foreach ($d in @(Get-ChildItem $repoSkills -Directory -Force)) {
+            if (-not (Test-Path -LiteralPath (Join-Path $d.FullName 'SKILL.md'))) { continue }
+            $ok = $false
+            if ($gs) {
+                $link = Get-Item -LiteralPath (Join-Path $globalSkills $d.Name) -Force -ErrorAction SilentlyContinue
+                if ($link -and $link.LinkType) {
+                    $t = @($link.Target)[0]
+                    $ok = [bool]($t -and (Test-Path $t) -and ((Resolve-Path $t).Path -eq (Resolve-Path $d.FullName).Path))
+                }
+            }
+            if (-not $ok) { $problemas += "'$($d.Name)' no esta atada en esta maquina" }
+        }
+        if ($gs) {
+            foreach ($d in @(Get-ChildItem $globalSkills -Directory -Force)) {
+                if ($d.LinkType -or -not (Test-Path -LiteralPath (Join-Path $d.FullName 'SKILL.md'))) { continue }
+                $problemas += "'$($d.Name)' esta solo en esta maquina, no en el repo"
+            }
         }
     }
-    if (-not $skillsOk) {
-        Aviso 'skills' "~/.claude/skills no esta atado a la carpeta skills del repo: las skills no viajan entre computadoras. Arreglalo con:  .\setup-symlink.ps1"
+    if ($problemas.Count -gt 0) {
+        Aviso 'skills' ("Las skills no viajan entre computadoras: " + ($problemas -join '; ') + ". Arreglalo con:  .\setup-symlink.ps1")
         $fallas++
     }
 }
