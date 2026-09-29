@@ -184,7 +184,7 @@ def leer_correo(id_correo: str) -> str:
         planos, htmls, adjuntos = [], [], []
         _recorrer(m["payload"], planos, htmls, adjuntos)
         texto = "\n\n".join(planos).strip() or "\n\n".join(_html_a_texto(x) for x in htmls).strip() or "(sin texto)"
-        texto = re.sub(r"\n[ \t]*(\n[ \t]*)+", "\n\n", texto)
+        texto = re.sub(r"\n[ \t]*(\n[ \t]*)+", "\n\n", texto.replace("\r\n", "\n"))
         if len(texto) > TOPE_CUERPO:
             texto = texto[:TOPE_CUERPO] + f"\n\n[… recortado: el texto sigue, {len(texto) - TOPE_CUERPO} caracteres más]"
         lista = "\n".join(f"- {n} ({t}, {_tamano(s)})" for n, t, s in adjuntos) or "(ninguno)"
