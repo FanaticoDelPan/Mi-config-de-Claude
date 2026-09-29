@@ -5,6 +5,7 @@ nada, aunque alguien lo intente. Se conecta una vez con `conectar.py`.
 """
 
 import base64
+import html
 import re
 from datetime import datetime
 from email.utils import parsedate_to_datetime
@@ -165,7 +166,7 @@ def buscar_correos(consulta: str = "in:inbox newer_than:7d", maximo: int = 20) -
             renglones.append(
                 f"- id {id_} · {_fecha(h.get('date'))} · {h.get('from', '?')}\n"
                 f"  asunto: {h.get('subject', '(sin asunto)')} · [{etiquetas}]\n"
-                f"  {m.get('snippet', '')[:200]}")
+                f"  {html.unescape(m.get('snippet', ''))[:200]}")
         cola = "\n(hay más resultados: afiná la búsqueda o subí el máximo)" if respuesta.get("nextPageToken") else ""
         return f"{len(ids)} correos para «{consulta}»:\n" + "\n".join(renglones) + cola
 
@@ -183,6 +184,7 @@ def leer_correo(id_correo: str) -> str:
         planos, htmls, adjuntos = [], [], []
         _recorrer(m["payload"], planos, htmls, adjuntos)
         texto = "\n\n".join(planos).strip() or "\n\n".join(_html_a_texto(x) for x in htmls).strip() or "(sin texto)"
+        texto = re.sub(r"\n[ \t]*(\n[ \t]*)+", "\n\n", texto)
         if len(texto) > TOPE_CUERPO:
             texto = texto[:TOPE_CUERPO] + f"\n\n[… recortado: el texto sigue, {len(texto) - TOPE_CUERPO} caracteres más]"
         lista = "\n".join(f"- {n} ({t}, {_tamano(s)})" for n, t, s in adjuntos) or "(ninguno)"
@@ -207,7 +209,7 @@ def leer_hilo(id_hilo: str) -> str:
         for m in hilo.get("messages", []):
             h = _encabezados(m["payload"])
             renglones.append(f"- id {m['id']} · {_fecha(h.get('date'))} · {h.get('from', '?')}\n"
-                             f"  {m.get('snippet', '')[:300]}")
+                             f"  {html.unescape(m.get('snippet', ''))[:300]}")
         asunto = _encabezados(hilo["messages"][0]["payload"]).get("subject", "(sin asunto)") if hilo.get("messages") else ""
         return f"Hilo «{asunto}», {len(renglones)} mensajes:\n" + "\n".join(renglones)
 
