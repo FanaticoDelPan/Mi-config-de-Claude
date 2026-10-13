@@ -136,8 +136,16 @@ Lo que sostiene una regla, cuando el porqué no entra en el renglón que la enun
   que nueve juntos. El costo de un agente es casi todo FIJO (arranque, instrucciones, relectura), así que
   lo único que ahorra es lanzar menos. Excepciones que no cuentan: revisión antes de escribir en una base
   y el cierre de chat.
-* La ventana que se cuida es la SEMANAL: de 100 a 200 dólares de plan, la de pocas horas se cuadruplicó y
-  el techo semanal apenas se duplicó.
+* La ventana que se cuida es la SEMANAL: de 100 a 200 dólares de plan, la de 5 horas se cuadruplica, pero
+  la semanal Anthropic no la publica y las mediciones de terceros van de **1,6x a 3,5x** (la más seria: 3
+  cuentas, Classmethod/DevelopersIO, ago-2026). Con semanas de 77-97 % del de 200, **el de 100 no alcanza en
+  ningún escenario** (revisado 2026-10-13): no se vuelve a plantear salvo semanas de ~35 % sostenidas.
+* **Modo rápido: descartado.** En la suscripción NO sale de la cuota: se cobra como uso extra a la tarjeta
+  (con el uso extra apagado queda bloqueado y no cobra). Los 200 USD/mes de créditos de API del plan Max NO
+  cubren Claude Code interactivo (solo API, Agent SDK, Managed Agents) y no consta que paguen modo rápido →
+  ante la duda, no. Esos créditos no se vinculan a la organización de API de la empresa (la paga la empresa;
+  el dueño no lo mezcla). Si algún día se vincula una propia: sin tarjeta cargada, y nunca dejar su llave en
+  el entorno (desvía los chats a facturación por API).
 * **Por qué no se baja de modelo:** se midió. Mismo encargo, mismo código: **32 hallazgos contra 4**, y las
   dos cosas graves las vio solo el modelo grande (2026-09-02). El chico queda para barrido mecánico
   verificable (listar, contar, encontrar), nunca para un juicio.
