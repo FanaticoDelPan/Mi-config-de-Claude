@@ -25,7 +25,7 @@ TOPE_CUERPO = 30_000
 CARPETA_ADJUNTOS = Path.home() / "Downloads" / "Adjuntos mail empresa"
 
 INSTRUCCIONES = """\
-Mail de la EMPRESA del dueño (Clear Sky), en SOLO LECTURA: se puede buscar, leer y bajar adjuntos a su PC;
+Mail de la EMPRESA del dueño (ClearSky), en SOLO LECTURA: se puede buscar, leer y bajar adjuntos a su PC;
 mandar, responder, borrar o marcar es imposible por permiso de Google.
 
 - Para qué lo quiere: saber si un aviso de Google o de un proveedor es IMPORTANTE (pide acción, tiene fecha

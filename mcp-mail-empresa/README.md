@@ -1,6 +1,6 @@
 # Conector del mail de la EMPRESA (solo lectura)
 
-Conector MCP local para que Claude lea el Gmail de la empresa (Google Workspace de Clear Sky). El oficial
+Conector MCP local para que Claude lea el Gmail de la empresa (Google Workspace de ClearSky). El oficial
 de claude.ai solo acepta la cuenta de Google del mismo mail que la cuenta de Claude, que es la personal.
 
 **Para qué:** decirle al dueño si un aviso de Google o de un proveedor es importante o de rutina, y bajar

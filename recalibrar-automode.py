@@ -29,7 +29,7 @@ BACKUP = RUTA + ".bak-original"
 ENVIRONMENT = [
     "$defaults",
     "### Org-wide",
-    "**Organization**: Clear Sky (CSKY-SA). Product: SkyOne, an internal Windows "
+    "**Organization**: ClearSky (CSKY-SA). Product: SkyOne, an internal Windows "
     "desktop app (Python + pywebview + PyInstaller) used by 9 non-technical staff "
     "over RDP on a shared Windows Server.",
     "**Repository visibility**: Private (CSKY-SA/skyone). Confidential business "
