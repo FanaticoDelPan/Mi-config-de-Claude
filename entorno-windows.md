@@ -126,6 +126,13 @@ Lo que sostiene una regla, cuando el porqué no entra en el renglón que la enun
 
 ### Subagentes: de dónde salen los números
 
+* **Equivalencia vigente para estimar:** 1 punto de cuota ≈ **82M tokens ≈ 30 USD de lista** (medido a mitad de
+  la semana del 23/09 con 36 %, casi todo Opus 5.5). Para estimar sirven los tokens: los dólares por punto se
+  movieron más de lo que explica el precio del modelo. Se recalibra al cierre de cada semana con
+  `medir-consumo-semanal.py <miércoles del reinicio> <% de get_usage>`.
+* **Otro chat en vez de subagentes (decidido que no, 2026-10-16):** se revisa si la app mejora cómo un chat
+  muestra lo que hizo el que lanzó.
+
 * **La regla 5 tal como estaba hasta el 2026-09-22** (la reemplazó la versión corta del `CLAUDE.md`: techo de 10, el tiempo por sobre los tokens). Queda acá por las mediciones que trae:
 
   > ## 5. Delegar en subagentes
