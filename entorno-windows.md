@@ -95,6 +95,30 @@ incluidos— y no necesita que el comando borre nada**: los falsos positivos son
   (`Assertion failed: !(handle->flags & UV_HANDLE_CLOSING)`, de `async.c`) en vez de terminar limpio. Pasa
   en Windows con handles abiertos al salir y **no es el bug que se busca**: el error de verdad es el que se
   imprimió arriba. Repetir la corrida alcanza.
+* **`python - @'...'@` desde la herramienta de PowerShell NO ejecuta el script**: Python abre su consola
+  interactiva, lee fin de archivo y entra en un bucle de errores en segundo plano (2026-09-20: 2,6 GB de salida y
+  una batería de tests que se quedó sin tiempo). Python de varias líneas, por la herramienta Bash con
+  `python - <<'PY' … PY`. Ante una tarea de fondo colgada, mirar primero el TAMAÑO de su salida.
+* **`… | Select-Object -First N` corta la tubería y deja `$LASTEXITCODE` en `-1`**, sin aviso: un control que
+  frenó bien y otro que pasó se leyeron los dos como falla (2026-09-12). Para medir un código de salida:
+  `& script *> $log; $LASTEXITCODE`, y filtrar el archivo después. En Bash, `${PIPESTATUS[0]}` es el PRIMER
+  comando de la tubería.
+* **Una mutación de prueba no se revierte con `git checkout -- <archivo>`**: vuelve a lo commiteado y se lleva
+  también los arreglos sin commitear de ese archivo, con los tests en verde justo porque el código correcto ya no
+  está (2026-09-12). Copia en memoria, escribir la mutación, correr el test acotado y restaurar en un `finally`.
+
+## Rarezas conocidas de la máquina y de la app (contestar sin re-investigar)
+
+* **El Explorador se cae solo** desde el 2026-08-13 (barra de tareas y escritorio). Firma fija: 0xc0000409,
+  fail-fast dentro de Explorer.EXE, desplazamiento 0x6698e; siempre el proceso PRINCIPAL. Descartados: RAM,
+  Claude, Acceso rápido, copias de trabajo. Sobrevivió a varias acumulativas, incluida KB5121794 (02/10): al 13/10
+  ~0,36 caídas/día contra ~0,8 de antes, no concluyente. La tarea programada `medir-caidas-explorador` corre el
+  **2026-11-17 10:00** y compara antes y después de la acumulativa de noviembre. No volver a atribuirlo a la RAM.
+* **El selector de esfuerzo** de la app se revierte solo a los ~6 s si se elige ANTES de abrir el chat (bug de la
+  app, no de su config). Rodeo: elegirlo con el chat ya abierto.
+* **Un ayudante «placeholder» con encargo «noop»** que aparece rechazado en rojo lo lanza la app, no un chat; el
+  rojo es el bloqueo por precaución cuando el control de seguridad no contesta. Solo se reporta a Anthropic si
+  pasa seguido.
 
 ## El detalle largo de las reglas del `CLAUDE.md`
 
