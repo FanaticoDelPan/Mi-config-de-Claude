@@ -111,8 +111,11 @@ incluidos— y no necesita que el comando borre nada**: los falsos positivos son
 
 * **El Explorador se cae solo** desde el 2026-08-13 (barra de tareas y escritorio). Firma fija: 0xc0000409,
   fail-fast dentro de Explorer.EXE, desplazamiento 0x6698e; siempre el proceso PRINCIPAL. Descartados: RAM,
-  Claude, Acceso rápido, copias de trabajo. Sobrevivió a varias acumulativas, incluida KB5121794 (02/10): al 13/10
-  ~0,36 caídas/día contra ~0,8 de antes, no concluyente. La tarea programada `medir-caidas-explorador` corre el
+  Claude, Acceso rápido, copias de trabajo, y también la carga de la PC (ver al 19/10). Sobrevivió a varias
+  acumulativas, incluida KB5121794 (02/10). El desplazamiento era 0x66c9e hasta el 26/09 y pasó a 0x6698e desde
+  el 01/10 (Explorer se actualizó y el error siguió en el mismo lugar). Ritmo al 19/10: ~0,7 caídas/día del
+  20/09 al 12/10 y **~2/día del 13/10 al 19/10** (empeoró). Todas en horario de uso (11-18 h), lo que no
+  distingue «carga» de «uso». La tarea programada `medir-caidas-explorador` corre el
   **2026-11-17 10:00** y compara antes y después de la acumulativa de noviembre. No volver a atribuirlo a la RAM.
 * **El selector de esfuerzo** de la app se revierte solo a los ~6 s si se elige ANTES de abrir el chat (bug de la
   app, no de su config). Rodeo: elegirlo con el chat ya abierto.
