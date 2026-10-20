@@ -117,6 +117,15 @@ incluidos— y no necesita que el comando borre nada**: los falsos positivos son
   20/09 al 12/10 y **~2/día del 13/10 al 19/10** (empeoró). Todas en horario de uso (11-18 h), lo que no
   distingue «carga» de «uso». La tarea programada `medir-caidas-explorador` corre el
   **2026-11-17 10:00** y compara antes y después de la acumulativa de noviembre. No volver a atribuirlo a la RAM.
+* **La PC se ahoga con varios chats en paralelo (2026-10-20):** es la carga de trabajo sobre un procesador de bajo
+  consumo (i7-1255U) y 16 GB en UNA sola placa. El antivirus pesa: crear+leer 2000 archivos chicos con Python =
+  4,7 s de mediana. El buscador de Windows NO indexa `C:\GitHub` (no hay nada que sacarle). Modo de energía:
+  «Máximo rendimiento» enchufado, lo puso el dueño.
+  **Decidido que NO: excluir cosas del antivirus** (ni por carpeta ni por proceso). Por carpeta, las revisiones
+  también se la saltean, así que nunca se revisaría. Por proceso, hay que excluir el intérprete de Python, que
+  Microsoft pone en su lista de «nunca excluir», y es el mismo que instala paquetes de internet. El dueño no
+  quiere bajar la seguridad. El camino elegido es un **Dev Drive** con el modo rendimiento de Defender, que
+  escanea igual pero sin frenar a nadie → CSKY-SA/skyone GH-611. La prueba de los 2000 archivos: `medir-antivirus.py`.
 * **El selector de esfuerzo** de la app se revierte solo a los ~6 s si se elige ANTES de abrir el chat (bug de la
   app, no de su config). Rodeo: elegirlo con el chat ya abierto.
 * **Un ayudante «placeholder» con encargo «noop»** que aparece rechazado en rojo lo lanza la app, no un chat; el
