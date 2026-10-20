@@ -127,6 +127,10 @@ incluidos— y no necesita que el comando borre nada**: los falsos positivos son
   enchufado da 2,8-3,3 GHz), la zapatilla y la temperatura (máx. 77 °C). Mirar solo los núcleos rápidos engaña: la
   vara es el «trabajo real» del Administrador de tareas. Base recién reiniciada, Claude con un chat: rápidos 2,3 GHz,
   9,9 % de trabajo real, 54 °C de placa, 8,5 de 15,7 GB de RAM.
+  **Decidido que NO: bajar los procesos de la suite para que la PC responda mejor** (medido, PC sin otros chats,
+  una corrida por lado): 10 procesos = 4 min 15 s, 6 = 4 min 19 s (el tope de 15 W iguala); una tarea chica a
+  prioridad normal tardó de mediana 60 contra 57 ms (19 en reposo), p90 106 contra 148, peor 441 contra 224. No
+  mejora la respuesta de forma clara, y con 6 una segunda corrida entraría en paralelo en vez de esperar su turno.
   **Decidido que NO: excluir cosas del antivirus** (ni por carpeta ni por proceso). Por carpeta, las revisiones
   también se la saltean, así que nunca se revisaría. Por proceso, hay que excluir el intérprete de Python, que
   Microsoft pone en su lista de «nunca excluir», y es el mismo que instala paquetes de internet. El dueño no
