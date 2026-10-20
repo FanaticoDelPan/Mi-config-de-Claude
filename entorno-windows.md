@@ -121,6 +121,12 @@ incluidos— y no necesita que el comando borre nada**: los falsos positivos son
   consumo (i7-1255U) y 16 GB en UNA sola placa. El antivirus pesa: crear+leer 2000 archivos chicos con Python =
   4,7 s de mediana. El buscador de Windows NO indexa `C:\GitHub` (no hay nada que sacarle). Modo de energía:
   «Máximo rendimiento» enchufado, lo puso el dueño.
+  **Los 2 núcleos rápidos clavados en 0,4 GHz con carga sostenida NO son una falla** (medido con
+  LibreHardwareMonitor, instalado): el chip tiene ~15 W sostenidos tras ~1 min de turbo y, enchufado, reparte ese
+  presupuesto a los 8 núcleos chicos (a batería, al revés). Se descartaron el cargador (Chicony 45 W original; recién
+  enchufado da 2,8-3,3 GHz), la zapatilla y la temperatura (máx. 77 °C). Mirar solo los núcleos rápidos engaña: la
+  vara es el «trabajo real» del Administrador de tareas. Base recién reiniciada, Claude con un chat: rápidos 2,3 GHz,
+  9,9 % de trabajo real, 54 °C de placa, 8,5 de 15,7 GB de RAM.
   **Decidido que NO: excluir cosas del antivirus** (ni por carpeta ni por proceso). Por carpeta, las revisiones
   también se la saltean, así que nunca se revisaría. Por proceso, hay que excluir el intérprete de Python, que
   Microsoft pone en su lista de «nunca excluir», y es el mismo que instala paquetes de internet. El dueño no
