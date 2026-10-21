@@ -134,8 +134,13 @@ incluidos— y no necesita que el comando borre nada**: los falsos positivos son
   **Decidido que NO: excluir cosas del antivirus** (ni por carpeta ni por proceso). Por carpeta, las revisiones
   también se la saltean, así que nunca se revisaría. Por proceso, hay que excluir el intérprete de Python, que
   Microsoft pone en su lista de «nunca excluir», y es el mismo que instala paquetes de internet. El dueño no
-  quiere bajar la seguridad. El camino elegido es un **Dev Drive** con el modo rendimiento de Defender, que
-  escanea igual pero sin frenar a nadie → CSKY-SA/skyone GH-611. La prueba de los 2000 archivos: `medir-antivirus.py`.
+  quiere bajar la seguridad.
+  **Decidido que NO: mudar los repos a un Dev Drive** (VHDX ReFS con modo rendimiento; piloto en CSKY-SA/skyone
+  GH-611). Crear+leer 2000 archivos (`medir-antivirus.py`) baja de ~2,6 s a ~1,1 s, pero la suite entera NO mejora:
+  alternada con chats abiertos dio C: 313/340 s contra Dev Drive 358/540/559 s. La suite gasta CPU, no espera
+  disco, y el modo rendimiento no baja la CPU del antivirus (los ~12 % que se ven con 3-4 chats siguen igual).
+  Antivirus medido con carga real: ~34 s de escaneo cada 5 min, ≈1 % de la máquina. Reabrir solo si aparece un
+  cuello de DISCO medido, no de CPU.
 * **El selector de esfuerzo** de la app se revierte solo a los ~6 s si se elige ANTES de abrir el chat (bug de la
   app, no de su config). Rodeo: elegirlo con el chat ya abierto.
 * **Un ayudante «placeholder» con encargo «noop»** que aparece rechazado en rojo lo lanza la app, no un chat; el
