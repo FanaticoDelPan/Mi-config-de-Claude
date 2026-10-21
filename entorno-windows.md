@@ -186,8 +186,13 @@ Lo que sostiene una regla, cuando el porqué no entra en el renglón que la enun
   día de la semana cerró en 17,1 puntos contra 16 de línea, con los agentes en 47 % del gasto (56 agentes,
   ~5 USD c/u) y dos chats de 8 y 10 agentes que solos sumaron 6 de esos 17 puntos. El dueño trabaja con
   4-6 chats abiertos a la vez (pico medido: 6 el 23/09), así que el techo por chat se multiplica. El
-  disparador: un «limpiá ramas» lanzó 5 revisores (uno por rama) amparado en una excepción del proyecto. Lo que sigue es el
-  porqué del techo por chat, que no se venció.
+  disparador: un «limpiá ramas» lanzó 5 revisores (uno por rama) amparado en una excepción del proyecto.
+  El 2026-10-21 subió a **5 a la vez / 8 en total**: dos semanas seguidas cerraron en 70-80 % de la cuota y
+  el dueño quiso más velocidad sin duplicar el gasto. Lo simultáneo se subió libre porque paralelo o en fila
+  cuesta lo mismo; el total solo un tercio, porque los agentes son ~la mitad del gasto y el margen sobrante
+  era 20-30 % (→ los agentes pueden crecer 40-60 %, no el doble que daría 10). ⚠ Chats de 8 y 10 agentes
+  fueron justo lo que disparó la baja del 24/09: si una semana vuelve a pasar la línea de ritmo, se vuelve
+  a 3 / 6. Lo que sigue es el porqué del techo por chat, que no se venció.
 * **El techo de 3 agentes por CHAT (total) y los workflows siempre con OK** (dueño, 2026-09-12) reemplazan
   al de «5 por tanda, una tanda por fase» del 2026-09-10. Con ese techo la cuota semanal llegó al 60 % a
   mitad de semana: contar por tanda dejaba abierto tres, después tres, después tres, que cuesta lo mismo
