@@ -117,7 +117,8 @@ $valeCpu = $intervalo -ge 50 -and $intervalo -le 1200
 $crudo = Get-CimInstance Win32_PerfRawData_PerfOS_Processor -Filter "Name='_Total'" -Property PercentProcessorTime, Timestamp_Sys100NS
 $ocioso = [double]$crudo.PercentProcessorTime; $reloj = [double]$crudo.Timestamp_Sys100NS
 $cpuTotal = $null
-if ($valeCpu -and $relojPrevio -and $reloj -gt $relojPrevio) {
+# Tras un reinicio el contador de ocio vuelve a cero: ese intervalo no se calcula.
+if ($valeCpu -and $relojPrevio -and $reloj -gt $relojPrevio -and $ocioso -ge $ociosoPrevio) {
     $cpuTotal = [math]::Max(0, 100 * (1 - ($ocioso - $ociosoPrevio) / ($reloj - $relojPrevio)))
 }
 
