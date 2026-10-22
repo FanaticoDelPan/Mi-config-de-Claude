@@ -141,6 +141,10 @@ incluidos— y no necesita que el comando borre nada**: los falsos positivos son
   disco, y el modo rendimiento no baja la CPU del antivirus (los ~12 % que se ven con 3-4 chats siguen igual).
   Antivirus medido con carga real: ~34 s de escaneo cada 5 min, ≈1 % de la máquina. Reabrir solo si aparece un
   cuello de DISCO medido, no de CPU.
+  **Historia del consumo:** Windows no la guarda por programa. `registrar-consumo-pc.ps1` (al lado de este
+  archivo) anota cada 5 min, por tarea programada, CPU y RAM por familia (SkyOne pantallas / SkyOne resto /
+  Vision / Claude / Edge / antivirus / resto) en `%LOCALAPPDATA%\registro-consumo-pc\`; cuesta ~3,5 s de CPU por
+  corrida (≈0,1 % de la máquina). `-Instalar -Hasta '…'` / `-Desinstalar`. Sirve igual para medir la PC nueva.
 * **El selector de esfuerzo** de la app se revierte solo a los ~6 s si se elige ANTES de abrir el chat (bug de la
   app, no de su config). Rodeo: elegirlo con el chat ya abierto.
 * **Un ayudante «placeholder» con encargo «noop»** que aparece rechazado en rojo lo lanza la app, no un chat; el
