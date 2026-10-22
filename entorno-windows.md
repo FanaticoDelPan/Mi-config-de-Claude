@@ -106,6 +106,11 @@ incluidos— y no necesita que el comando borre nada**: los falsos positivos son
 * **Una mutación de prueba no se revierte con `git checkout -- <archivo>`**: vuelve a lo commiteado y se lleva
   también los arreglos sin commitear de ese archivo, con los tests en verde justo porque el código correcto ya no
   está (2026-09-12). Copia en memoria, escribir la mutación, correr el test acotado y restaurar en un `finally`.
+* **Lo que un comando de Claude escribe en `AppData` va a una COPIA PRIVADA** (la app de escritorio es un paquete
+  MSIX y Windows virtualiza `AppData` para todo lo que lanza, `Temp` aparte). Claude ve SU copia y cualquier
+  proceso de afuera (tarea programada, otro programa) ve la real: los dos «escriben bien» y nunca se cruzan
+  (2026-10-22: una tarea programada anotaba en un archivo y Claude leía otro, sin ningún error). Datos que
+  comparten Claude y algo de afuera van fuera de `AppData` (p. ej. `%USERPROFILE%\<carpeta>`).
 
 ## Rarezas conocidas de la máquina y de la app (contestar sin re-investigar)
 
@@ -143,7 +148,7 @@ incluidos— y no necesita que el comando borre nada**: los falsos positivos son
   cuello de DISCO medido, no de CPU.
   **Historia del consumo:** Windows no la guarda por programa. `registrar-consumo-pc.ps1` (al lado de este
   archivo) anota cada 5 min, por tarea programada, CPU y RAM por familia (SkyOne pantallas / SkyOne resto /
-  Vision / Claude / Edge / antivirus / resto) en `%LOCALAPPDATA%\registro-consumo-pc\`; cuesta ~3,5 s de CPU por
+  Vision / Claude / Edge / antivirus / resto) en `%USERPROFILE%\registro-consumo-pc\`; cuesta ~3,5 s de CPU por
   corrida (≈0,1 % de la máquina). `-Instalar -Hasta '…'` / `-Desinstalar`. Sirve igual para medir la PC nueva.
 * **El selector de esfuerzo** de la app se revierte solo a los ~6 s si se elige ANTES de abrir el chat (bug de la
   app, no de su config). Rodeo: elegirlo con el chat ya abierto.

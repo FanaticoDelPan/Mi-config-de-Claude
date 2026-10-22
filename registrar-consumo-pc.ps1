@@ -14,7 +14,7 @@ Uso:
   registrar-consumo-pc.ps1                 -> anota una fila (lo que corre la tarea programada)
   registrar-consumo-pc.ps1 -Instalar [-Hasta 'AAAA-MM-DD HH:mm']  -> programa la tarea cada 5 min
   registrar-consumo-pc.ps1 -Desinstalar    -> borra la tarea (los CSV quedan)
-Datos: %LOCALAPPDATA%\registro-consumo-pc\consumo-AAAA-MM-DD.csv
+Datos: %USERPROFILE%\registro-consumo-pc\consumo-AAAA-MM-DD.csv
 #>
 param(
     [switch]$Instalar,
@@ -24,7 +24,15 @@ param(
 
 $ErrorActionPreference = 'Stop'
 $nombreTarea = 'registro-consumo-pc'
-$carpeta = Join-Path $env:LOCALAPPDATA 'registro-consumo-pc'
+# NO en AppData: la app de Claude es un paquete MSIX y lo que escribe un comando lanzado desde ella en AppData
+# va a una copia privada del paquete; la tarea programada escribiría en otro archivo que Claude no ve.
+$carpeta = Join-Path $env:USERPROFILE 'registro-consumo-pc'
+# La tarea corre sin ventana: un error que nadie ve se anota acá.
+trap {
+    New-Item -ItemType Directory -Force $carpeta | Out-Null
+    Add-Content (Join-Path $carpeta 'errores.log') ("{0} {1} | {2}" -f (Get-Date -Format 'yyyy-MM-dd HH:mm:ss'), $_, $_.InvocationInfo.PositionMessage)
+    exit 1
+}
 
 if ($Desinstalar) {
     Unregister-ScheduledTask -TaskName $nombreTarea -Confirm:$false
@@ -33,11 +41,11 @@ if ($Desinstalar) {
 }
 
 if ($Instalar) {
-    $conhost = Join-Path $env:SystemRoot 'System32\conhost.exe'
-    $ps = Join-Path $env:SystemRoot 'System32\WindowsPowerShell\v1.0\powershell.exe'
-    # conhost --headless: corre sin abrir ni parpadear una ventana cada 5 minutos.
-    $accion = New-ScheduledTaskAction -Execute $conhost `
-        -Argument "--headless `"$ps`" -NoProfile -ExecutionPolicy Bypass -File `"$PSCommandPath`""
+    # El .vbs de al lado lo lanza SIN ventana (no parpadea cada 5 minutos); la sesión S4U, que tampoco abre
+    # ventana, pide administrador.
+    $wscript = Join-Path $env:SystemRoot 'System32\wscript.exe'
+    $vbs = [IO.Path]::ChangeExtension($PSCommandPath, '.vbs')
+    $accion = New-ScheduledTaskAction -Execute $wscript -Argument "//B //Nologo `"$vbs`""
     $inicio = (Get-Date).AddMinutes(1)
     $fin = if ($Hasta) { [datetime]::ParseExact($Hasta, 'yyyy-MM-dd HH:mm', $null) } else { $inicio.AddDays(2) }
     $disparo = New-ScheduledTaskTrigger -Once -At $inicio -RepetitionInterval (New-TimeSpan -Minutes 5) `
