@@ -105,11 +105,21 @@ if (Test-Path $archivoEstado) {
         $e = Get-Content $archivoEstado -Raw | ConvertFrom-Json
         $tPrevio = [datetime]::Parse($e.t, $inv)
         foreach ($prop in $e.cpu.PSObject.Properties) { $previo[$prop.Name] = [double]$prop.Value }
+        $ociosoPrevio = [double]$e.ocioso; $relojPrevio = [double]$e.reloj
     } catch { $previo = @{}; $tPrevio = $null }
 }
 $intervalo = if ($tPrevio) { ($ahora - $tPrevio).TotalSeconds } else { 0 }
 # Un hueco largo (PC apagada o suspendida) no se promedia: se anota la RAM y se reinicia la cuenta.
-$valeCpu = $intervalo -ge 60 -and $intervalo -le 1200
+$valeCpu = $intervalo -ge 50 -and $intervalo -le 1200
+
+# Ocupación TOTAL del intervalo (contador de tiempo ocioso de Windows). Incluye a los procesos que nacieron y
+# murieron entre dos corridas —pruebas y comandos de los chats—, que por familia no se ven.
+$crudo = Get-CimInstance Win32_PerfRawData_PerfOS_Processor -Filter "Name='_Total'" -Property PercentProcessorTime, Timestamp_Sys100NS
+$ocioso = [double]$crudo.PercentProcessorTime; $reloj = [double]$crudo.Timestamp_Sys100NS
+$cpuTotal = $null
+if ($valeCpu -and $relojPrevio -and $reloj -gt $relojPrevio) {
+    $cpuTotal = [math]::Max(0, 100 * (1 - ($ocioso - $ociosoPrevio) / ($reloj - $relojPrevio)))
+}
 
 $nuevo = @{}
 foreach ($p in $procs) {
@@ -125,7 +135,7 @@ foreach ($p in $procs) {
         if ($d -gt 0) { $cpu[$f] += $d }
     }
 }
-@{ t = $ahora.ToString('o', $inv); cpu = $nuevo } | ConvertTo-Json -Compress | Set-Content $archivoEstado -Encoding UTF8
+@{ t = $ahora.ToString('o', $inv); cpu = $nuevo; ocioso = $ocioso; reloj = $reloj } | ConvertTo-Json -Compress | Set-Content $archivoEstado -Encoding UTF8
 
 $nucleos = [Environment]::ProcessorCount
 $so = Get-CimInstance Win32_OperatingSystem -Property TotalVisibleMemorySize, FreePhysicalMemory, TotalVirtualMemorySize, FreeVirtualMemory
@@ -148,7 +158,16 @@ foreach ($f in $familias) {
     $fila["ram_$f"] = N ($ram[$f] / 1GB) 2
 }
 $fila['costo_registro_s'] = N ([Diagnostics.Process]::GetCurrentProcess().TotalProcessorTime.TotalSeconds) 2
+# Misma vara que las familias (tiempo de procesador, no «trabajo real»): la diferencia es lo que no se atribuye.
+$fila['cpu_total_intervalo'] = N $cpuTotal 1
+$sumaFamilias = 0.0; foreach ($f in $familias) { $sumaFamilias += $cpu[$f] * 100 / [math]::Max(1, $intervalo * $nucleos) }
+$fila['cpu_no_atribuido'] = if ($null -ne $cpuTotal) { N ([math]::Max(0, $cpuTotal - $sumaFamilias)) 1 } else { '' }
 
 $csv = Join-Path $carpeta ("consumo-{0}.csv" -f $ahora.ToString('yyyy-MM-dd'))
-if (-not (Test-Path $csv)) { ($fila.Keys -join ',') | Set-Content $csv -Encoding UTF8 }
+$encabezado = $fila.Keys -join ','
+if ((Test-Path $csv) -and (Get-Content $csv -TotalCount 1) -ne $encabezado) {
+    # Cambiaron las columnas: lo anterior del día queda aparte, intacto, en vez de mezclar formatos.
+    Rename-Item $csv ("consumo-{0}-antes-{1}.csv" -f $ahora.ToString('yyyy-MM-dd'), $ahora.ToString('HHmm'))
+}
+if (-not (Test-Path $csv)) { $encabezado | Set-Content $csv -Encoding UTF8 }
 ($fila.Values -join ',') | Add-Content $csv -Encoding UTF8
