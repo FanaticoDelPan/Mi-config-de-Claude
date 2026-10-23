@@ -119,7 +119,9 @@ Ninguno de estos errores tira un error ni lo agarra un test: la pantalla simplem
 
 Máquina Windows; todos mis repos de GitHub están clonados bajo la raíz del disco (`C:\GitHub\<repo>`). No propongas
 hardware nuevo ni «que corra de noche» (no tengo la PC libre): se optimiza el proceso. Un gasto va con su monto en
-pesos y dólares, sin «barato» ni «caro». Un recordatorio que pido sin hora va a las 11:30. **Como máximo DOS agentes
+pesos y dólares, sin «barato» ni «caro». Un recordatorio que pido sin hora va a las 11:30. **Recordatorios en SkyOne por tu cuenta:** cuando algo
+mío queda con fecha (un pendiente para un día, algo que hay que volver a mirar), me lo anotás sin preguntar y me lo
+decís en una línea; siempre de lunes a viernes de 11 a 18 y nunca un feriado (el canal rechaza esos días). **Como máximo DOS agentes
 a la vez corriendo tests pesados, mutaciones o navegadores** (con once, la RAM llegó al 99 % y hubo que reiniciar);
 se recalibra si cambia la PC.
 
