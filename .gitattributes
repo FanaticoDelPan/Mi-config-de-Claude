@@ -1,0 +1,2 @@
+# Los hooks los corre sh: con fin de línea de Windows, el shebang y cada línea se rompen.
+.githooks/* text eol=lf

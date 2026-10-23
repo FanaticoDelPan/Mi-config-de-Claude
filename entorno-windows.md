@@ -111,6 +111,13 @@ incluidos— y no necesita que el comando borre nada**: los falsos positivos son
   proceso de afuera (tarea programada, otro programa) ve la real: los dos «escriben bien» y nunca se cruzan
   (2026-10-22: una tarea programada anotaba en un archivo y Claude leía otro, sin ningún error). Datos que
   comparten Claude y algo de afuera van fuera de `AppData` (p. ej. `%USERPROFILE%\<carpeta>`).
+* **Algo largo va con `run_in_background`, nunca con un `&` a mano en Bash**: ese proceso queda sin dueño en el
+  acto y nadie lo puede cerrar después.
+* **Entrar a una copia aparte (`EnterWorktree`) con agentes corriendo les bloquea todos los comandos**: la sesión
+  queda atada a la copia. Se entra antes de lanzarlos o después de que terminen.
+* **Mandarle un mensaje a un agente que ya terminó lo despierta sin el encargo original**, y hace otra cosa
+  (observado en SkyOne, aunque la herramienta diga que conserva el contexto). Para seguir un trabajo terminado,
+  encargo nuevo y autocontenido.
 
 ## Rarezas conocidas de la máquina y de la app (contestar sin re-investigar)
 

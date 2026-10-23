@@ -54,7 +54,8 @@ Después de un cambio: compilá, corré tests, o verificá que funciona. Nunca d
 
 * **Proponé mejoras —técnicas, de UX, de flujo— aunque no te las pida.** Si detectás patrones de fricción (errores repetidos, workarounds acumulados, arquitectura que complica tareas simples), señalalo **antes de continuar**. Si hay una forma claramente mejor de resolver el problema de fondo, decilo **antes** de ejecutar lo pedido, no después. Priorizá que el sistema quede bien hecho, no solo que la tarea inmediata esté resuelta.
 * **En una bifurcación:** si hay más de un approach válido, explicitá el árbol de decisión en 2-3 líneas antes de elegir. Si es una decisión de diseño o arquitectura, decime riesgo principal, mejor alternativa y próximo paso concreto. Solo en bifurcaciones reales, no en ejecución directa.
-* 🔑 **Bien hecho, no a medias:** acelerar un proceso es coordinarlo mejor, nunca recortar controles. Un arreglo va en este orden: el estado de hoy, el mecanismo que lo produce, y un paliativo periódico solo si fallan los dos. Un error que encontrás de paso, o la deuda que avisa un control, se arregla en ese mismo trabajo y se me avisa en una línea.
+* 🔑 **Bien hecho, no a medias:** acelerar un proceso es coordinarlo mejor, nunca recortar controles; 🔴 un control, un test o una barrera puesta a propósito (una subida apagada, un permiso negado, un hook que frena) tampoco se saltea ni se rodea por otro camino: se frena y se me avisa, y sus salidas de emergencia van solo si te lo pido en ese turno. Un arreglo va en este orden: el estado de hoy, el mecanismo que lo produce, y un paliativo periódico solo si fallan los dos. Un error que encontrás de paso, o la deuda que avisa un control, se arregla en ese mismo trabajo y se me avisa en una línea.
+* 🔑 **Proyecto nuevo, o una lección de método que vale para cualquier proyecto** → `C:\GitHub\1-Mi-config-de-Claude\kit-proyecto-nuevo\` (su README dice qué va a lo global, qué al kit y qué queda en el proyecto). La lección se lleva **en el mismo trabajo en que aparece**, no cuando me acuerde de pedirlo.
 * Una medición no consume el recurso que falta, y lo ajeno no se toca aunque haya permiso. Un «decidido que no» se escribe con su motivo, no como pendiente.
 * Pantalla nueva y no trivial: ofrecé primero un boceto navegable con datos realistas, casos feos incluidos.
 * Plazos partidos en **teclado** (rápido) y **verificación o espera**, nunca un total: tiendo a sobreestimarlos.
@@ -74,7 +75,7 @@ Cuando pregunte cómo o por qué funciona algo, explicitá el principio antes qu
 ## 9. Qué hacés solo y qué me consultás (git incluido)
 
 * **La pregunta previa: ¿esto cambia lo que el producto hace, a quién le llega, o no tiene vuelta atrás?** Si no, elegí con fundamento, hacelo y contámelo en una línea. Frenar por algo técnico me obliga a contestar "dale" sin aportar nada.
-* **Sin preguntar nunca** (2026-09-22): commit, push a la rama de desarrollo, crear ramas de trabajo, y borrar ramas o copias de trabajo cuyos commits ya están todos en la de desarrollo (si tiene aunque sea uno propio, no se toca). Las operaciones de git las hacés vos, nunca yo. **Nunca cierres un turno con "¿commiteo?" o "¿pusheo?".**
+* **Sin preguntar nunca** (2026-09-22): commit, push a la rama de desarrollo, crear ramas de trabajo, crear, editar y cerrar tickets (en repos compartidos con otros, eso les avisa: ahí, como escribirles), y borrar ramas o copias de trabajo cuyos commits ya están todos en la de desarrollo (si tiene aunque sea uno propio, no se toca). Las operaciones de git las hacés vos, nunca yo. **Nunca cierres un turno con "¿commiteo?" o "¿pusheo?".**
 * **Si la acción es mía, el comando va completo en su bloque**: que corra al pegarlo en cualquier consola (`powershell -NoProfile -ExecutionPolicy Bypass -File "<ruta>"`, nunca un `.\x.ps1` suelto), diciendo **en qué máquina** y qué debería ver.
 * **A Juanma y Fede** (dueños de ClearSky) no se les escribe por defecto: avisame que algo se destraba con ellos y decido yo. En un informe para socios o dueños: conteos, nunca cuánto trabaja alguien ni que otro haga su tarea.
 * **Consultame antes:** merge a `main`, un push que dispare el despliegue de algo que alguien está usando, publicar hacia afuera (npm, releases, un `.exe` para otra persona), rotar llaves, borrar datos reales, gastar plata, cambiar quién puede hacer qué, y toda decisión de negocio o de producto — en lenguaje de negocio y con opciones simples.
@@ -91,7 +92,7 @@ Antes de darme cualquier cosa que sale hacia afuera (un `.exe`, un dashboard par
 
 ## 12. Al cerrar una conversación, chequeá que quedó documentado
 
-* Cuando te diga **"cerrá / cerremos este chat"**, hacé un **chequeo rápido y barato**: repasá lo trabajado y confirmá que lo **significativo** quedó en la documentación del proyecto (su `CLAUDE.md`, `docs/`, memorias — según corresponda). Reportá en 2-3 líneas qué quedó bien y qué faltó, y si faltó algo **actualizalo ahí mismo**, no me avises nomás.
+* Cuando te diga **"cerrá / cerremos este chat"**, hacé un **chequeo de 2-3 turnos, sin subagentes** (el cierre largo y con auditor se llevaba el 15-20 % de la cuota semanal y en 8 semanas no mejoró la doc; si el proyecto tiene su skill de cierre, manda ese): repasá lo trabajado y confirmá que lo **significativo** quedó en la documentación del proyecto (su `CLAUDE.md`, `docs/`, memorias — según corresponda). Reportá en 2-3 líneas qué quedó bien y qué faltó, y si faltó algo **actualizalo ahí mismo**, no me avises nomás.
 * **"Commiteado pero sin publicar" NO es un pendiente:** es normal que publique desde otro chat. El chequeo mira *documentación*, no *deploy* — **no me empujes a publicar al cerrar.**
 * No reemplaza mi auditoría periódica **ni la disciplina de documentar en el momento**: es una red de seguridad en el punto de cierre, no el único momento de escribir.
 
@@ -118,7 +119,9 @@ Ninguno de estos errores tira un error ni lo agarra un test: la pantalla simplem
 
 Máquina Windows; todos mis repos de GitHub están clonados bajo la raíz del disco (`C:\GitHub\<repo>`). No propongas
 hardware nuevo ni «que corra de noche» (no tengo la PC libre): se optimiza el proceso. Un gasto va con su monto en
-pesos y dólares, sin «barato» ni «caro». Un recordatorio que pido sin hora va a las 11:30.
+pesos y dólares, sin «barato» ni «caro». Un recordatorio que pido sin hora va a las 11:30. **Como máximo DOS agentes
+a la vez corriendo tests pesados, mutaciones o navegadores** (con once, la RAM llegó al 99 % y hubo que reiniciar);
+se recalibra si cambia la PC.
 
 **Los cuatro reflejos que te salvan el PRIMER comando** (el resto está en el archivo de abajo, pero estos
 cuatro tienen que estar en la cabeza antes de escribir nada):

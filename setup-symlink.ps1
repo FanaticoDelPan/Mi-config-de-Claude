@@ -76,6 +76,15 @@ if (Test-Path $entorno) {
     Write-Host "AVISO: falta entorno-windows.md en el repo. El CLAUDE.md lo cita y no lo va a encontrar." -ForegroundColor Yellow
 }
 
+# El control al commitear (tope del CLAUDE.md, nombres colados en el kit) viaja por
+# core.hooksPath, que es configuracion LOCAL: en un clon nuevo esta apagado hasta este paso.
+git -C $PSScriptRoot config core.hooksPath .githooks
+if ($LASTEXITCODE -eq 0) {
+    Write-Host "OK -> control al commitear activo (.githooks)." -ForegroundColor Green
+} else {
+    Write-Host "AVISO: no se pudo activar el control al commitear (git config core.hooksPath .githooks)." -ForegroundColor Yellow
+}
+
 # --- Skills: un junction POR SKILL adentro de ~/.claude/skills, no la carpeta entera ---
 # ~/.claude/skills es compartida con la app: ahi guarda su propia copia de las skills de
 # Anthropic (la carpeta 'synced', que baja sola en cada maquina). Atar la carpeta entera al

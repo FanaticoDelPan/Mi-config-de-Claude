@@ -1,0 +1,104 @@
+# Plantilla del pipeline mínimo del PRIMER COMMIT.
+# Va a .github/workflows/ci.yml. Ejemplo con Python + Postgres: adaptar el stack, no la estructura.
+#
+# Las cuatro decisiones que NO se cambian:
+#   1. corre solo, no en un botón que alguien aprieta. Arranca en cada push y cada PR; cuando la CI cuesta
+#      plata de verdad, pasa a «al publicar + una diaria sobre la rama de desarrollo» (escalar-el-arnes.md),
+#      nunca a «cuando alguien se acuerde»;
+#   2. la base es el MISMO motor que producción, en contenedor;
+#   3. un test salteado por infraestructura ausente es ROJO (-p no:randomly … --strict-markers + el guard);
+#   4. los tests sensibles al reloj corren en su propio job, no compitiendo con builds ni navegadores.
+#
+# Y la protección de rama que exige este check en verde para mergear se configura en el repositorio:
+# sin eso, el pipeline informa pero no frena.
+
+name: ci
+
+on:
+  push:
+  pull_request:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  # ── Lo barato y rápido primero: si esto falla, no se gasta un minuto en lo caro ──────────────
+  estatico:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v5
+      - run: uv sync --frozen            # --frozen: el lockfile manda. Sin lock, dos corridas son dos programas.
+      - run: uv run ruff check .
+      - run: uv run ruff format --check .
+      - run: uv run mypy --strict src/   # empezar estricto: endurecer sobre 50k líneas no se hace nunca
+      - uses: gitleaks/gitleaks-action@v2 # secretos: el escáner, no la convención
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  # ── Tests contra el MOTOR REAL. Es el punto 3 del día 1 y el más caro de revertir después. ──
+  tests:
+    runs-on: ubuntu-latest
+    needs: estatico
+    services:
+      db:
+        image: postgres:17
+        env:
+          POSTGRES_PASSWORD: test
+          POSTGRES_DB: test
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd pg_isready --health-interval 5s --health-timeout 5s --health-retries 10
+    env:
+      DATABASE_URL: postgresql://postgres:test@localhost:5432/test
+      CI_ESTRICTO: '1'        # lo lee el conftest de abajo: acá un skip es rojo
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v5
+      - run: uv sync --frozen
+      - run: uv run alembic upgrade head          # la cadena entera desde cero, contra el motor real
+      - run: uv run pytest -q --strict-markers
+
+  # ── La pantalla se abre de verdad. 30 líneas, no un arnés: ver checklist-pantalla.md ─────────
+  pantallas:
+    runs-on: ubuntu-latest
+    needs: estatico
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: '22', cache: 'npm' }
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - run: npm run build
+      - run: npx playwright test        # falla por: excepción JS, promesa rechazada, console.error,
+                                        # body vacío, y scrollWidth > viewport en el ancho mínimo
+
+  # ── Dependencias vulnerables: falla el pipeline en severidad alta ────────────────────────────
+  dependencias:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v5
+      - run: uv sync --frozen
+      - run: uv run pip-audit --strict
+
+# ─────────────────────────────────────────────────────────────────────────────────────────────
+# El guard del punto 2 del día 1 — un skip por infraestructura ausente NO puede quedar verde.
+# Va en conftest.py de la raíz:
+#
+#   import os, pytest
+#
+#   def pytest_collection_modifyitems(config, items):
+#       """En CI no se tolera un skip condicional: o el entorno está, o la corrida falla.
+#       Un test que puede desaparecer sin ruido es peor que no tenerlo: deja el verde y saca
+#       la cobertura."""
+#       if os.environ.get("CI_ESTRICTO") != "1":
+#           return
+#       for item in items:
+#           for marca in item.iter_markers(name="skipif"):
+#               if marca.args and marca.args[0]:
+#                   pytest.fail(f"{item.nodeid}: salteado con CI_ESTRICTO=1", pytrace=False)
+#
+# Y el equivalente en el runner del frontend: test.skip condicional prohibido en CI.
+# ─────────────────────────────────────────────────────────────────────────────────────────────

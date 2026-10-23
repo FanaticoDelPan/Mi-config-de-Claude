@@ -1,0 +1,28 @@
+#!/bin/sh
+# Control al commitear en el repo de configuracion global. Frena si:
+#  1. el CLAUDE.md global pasa su tope (se carga entero en cada chat de cada proyecto). La
+#     unica salida es partir: el porque largo de una regla va a entorno-windows.md. Subir el
+#     numero no es una salida;
+#  2. se cuela un nombre de producto, persona o cliente en el kit de proyecto nuevo, que tiene
+#     que servir para cualquier repo. La lista crece cuando aparece un repo o una persona nueva.
+# Lo instala setup-symlink.ps1 (core.hooksPath = .githooks). Lo prueba probar-pre-commit.sh.
+
+cd "$(git rev-parse --show-toplevel)" || exit 1
+TOPE=22528
+NOMBRES='skyone|skyia|clearsky|csky|juanma|fede|joaquin|joaquín|bolotin|contanos|cestachef|support_client|id_sistema'
+fallo=0
+
+peso=$(git show :CLAUDE.md 2>/dev/null | wc -c)
+if [ "$peso" -gt "$TOPE" ]; then
+    echo "COMMIT FRENADO: CLAUDE.md pesa $peso bytes y el tope es $TOPE. Partir: el detalle va a entorno-windows.md."
+    fallo=1
+fi
+
+colados=$(git grep --cached -n -i -w -E "$NOMBRES" -- kit-proyecto-nuevo 2>/dev/null)
+if [ -n "$colados" ]; then
+    echo "COMMIT FRENADO: el kit tiene nombres de un producto, persona o cliente:"
+    echo "$colados"
+    fallo=1
+fi
+
+exit $fallo

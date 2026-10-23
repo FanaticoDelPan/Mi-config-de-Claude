@@ -63,6 +63,10 @@ Listo. Desde ahí, el global de esa máquina queda atado a este repo.
 
 ## Qué más sincroniza
 
+- **Kit para proyectos nuevos** (`kit-proyecto-nuevo/`): lo que se copia a un repo nuevo el día 1 y
+  lo que se le agrega después con su gatillo. No se enlaza a nada: lo cita el `CLAUDE.md`. Sus
+  plantillas de skills viven ahí adentro y NO en `skills/`, a propósito: van a cada proyecto, porque
+  una skill global le gana a la del proyecto con el mismo nombre.
 - **Skills globales** (`skills/`): en cada máquina, adentro de `~/.claude/skills` va un
   *junction* (link de carpeta, no pide admin) **por cada skill** de esta carpeta. La carpeta
   en sí NO se ata entera: la comparte la app, que guarda ahí su propia copia de las skills de
