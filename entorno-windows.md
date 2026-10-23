@@ -146,6 +146,11 @@ incluidos— y no necesita que el comando borre nada**: los falsos positivos son
   disco, y el modo rendimiento no baja la CPU del antivirus (los ~12 % que se ven con 3-4 chats siguen igual).
   Antivirus medido con carga real: ~34 s de escaneo cada 5 min, ≈1 % de la máquina. Reabrir solo si aparece un
   cuello de DISCO medido, no de CPU.
+  **Decidido que NO: achicar las copias del conector de mail** (`mcp-mail-empresa`, una por chat abierto, cada una
+  con su lanzador del `.venv`): medido 2026-10-23, ~68 MB privados por chat (7 chats ≈ 480 MB, 3 % de la RAM) y
+  casi nada de CPU. Cargar las librerías de Google recién al primer uso ahorra ~10 MB por chat (el peso es el
+  paquete `mcp` mismo, 57 MB); un servidor único compartido ahorra más pero, si se cae, deja a todos los chats sin
+  mail y pide tenerlo siempre prendido. Reabrir solo si la RAM pasa a ser el freno medido.
   **Historia del consumo:** Windows no la guarda por programa. `registrar-consumo-pc.ps1` (al lado de este
   archivo) anota cada 5 min, por tarea programada, CPU y RAM por familia (SkyOne pantallas / SkyOne resto /
   Vision / Claude / Edge / antivirus / resto) en `%USERPROFILE%\registro-consumo-pc\`; cuesta ~3,5 s de CPU por
