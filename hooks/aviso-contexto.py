@@ -23,6 +23,7 @@ import os
 import sys
 import time
 
+sys.dont_write_bytecode = True  # cargar el medidor dejaba __pycache__ adentro del repo
 AQUI = os.path.dirname(os.path.abspath(__file__))
 ESTADO_DIR = os.path.join(os.path.expanduser("~"), ".claude", "aviso-contexto")  # fuera de AppData (MSIX)
 UMBRALES_CTX = (0.40, 0.60, 0.75)
