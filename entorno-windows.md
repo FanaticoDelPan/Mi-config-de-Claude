@@ -258,6 +258,27 @@ Lo que sostiene una regla, cuando el porqué no entra en el renglón que la enun
   la refutación adversarial dejó 3. Desde el 2026-09-12 esa refutación con agente queda para lo crítico
   (un adversario para toda la lista); en lo demás la verificación contra el código la hace el chat.
 
+### Aviso de contexto y de costo (regla 3)
+
+* **Qué pide cada umbral** (la versión larga de la regla, recortada del `CLAUDE.md` el 2026-10-16): **40 %** =
+  una línea al pie nombrando el corte natural, y de ahí en adelante el estado escrito a medida que se avanza;
+  **60 %** = checkpoint armado al pie (qué quedó terminado, qué falta) y se sigue si no hay respuesta; **75 %** =
+  Claude cierra, con el traspaso escrito. Más dos avisos por COSTO del chat con sus subagentes (**2 y 4
+  puntos**), que cazan el chat que gasta sin agrandarse. Cada umbral avisa una vez; si el chat se compacta,
+  los de contexto se rearman.
+* **Rehecho el 2026-10-24** (`hooks/aviso-contexto.py`): el original vivía solo en `~/.claude/hooks` de una
+  máquina, nunca entró al repo y en la otra no existía. Ahora está en el repo, `setup-symlink.ps1` lo registra
+  y `check-symlink.ps1` avisa al arrancar si a una máquina le falta (igual que el bloqueo de chats y Opus por
+  defecto, que se habían perdido de la misma forma).
+* **Cómo mide:** el contexto es el último mensaje del chat (entrada + caché + salida) sobre la ventana: 1
+  millón en Opus 5.5, Opus 5, Fable y Sonnet 5; 200 mil en Haiku o con el 1M apagado; se fuerza con la
+  variable `AVISO_CONTEXTO_VENTANA`. El costo usa `precio()` y `USD_POR_PUNTO` de `medir-consumo-semanal.py`:
+  se recalibra ahí y el aviso lo toma solo. Lee cada archivo desde donde quedó la vez anterior (marcas en
+  `~/.claude/aviso-contexto/`, fuera de `AppData` por el MSIX) y dentro de un subagente no avisa.
+* **Python y no PowerShell:** corre en cada herramienta, y Python tarda ~0,3 s contra ~1 s. Probarlo sobre un
+  chat ya hecho: `python -I hooks/aviso-contexto.py --probar <ruta del .jsonl>`. Referencia del 24/10: el chat
+  más grande de la máquina llegó a 61 % y 1,5 puntos; ninguno pasó de 2.
+
 ### Formatos locales: por qué es una lista y no un criterio
 
 Es una familia de errores que el entorno de quien programa resuelve solo y que el dueño ve siempre. **No

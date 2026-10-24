@@ -156,6 +156,28 @@ if (Test-Path $repoSkills) {
     }
 }
 
+# Lo que setup-symlink.ps1 escribe en el settings.json de cada maquina. Si falta, es que en esta
+# no se corrio despues de traer cambios (asi se perdieron el bloqueo de chats y el aviso de contexto).
+$settingsFile = Join-Path $env:USERPROFILE (Join-Path '.claude' 'settings.json')
+$faltan = @()
+try {
+    $s = Get-Content -LiteralPath $settingsFile -Raw -Encoding UTF8 | ConvertFrom-Json
+    if ($s.model -ne 'opus') { $faltan += "modelo por defecto en '$($s.model)', no en opus" }
+    foreach ($t in @('mcp__ccd_session__start_session', 'mcp__ccd_session__hand_off_to_session')) {
+        if (@($s.permissions.deny) -notcontains $t) { $faltan += 'el bloqueo de abrir o traspasar chats' ; break }
+    }
+    foreach ($evento in @('UserPromptSubmit', 'PostToolUse')) {
+        $cmds = @($s.hooks.$evento | ForEach-Object { $_.hooks } | ForEach-Object { $_.command })
+        if (-not ($cmds -match 'aviso-contexto')) { $faltan += "el aviso de contexto ($evento)" }
+    }
+} catch {
+    $faltan += 'el settings.json no se puede leer'
+}
+if ($faltan.Count -gt 0) {
+    Aviso 'settings' ("A esta maquina le falta lo del armado: " + ($faltan -join '; ') + ". Arreglalo con:  .\setup-symlink.ps1")
+    $fallas++
+}
+
 # Cambios sin commitear en este repo: la otra computadora trabaja con reglas viejas sin enterarse.
 if (Get-Command git -ErrorAction SilentlyContinue) {
     $pendientes = @(& git -C $PSScriptRoot status --porcelain 2>$null)

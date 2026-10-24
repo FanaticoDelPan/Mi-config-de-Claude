@@ -77,11 +77,14 @@ Listo. Desde ahí, el global de esa máquina queda atado a este repo.
   una), hay que volver a correr el script en cada máquina; el control de cada sesión lo avisa.
 - **Ajustes de `settings.json`**: el archivo NO se versiona entero (Claude Code lo reescribe
   solo y tiene cosas propias de cada máquina). `setup-symlink.ps1` le agrega lo común: el hook
-  de control y `cleanupPeriodDays` (historial de conversaciones por ~10 años; por defecto se
-  borra a los 30 días).
+  de control, `cleanupPeriodDays` (historial de conversaciones por ~10 años; por defecto se
+  borra a los 30 días), Opus como modelo por defecto, el bloqueo de abrir o traspasar chats y
+  el aviso de contexto y costo (`hooks/aviso-contexto.py`, necesita Python). Lo que se agregue a
+  mano en una sola máquina no viaja: va acá.
 - **Control al abrir cada sesión** (`check-symlink.ps1`, lo corre el hook): además del link y
-  de la ruta de `entorno-windows.md`, avisa si las skills se desataron del repo o si hay cambios
-  sin commitear que la otra computadora no está viendo. En modo hook sale siempre con 0: Claude
+  de la ruta de `entorno-windows.md`, avisa si las skills se desataron del repo, si al
+  `settings.json` le falta algo de lo de arriba (señal de que el script no se corrió después de
+  un `git pull`) o si hay cambios sin commitear que la otra computadora no está viendo. En modo hook sale siempre con 0: Claude
   Code solo le pasa a la sesión lo que imprime un hook que sale con 0.
 - **`guardar-secreto.ps1`**: pasarle un secreto a Claude sin chat ni TXT en el escritorio.
   Copiás el secreto y Claude corre el script con el nombre de la variable desde la carpeta del

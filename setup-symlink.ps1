@@ -199,6 +199,32 @@ $newGroup = [pscustomobject]@{
 }
 $settings.hooks.SessionStart = @($kept) + $newGroup
 
+# --- Aviso de contexto y de costo del chat (CLAUDE.md regla 3) ---
+# Corre al mandar cada mensaje y despues de cada herramienta, para que el aviso llegue tambien en
+# los turnos largos que Claude hace solo. Va en Python (~0,3 s) y no en PowerShell (~1 s por llamada).
+# Como el de arriba, se saca el registro previo y se vuelve a poner con la ruta de ESTA maquina.
+$avisoScript = Join-Path $PSScriptRoot 'hooks\aviso-contexto.py'
+$avisoCmd    = "python -I `"$avisoScript`""
+foreach ($evento in @('UserPromptSubmit', 'PostToolUse')) {
+    if (-not ($settings.hooks.PSObject.Properties.Name -contains $evento)) {
+        $settings.hooks | Add-Member -NotePropertyName $evento -NotePropertyValue @()
+    }
+    $kept = @()
+    foreach ($group in @($settings.hooks.$evento)) {
+        $refsAviso = $false
+        foreach ($h in @($group.hooks)) {
+            if ($h.command -and $h.command -match 'aviso-contexto') { $refsAviso = $true }
+        }
+        if (-not $refsAviso) { $kept += $group }
+    }
+    $settings.hooks.$evento = @($kept) + [pscustomobject]@{
+        hooks = @( [pscustomobject]@{ type = 'command'; command = $avisoCmd; timeout = 10 } )
+    }
+}
+if (-not (Get-Command python -ErrorAction SilentlyContinue)) {
+    Write-Host "AVISO: no hay Python en esta maquina: el aviso de contexto no va a correr." -ForegroundColor Yellow
+}
+
 # Conservar el historial de conversaciones ~10 anos. Por defecto Claude Code borra las
 # conversaciones de mas de 30 dias, y con ellas se fue el historial de un proyecto entero.
 $diasHistorial = 3650
@@ -231,3 +257,4 @@ $settings.permissions.deny = @(@($settings.permissions.deny) + $bloqueos | Selec
 $json = $settings | ConvertTo-Json -Depth 12
 [System.IO.File]::WriteAllText($settingsFile, $json)
 Write-Host "OK -> hook SessionStart registrado -> $checkScript" -ForegroundColor Green
+Write-Host "OK -> aviso de contexto registrado -> $avisoScript" -ForegroundColor Green

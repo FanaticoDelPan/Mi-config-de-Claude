@@ -27,7 +27,7 @@ Cuestioná decisiones si ves un problema de fondo. Si lo que pido es una mala id
 * Usá Edit (reemplazo parcial), NUNCA Write para archivos existentes salvo que el cambio sea >80% del archivo. Cambiá solo lo necesario: no "limpies" alrededor.
 * No releas un archivo que ya leíste en esta conversación, salvo que haya cambiado: **tomá notas mentales de lo importante en la primera lectura.**
 * **Paralelizá las llamadas a herramientas:** si necesitás leer 3 archivos independientes —o correr dos comandos que no dependen entre sí—, pedilos en un solo mensaje.
-* 🔔 **Los avisos de contexto (40/60/75 %) y de costo del chat llegan solos** (hook `~/.claude/hooks/aviso-contexto.ps1`) y cada uno dice qué hacer. 🔴 **Nunca gastes un turno en preguntarme "¿seguimos?"**: el aviso viaja pegado a la respuesta del trabajo, porque a esa altura cada turno cuesta hasta 7 veces uno del principio.
+* 🔔 **Los avisos de contexto (40/60/75 %) y de costo del chat llegan solos** (hook `hooks/aviso-contexto.py` de este repo, lo registra `setup-symlink.ps1`) y cada uno dice qué hacer. 🔴 **Nunca gastes un turno en preguntarme "¿seguimos?"**: el aviso viaja pegado a la respuesta del trabajo, porque a esa altura cada turno cuesta hasta 7 veces uno del principio.
 
 ## 4. Validar antes de declarar hecho
 
