@@ -208,6 +208,25 @@ if ($settings.PSObject.Properties.Name -contains 'cleanupPeriodDays') {
     $settings | Add-Member -NotePropertyName 'cleanupPeriodDays' -NotePropertyValue $diasHistorial
 }
 
+# Opus como modelo por defecto (CLAUDE.md §5: Fable no es superior y cuesta el doble).
+# Antes esto vivia solo en una maquina y en otra quedo "fable" sin que nadie lo notara.
+if ($settings.PSObject.Properties.Name -contains 'model') {
+    $settings.model = 'opus'
+} else {
+    $settings | Add-Member -NotePropertyName 'model' -NotePropertyValue 'opus'
+}
+
+# Bloquear abrir y traspasar trabajo a otro chat (CLAUDE.md §5), sumando a los
+# bloqueos que ya haya sin pisarlos.
+$bloqueos = @('mcp__ccd_session__start_session', 'mcp__ccd_session__hand_off_to_session')
+if (-not ($settings.PSObject.Properties.Name -contains 'permissions')) {
+    $settings | Add-Member -NotePropertyName 'permissions' -NotePropertyValue ([pscustomobject]@{})
+}
+if (-not ($settings.permissions.PSObject.Properties.Name -contains 'deny')) {
+    $settings.permissions | Add-Member -NotePropertyName 'deny' -NotePropertyValue @()
+}
+$settings.permissions.deny = @(@($settings.permissions.deny) + $bloqueos | Select-Object -Unique)
+
 # Escribir sin BOM (los parsers de JSON no toleran el BOM).
 $json = $settings | ConvertTo-Json -Depth 12
 [System.IO.File]::WriteAllText($settingsFile, $json)
