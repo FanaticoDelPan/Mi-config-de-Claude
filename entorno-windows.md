@@ -161,9 +161,10 @@ incluidos— y no necesita que el comando borre nada**: los falsos positivos son
   paquete `mcp` mismo, 57 MB); un servidor único compartido ahorra más pero, si se cae, deja a todos los chats sin
   mail y pide tenerlo siempre prendido. Reabrir solo si la RAM pasa a ser el freno medido.
   **Historia del consumo:** Windows no la guarda por programa. `registrar-consumo-pc.ps1` (al lado de este
-  archivo) anota cada 5 min, por tarea programada, CPU y RAM por familia (SkyOne pantallas / SkyOne resto /
-  Vision / Claude / Edge / antivirus / resto) en `%USERPROFILE%\registro-consumo-pc\`; cuesta ~3,5 s de CPU por
-  corrida (≈0,1 % de la máquina). `-Instalar -Hasta '…'` / `-Desinstalar`. Sirve igual para medir la PC nueva.
+  archivo) anota cada N min (`-Minutos`, 5 por omisión; 1 para ver picos), por tarea programada, CPU y RAM por
+  familia (SkyOne pantallas / SkyOne resto / Vision / Claude / Edge / antivirus / resto) en
+  `%USERPROFILE%\registro-consumo-pc\`; cuesta ~3,5 s de CPU por corrida (≈0,1 % de la máquina cada 5 min, ≈0,5 %
+  cada 1 min). `-Instalar -Hasta '…' [-Minutos N]` / `-Desinstalar`. Sirve igual para medir la PC nueva.
 * **El selector de esfuerzo** de la app se revierte solo a los ~6 s si se elige ANTES de abrir el chat (bug de la
   app, no de su config). Rodeo: elegirlo con el chat ya abierto.
 * **Un ayudante «placeholder» con encargo «noop»** que aparece rechazado en rojo lo lanza la app, no un chat; el
