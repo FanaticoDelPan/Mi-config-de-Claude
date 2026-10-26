@@ -20,7 +20,9 @@ incluidos— y no necesita que el comando borre nada**: los falsos positivos son
 * **Workaround general:** nunca escribir rutas absolutas literales — armarlas con `$env:ProgramFiles` /
   `$env:TEMP` / `$env:USERPROFILE`, `Join-Path`, o apoyarse en el cwd (que ya es el repo). Para llegar a
   un repo hermano: `Join-Path (Split-Path (Get-Location)) '<repo>'`. **Todo texto largo viaja por archivo**
-  (`git commit -F`, `gh --notes-file`), nunca inline. **Un script se escribe con Write y se ejecuta por su
+  (`git commit -F`, `gh --notes-file`), nunca inline; ese archivo se escribe con Write o desde Bash, **no con
+  `Out-File -Encoding utf8` de PowerShell 5.1**, que le pone BOM y el título del commit queda con un carácter
+  invisible adelante. **Un script se escribe con Write y se ejecuta por su
   ruta:** sale más barato que esquivar tokens de a uno.
 * **Lo que lo dispara (verificado):** un `*` en el mismo comando que un `Remove-Item`; un literal tipo
   `.\dist\App\*` junto a un `Remove-Item`; rutas mencionadas dentro de un here-string (un mensaje de commit
