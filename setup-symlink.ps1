@@ -236,8 +236,9 @@ if ($settings.PSObject.Properties.Name -contains 'cleanupPeriodDays') {
 
 # Opus como modelo por defecto (CLAUDE.md §5: Fable no es superior y cuesta el doble).
 # Antes esto vivia solo en una maquina y en otra quedo "fable" sin que nadie lo notara.
+# Una variante de Opus ya elegida (p. ej. "opus[1m]", la ventana de 1 millon) se respeta.
 if ($settings.PSObject.Properties.Name -contains 'model') {
-    $settings.model = 'opus'
+    if ([string]$settings.model -notlike 'opus*') { $settings.model = 'opus' }
 } else {
     $settings | Add-Member -NotePropertyName 'model' -NotePropertyValue 'opus'
 }
