@@ -236,11 +236,11 @@ if ($settings.PSObject.Properties.Name -contains 'cleanupPeriodDays') {
 
 # Opus como modelo por defecto (CLAUDE.md §5: Fable no es superior y cuesta el doble).
 # Antes esto vivia solo en una maquina y en otra quedo "fable" sin que nadie lo notara.
-# Una variante de Opus ya elegida (p. ej. "opus[1m]", la ventana de 1 millon) se respeta.
+# Va la ventana de 1 millon ("opus[1m]"), la que elige el dueno; otra variante de Opus ya puesta se respeta.
 if ($settings.PSObject.Properties.Name -contains 'model') {
-    if ([string]$settings.model -notlike 'opus*') { $settings.model = 'opus' }
+    if ([string]$settings.model -notlike 'opus*') { $settings.model = 'opus[1m]' }
 } else {
-    $settings | Add-Member -NotePropertyName 'model' -NotePropertyValue 'opus'
+    $settings | Add-Member -NotePropertyName 'model' -NotePropertyValue 'opus[1m]'
 }
 
 # Bloquear abrir y traspasar trabajo a otro chat (CLAUDE.md §5), sumando a los
