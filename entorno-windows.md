@@ -113,6 +113,10 @@ incluidos— y no necesita que el comando borre nada**: los falsos positivos son
   proceso de afuera (tarea programada, otro programa) ve la real: los dos «escriben bien» y nunca se cruzan
   (2026-10-22: una tarea programada anotaba en un archivo y Claude leía otro, sin ningún error). Datos que
   comparten Claude y algo de afuera van fuera de `AppData` (p. ej. `%USERPROFILE%\<carpeta>`).
+* **`npm audit fix --omit=dev` arregla el lockfile pero DESINSTALA las dependencias de desarrollo de
+  `node_modules`** (2026-10-26, agent-card): después lint, tipos y build fallan con `MODULE_NOT_FOUND` y se
+  leen como si el arreglo hubiera roto algo. Volver con `npm ci`. ⚠ Y si después el build de Next sigue sin
+  encontrar un módulo que `require.resolve` sí encuentra, es su caché: borrar `.next` y compilar de nuevo.
 * **Algo largo va con `run_in_background`, nunca con un `&` a mano en Bash**: ese proceso queda sin dueño en el
   acto y nadie lo puede cerrar después.
 * **Entrar a una copia aparte (`EnterWorktree`) con agentes corriendo les bloquea todos los comandos**: la sesión
