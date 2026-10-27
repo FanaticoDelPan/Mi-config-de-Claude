@@ -256,13 +256,18 @@ $settings.permissions.deny = @(@($settings.permissions.deny) + $bloqueos | Selec
 
 # Compactar solo al 60 % de la ventana (CLAUDE.md §3): por omision compacta recien al ~97 %, y con la ventana de
 # 1 millon eso es una charla carisima y un modelo que rinde peor. Debajo del 60 lo maneja Claude delegando.
+# El porcentaje (CLAUDE_AUTOCOMPACT_PCT_OVERRIDE=60) NO tiene efecto con la ventana de 1 millon: `/context` seguia
+# mostrando el colchon de 33k (compacta al ~97 %). Lo que si mueve el umbral es achicar la ventana que se usa para
+# la cuenta: 633k - 33k de colchon = compacta a los ~600k, el 60 % del millon. Se borra el porcentaje para que, si
+# una version futura lo respeta, no se multiplique con la ventana (60 % de 633k = 38 %).
 if (-not ($settings.PSObject.Properties.Name -contains 'env')) {
     $settings | Add-Member -NotePropertyName 'env' -NotePropertyValue ([pscustomobject]@{})
 }
-if ($settings.env.PSObject.Properties.Name -contains 'CLAUDE_AUTOCOMPACT_PCT_OVERRIDE') {
-    $settings.env.CLAUDE_AUTOCOMPACT_PCT_OVERRIDE = '60'
+$settings.env.PSObject.Properties.Remove('CLAUDE_AUTOCOMPACT_PCT_OVERRIDE')
+if ($settings.env.PSObject.Properties.Name -contains 'CLAUDE_CODE_AUTO_COMPACT_WINDOW') {
+    $settings.env.CLAUDE_CODE_AUTO_COMPACT_WINDOW = '633000'
 } else {
-    $settings.env | Add-Member -NotePropertyName 'CLAUDE_AUTOCOMPACT_PCT_OVERRIDE' -NotePropertyValue '60'
+    $settings.env | Add-Member -NotePropertyName 'CLAUDE_CODE_AUTO_COMPACT_WINDOW' -NotePropertyValue '633000'
 }
 
 # Escribir sin BOM (los parsers de JSON no toleran el BOM).
