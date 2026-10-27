@@ -55,11 +55,10 @@ Listo. Desde ahí, el global de esa máquina queda atado a este repo.
   git commit -m "Ajuste de instrucciones"
   git push
   ```
-- **En la otra compu**, antes de trabajar:
-  ```powershell
-  git pull
-  ```
-  El global se actualiza solo, porque apunta a este archivo. Cero copiar/pegar.
+- **En la otra compu no hay que hacer nada**: al abrir cada chat, el control de arranque
+  (`check-symlink.ps1`) trae lo nuevo solo (solo si avanza sin mezclar; si choca con algo de esa
+  máquina, avisa) y, si cambió `setup-symlink.ps1`, lo vuelve a correr. El global se actualiza
+  solo, porque apunta a este archivo. Sin internet, el chat arranca igual con lo que hay.
 
 ## Qué más sincroniza
 
@@ -81,7 +80,8 @@ Listo. Desde ahí, el global de esa máquina queda atado a este repo.
   borra a los 30 días), Opus de 1 millón como modelo por defecto, el bloqueo de abrir o traspasar chats y
   el aviso de contexto y costo (`hooks/aviso-contexto.py`, necesita Python). Lo que se agregue a
   mano en una sola máquina no viaja: va acá.
-- **Control al abrir cada sesión** (`check-symlink.ps1`, lo corre el hook): además del link y
+- **Control al abrir cada sesión** (`check-symlink.ps1`, lo corre el hook): primero trae lo
+  nuevo del repo (ver «Uso diario»); después, además del link y
   de la ruta de `entorno-windows.md`, avisa si las skills se desataron del repo, si al
   `settings.json` le falta algo de lo de arriba (señal de que el script no se corrió después de
   un `git pull`) o si hay cambios sin commitear que la otra computadora no está viendo. En modo hook sale siempre con 0: Claude

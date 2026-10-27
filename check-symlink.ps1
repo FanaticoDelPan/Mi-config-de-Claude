@@ -20,6 +20,8 @@
 #
 # Ademas controla que ~/.claude/skills este atado a la carpeta skills del repo, y que el
 # repo no tenga cambios sin commitear (la otra computadora no los ve).
+#
+# Y antes que nada TRAE lo que se subio desde la otra computadora (ver "Traer lo nuevo", abajo).
 
 param([switch]$Quiet)
 
@@ -31,6 +33,63 @@ $archivos = @('CLAUDE.md')
 $fallas   = 0
 
 function Aviso($nombre, $msg) { Write-Host "[$nombre] $msg" -ForegroundColor Yellow }
+
+# --- Traer lo nuevo del repo, antes de los controles (asi controlan lo que quedo) ---
+# Solo avanza si no hay nada que mezclar (merge --ff-only): con commits de esta maquina sin subir, o
+# un archivo tocado aca que tambien cambio alla, no toca nada y avisa. El fetch va con limite de
+# tiempo y sin pedir credenciales: sin internet el chat arranca igual, con lo que hay.
+# Si lo traido cambia setup-symlink.ps1, lo corre: traer el script sin correrlo deja a la maquina con
+# el armado viejo, y eso es lo que pasaba con el pull a mano.
+function Fetch-ConLimite([int]$segundos) {
+    $psi = New-Object System.Diagnostics.ProcessStartInfo 'git'
+    $psi.Arguments = "-C `"$PSScriptRoot`" fetch --quiet"
+    $psi.UseShellExecute = $false
+    $psi.CreateNoWindow = $true
+    $psi.RedirectStandardOutput = $true
+    $psi.RedirectStandardError = $true
+    $psi.EnvironmentVariables['GIT_TERMINAL_PROMPT'] = '0'
+    $psi.EnvironmentVariables['GCM_INTERACTIVE'] = 'never'
+    $p = [System.Diagnostics.Process]::Start($psi)
+    $null = $p.StandardOutput.ReadToEndAsync(); $null = $p.StandardError.ReadToEndAsync()
+    if (-not $p.WaitForExit($segundos * 1000)) { try { $p.Kill() } catch { }; return $false }
+    return ($p.ExitCode -eq 0)
+}
+
+if (Get-Command git -ErrorAction SilentlyContinue) {
+    $null = & git -C $PSScriptRoot rev-parse --abbrev-ref '@{u}' 2>$null
+    if ($LASTEXITCODE -eq 0) {
+        if (-not (Fetch-ConLimite 15)) {
+            Aviso 'repo' 'No se pudo ver si Mi-config-de-Claude tiene cambios nuevos (sin conexion o GitHub no contesto): sigo con lo que hay.'
+        } else {
+            $atras = [int](& git -C $PSScriptRoot rev-list --count 'HEAD..@{u}' 2>$null)
+            if ($atras -gt 0) {
+                $cambiados = @(& git -C $PSScriptRoot diff --name-only HEAD '@{u}' 2>$null)
+                $null = & git -C $PSScriptRoot merge --ff-only --quiet '@{u}' 2>&1
+                if ($LASTEXITCODE -ne 0) {
+                    # Otro chat que arranco a la vez pudo haberlo traido ya (el lock de git hace fallar al segundo).
+                    if ([int](& git -C $PSScriptRoot rev-list --count 'HEAD..@{u}' 2>$null) -gt 0) {
+                        Aviso 'repo' "Mi-config-de-Claude tiene $atras cambio(s) de la otra computadora que no se pudieron traer solos (chocan con commits o cambios de esta maquina). Juntalos y subilos (no hace falta preguntar)."
+                        $fallas++
+                    }
+                } else {
+                    Write-Host "[repo] Mi-config-de-Claude: se trajeron $atras cambio(s) de la otra computadora."
+                    if ($cambiados -contains 'setup-symlink.ps1') {
+                        try {
+                            $null = & (Join-Path $PSScriptRoot 'setup-symlink.ps1') *>&1
+                            Write-Host '[repo] Cambio el armado de la maquina: se volvio a correr setup-symlink.ps1.'
+                        } catch {
+                            Aviso 'repo' "Cambio el armado de la maquina y setup-symlink.ps1 fallo al correrlo solo ($($_.Exception.Message)). Correlo a mano."
+                            $fallas++
+                        }
+                    }
+                    if ($cambiados -contains 'CLAUDE.md') {
+                        Write-Host '[repo] Cambio el CLAUDE.md global: este chat pudo arrancar con la version anterior; releelo antes de seguir.'
+                    }
+                }
+            }
+        }
+    }
+}
 
 foreach ($nombre in $archivos) {
     $globalFile = Join-Path $env:USERPROFILE (Join-Path '.claude' $nombre)
