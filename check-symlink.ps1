@@ -162,7 +162,7 @@ $settingsFile = Join-Path $env:USERPROFILE (Join-Path '.claude' 'settings.json')
 $faltan = @()
 try {
     $s = Get-Content -LiteralPath $settingsFile -Raw -Encoding UTF8 | ConvertFrom-Json
-    if ($s.model -ne 'opus') { $faltan += "modelo por defecto en '$($s.model)', no en opus" }
+    if ([string]$s.model -notlike 'opus*') { $faltan += "modelo por defecto en '$($s.model)', no en opus" }
     foreach ($t in @('mcp__ccd_session__start_session', 'mcp__ccd_session__hand_off_to_session')) {
         if (@($s.permissions.deny) -notcontains $t) { $faltan += 'el bloqueo de abrir o traspasar chats' ; break }
     }

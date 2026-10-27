@@ -78,7 +78,7 @@ Listo. Desde ahí, el global de esa máquina queda atado a este repo.
 - **Ajustes de `settings.json`**: el archivo NO se versiona entero (Claude Code lo reescribe
   solo y tiene cosas propias de cada máquina). `setup-symlink.ps1` le agrega lo común: el hook
   de control, `cleanupPeriodDays` (historial de conversaciones por ~10 años; por defecto se
-  borra a los 30 días), Opus como modelo por defecto, el bloqueo de abrir o traspasar chats y
+  borra a los 30 días), Opus de 1 millón como modelo por defecto, el bloqueo de abrir o traspasar chats y
   el aviso de contexto y costo (`hooks/aviso-contexto.py`, necesita Python). Lo que se agregue a
   mano en una sola máquina no viaja: va acá.
 - **Control al abrir cada sesión** (`check-symlink.ps1`, lo corre el hook): además del link y

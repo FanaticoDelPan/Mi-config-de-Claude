@@ -12,14 +12,16 @@ propio registro, para poder probar que no pesa.
 
 Uso:
   registrar-consumo-pc.ps1                 -> anota una fila (lo que corre la tarea programada)
-  registrar-consumo-pc.ps1 -Instalar [-Hasta 'AAAA-MM-DD HH:mm']  -> programa la tarea cada 5 min
+  registrar-consumo-pc.ps1 -Instalar [-Hasta 'AAAA-MM-DD HH:mm'] [-Minutos N]  -> programa la tarea cada N min (5)
+  Cada corrida cuesta ~3,5 s de CPU: cada 5 min ≈ 0,1 % de la máquina, cada 1 min ≈ 0,5 %.
   registrar-consumo-pc.ps1 -Desinstalar    -> borra la tarea (los CSV quedan)
 Datos: %USERPROFILE%\registro-consumo-pc\consumo-AAAA-MM-DD.csv
 #>
 param(
     [switch]$Instalar,
     [switch]$Desinstalar,
-    [string]$Hasta = ''
+    [string]$Hasta = '',
+    [ValidateRange(1, 20)][int]$Minutos = 5
 )
 
 $ErrorActionPreference = 'Stop'
@@ -41,20 +43,20 @@ if ($Desinstalar) {
 }
 
 if ($Instalar) {
-    # El .vbs de al lado lo lanza SIN ventana (no parpadea cada 5 minutos); la sesión S4U, que tampoco abre
+    # El .vbs de al lado lo lanza SIN ventana (no parpadea en cada corrida); la sesión S4U, que tampoco abre
     # ventana, pide administrador.
     $wscript = Join-Path $env:SystemRoot 'System32\wscript.exe'
     $vbs = [IO.Path]::ChangeExtension($PSCommandPath, '.vbs')
     $accion = New-ScheduledTaskAction -Execute $wscript -Argument "//B //Nologo `"$vbs`""
     $inicio = (Get-Date).AddMinutes(1)
     $fin = if ($Hasta) { [datetime]::ParseExact($Hasta, 'yyyy-MM-dd HH:mm', $null) } else { $inicio.AddDays(2) }
-    $disparo = New-ScheduledTaskTrigger -Once -At $inicio -RepetitionInterval (New-TimeSpan -Minutes 5) `
+    $disparo = New-ScheduledTaskTrigger -Once -At $inicio -RepetitionInterval (New-TimeSpan -Minutes $Minutos) `
         -RepetitionDuration ($fin - $inicio)
     $ajustes = New-ScheduledTaskSettingsSet -AllowStartIfOnBatteries -DontStopIfGoingOnBatteries `
         -MultipleInstances IgnoreNew -ExecutionTimeLimit (New-TimeSpan -Minutes 2) -Priority 7 -StartWhenAvailable
     Register-ScheduledTask -TaskName $nombreTarea -Action $accion -Trigger $disparo -Settings $ajustes `
-        -Description 'Anota cada 5 min el consumo de la PC por familia de programas (registrar-consumo-pc.ps1).' -Force | Out-Null
-    "Tarea '$nombreTarea' programada cada 5 min, hasta $($fin.ToString('dd/MM/yyyy HH:mm')). Datos en $carpeta"
+        -Description "Anota cada $Minutos min el consumo de la PC por familia de programas (registrar-consumo-pc.ps1)." -Force | Out-Null
+    "Tarea '$nombreTarea' programada cada $Minutos min, hasta $($fin.ToString('dd/MM/yyyy HH:mm')). Datos en $carpeta"
     return
 }
 
