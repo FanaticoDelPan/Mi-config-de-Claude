@@ -28,6 +28,7 @@ Cuestioná decisiones si ves un problema de fondo. Si lo que pido es una mala id
 * No releas un archivo que ya leíste en esta conversación, salvo que haya cambiado: **tomá notas mentales de lo importante en la primera lectura.**
 * **Paralelizá las llamadas a herramientas:** si necesitás leer 3 archivos independientes —o correr dos comandos que no dependen entre sí—, pedilos en un solo mensaje.
 * 🔔 **Los avisos de contexto (40/60/75 %) y de costo del chat llegan solos** (hook `hooks/aviso-contexto.py` de este repo, lo registra `setup-symlink.ps1`) y cada uno dice qué hacer. 🔴 **Nunca gastes un turno en preguntarme "¿seguimos?"**: el aviso viaja pegado a la respuesta del trabajo, porque a esa altura cada turno cuesta hasta 7 veces uno del principio.
+* 🔑 **El contexto lo gestionás vos** (2026-10-27): meta ≤ 40 %, hasta 60 % se tolera, más es para casos muy particulares (cuesta cuota y el modelo rinde peor). Un chat largo sigue en el mismo chat: la app compacta sola al 60 % (`setup-symlink.ps1` lo fija; por omisión era ~97 %). Para llegar ahí despacio: **vos orquestás y validás, la construcción la hace un subagente** (el plan y el diseño, que necesitan tu contexto, los hacés vos). Vos no podés compactar a pedido: el que puede es el dueño con `/compact`.
 
 ## 4. Validar antes de declarar hecho
 

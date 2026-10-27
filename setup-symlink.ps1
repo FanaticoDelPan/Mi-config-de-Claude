@@ -254,6 +254,17 @@ if (-not ($settings.permissions.PSObject.Properties.Name -contains 'deny')) {
 }
 $settings.permissions.deny = @(@($settings.permissions.deny) + $bloqueos | Select-Object -Unique)
 
+# Compactar solo al 60 % de la ventana (CLAUDE.md §3): por omision compacta recien al ~97 %, y con la ventana de
+# 1 millon eso es una charla carisima y un modelo que rinde peor. Debajo del 60 lo maneja Claude delegando.
+if (-not ($settings.PSObject.Properties.Name -contains 'env')) {
+    $settings | Add-Member -NotePropertyName 'env' -NotePropertyValue ([pscustomobject]@{})
+}
+if ($settings.env.PSObject.Properties.Name -contains 'CLAUDE_AUTOCOMPACT_PCT_OVERRIDE') {
+    $settings.env.CLAUDE_AUTOCOMPACT_PCT_OVERRIDE = '60'
+} else {
+    $settings.env | Add-Member -NotePropertyName 'CLAUDE_AUTOCOMPACT_PCT_OVERRIDE' -NotePropertyValue '60'
+}
+
 # Escribir sin BOM (los parsers de JSON no toleran el BOM).
 $json = $settings | ConvertTo-Json -Depth 12
 [System.IO.File]::WriteAllText($settingsFile, $json)
