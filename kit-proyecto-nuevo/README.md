@@ -52,8 +52,10 @@ El kit no se copia entero sobre un repo vivo. Lo que sí se aplica, con su gatil
   Es lo primero: un `CLAUDE.md` de 40-60 KB se paga en cada chat.
 - **El estado vive en prosa** (pendientes, avances en docs) → a tickets, y se borra de la prosa.
 - **El cierre de chat usa subagentes o tarda más de 2-3 turnos** → el §12 del global, o `skills/cerrar-chat`.
-- **El chequeo de gatillos** entra a cualquier repo vivo: en la primera corrida avisa todo lo que ya se cumplió,
-  y cada aviso se resuelve una vez (adoptar, ticket, o «no» con motivo en `docs/gatillos.json`).
+- **El chequeo de gatillos** entra a cualquier repo vivo, con `escalar-el-arnes.md` a su `docs/` (es su lista).
+  Si el repo ya tenía su propia lista de piezas faltantes, esa lista apunta a la del kit para lo genérico y se
+  queda solo con lo suyo. En la primera corrida avisa todo lo que ya se cumplió, y cada aviso se resuelve una
+  vez en `docs/gatillos.json`.
 - El resto, solo cuando su gatillo de `escalar-el-arnes.md` se cumple en ese repo.
 
 ## Los archivos

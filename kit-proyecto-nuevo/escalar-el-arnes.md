@@ -6,7 +6,10 @@
 >
 > 🔔 **Los gatillos que se pueden contar mirando el repo los vigila `chequear_gatillos.py`** (va a `scripts/`
 > con su test; corre en el pre-commit como aviso y en la CI con `--estricto`). Cuando uno se cumple, lo nombra
-> hasta que haya una decisión en `docs/gatillos.json`: adoptada, un ticket, o «no» con su motivo. La llave es
+> hasta que haya una decisión en `docs/gatillos.json`: adoptada, un ticket, o «no» con su motivo (un repo que
+> lleva lo pendiente en un archivo y no en tickets declara «pendiente: <archivo>», y ese archivo tiene que
+> nombrar el gatillo). «Algo publicado» lo ve por etiquetas, por un workflow de publicar, o por un proyecto
+> atado a una plataforma o un paquete que se publica desde la máquina. La llave es
 > el nombre en negrita de la fila: **renombrar una fila es cambiar el chequeo en el mismo commit**, y su test
 > lo verifica. Los demás gatillos siguen dependiendo de que alguien los vea.
 

@@ -16,6 +16,7 @@ import unittest
 from pathlib import Path
 
 AQUI = Path(__file__).resolve().parent
+sys.dont_write_bytecode = True  # importar el chequeo no deja un __pycache__ en el repo del proyecto
 _spec = importlib.util.spec_from_file_location("chequear_gatillos", AQUI / "chequear_gatillos.py")
 cg = importlib.util.module_from_spec(_spec)
 _spec.loader.exec_module(cg)
@@ -26,6 +27,7 @@ FECHA = "20" + "26-01-15"
 
 class RepoDescartable(unittest.TestCase):
     def setUp(self):
+        cg._todos.cache_clear()  # cada test cambia archivos: la lista no se reusa entre corridas
         self._tmp = tempfile.TemporaryDirectory()
         self.raiz = Path(self._tmp.name)
         filas = "\n".join(f"| **{n}** | gatillo | pieza |" for n in cg.GATILLOS)
@@ -40,6 +42,7 @@ class RepoDescartable(unittest.TestCase):
         ruta.write_text(texto, encoding="utf-8")
 
     def avisados(self):
+        cg._todos.cache_clear()
         avisos, desajustes, errores, _ = cg.chequear(self.raiz)
         self.assertEqual(desajustes, [])
         self.assertEqual(errores, [])
@@ -64,6 +67,17 @@ class RepoDescartable(unittest.TestCase):
             self.escribir("docs/gatillos.json", json.dumps({"Prosa repetida": valor}))
             self.assertTrue(cg.chequear(self.raiz)[2], f"aceptó el valor {valor!r}")
 
+    def test_pendiente_vale_mientras_la_lista_lo_nombre(self):
+        for i in range(9):
+            self.escribir(f"docs/doc{i}.md", "texto")
+        decl = {"Prosa repetida": "pendiente: docs/pendientes.md",
+                "Validador de enlaces internos": "pendiente: docs/pendientes.md"}
+        self.escribir("docs/gatillos.json", json.dumps(decl))
+        self.escribir("docs/pendientes.md", "- Prosa repetida: falta el control\n")
+        errores = cg.chequear(self.raiz)[2]
+        self.assertEqual(len(errores), 1, errores)
+        self.assertIn("Validador de enlaces internos", errores[0])
+
     def test_declarar_un_gatillo_que_no_existe_frena(self):
         self.escribir("docs/gatillos.json", json.dumps({"Gatillo viejo": "adoptada"}))
         self.assertTrue(cg.chequear(self.raiz)[2])
@@ -86,7 +100,18 @@ class RepoDescartable(unittest.TestCase):
     def test_carpetas_ajenas_no_cuentan(self):
         self.escribir("node_modules/x/a.js", f"// {FECHA}\n")
         self.escribir(".worktrees/otra/src/a.py", f"# {FECHA}\n")
+        self.escribir(".claude/worktrees/otra/src/a.py", f"# {FECHA}\n")
         self.assertEqual(self.avisados(), set())
+
+    def test_en_un_repo_lo_ignorado_por_git_no_cuenta(self):
+        git = ["git", "-C", str(self.raiz)]
+        subprocess.run(git + ["init", "-q"], check=True, env=cg.git_sin_herencia())
+        self.escribir(".gitignore", "salida-del-build/\n")
+        self.escribir("salida-del-build/chunk.js", f"// {FECHA}\n")
+        self.assertEqual(self.avisados(), set())
+        cg._todos.cache_clear()
+        self.escribir("src/a.js", f"// {FECHA}\n")  # sin commitear todavía: igual es del proyecto
+        self.assertEqual(self.avisados(), {"Sin fechas ni autores en el código y los docs"})
 
     def test_migracion_destructiva(self):
         self.escribir("alembic/versions/0003_x.py", "def upgrade():\n    op.add_column('t', c)\n")
@@ -106,6 +131,16 @@ class RepoDescartable(unittest.TestCase):
         self.assertEqual(self.avisados(), set())
         self.escribir(".env.example", "DATABASE_URL=\nERP_API_KEY=\n")
         self.assertEqual(self.avisados(), {"Método para conectar sistemas de otros"})
+
+    def test_publicado_desde_la_maquina(self):
+        publicado = {"Guarda de rama", "Revisor adversarial antes de publicar"}
+        self.escribir("package.json", json.dumps({"name": "app", "private": True, "bin": {"x": "x.js"}}))
+        self.assertEqual(self.avisados(), set())
+        self.escribir("mcp/package.json", json.dumps({"name": "@alguien/x", "publishConfig": {"access": "public"}}))
+        self.assertEqual(self.avisados(), publicado)
+        (self.raiz / "mcp" / "package.json").unlink()
+        self.escribir(".vercel/project.json", "{}")
+        self.assertEqual(self.avisados(), publicado)
 
     def test_publicaciones_por_etiquetas(self):
         # Sin las GIT_* heredadas: corriendo adentro de un pre-commit, este git operaría sobre el repo real.

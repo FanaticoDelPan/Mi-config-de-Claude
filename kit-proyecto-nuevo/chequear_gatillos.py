@@ -11,10 +11,14 @@ Es un AVISO (patrones-de-control.md §Duro vs. aviso): un gatillo cumplido no fr
     python -I scripts/chequear_gatillos.py --estricto   # en la CI: si se rompe o el documento cambió, falla
 
 docs/gatillos.json, un valor por gatillo cumplido:
-    {"Prosa repetida": "adoptada", "Guarda de rama": "#12", "Piso de rollback": "no: la base es de solo lectura"}
+    {"Prosa repetida": "adoptada", "Guarda de rama": "#12", "Piso de rollback": "no: la base es de solo lectura",
+     "Validador de enlaces internos": "pendiente: docs/pendientes.md"}
+«pendiente: <archivo>» es para el proyecto que lleva lo pendiente en un archivo y no en tickets: vale mientras
+ese archivo nombre el gatillo tal cual.
 """
 
 import argparse
+import functools
 import json
 import os
 import re
@@ -24,8 +28,9 @@ from pathlib import Path
 
 DOC = Path("docs") / "escalar-el-arnes.md"
 DECLARACION = Path("docs") / "gatillos.json"
-VALOR_VALIDO = re.compile(r"^(adoptada|#\d+|no: .{10,})$")
-SALTEAR = {".git", "node_modules", ".venv", "venv", "dist", "build", "__pycache__", ".worktrees", ".mypy_cache"}
+VALOR_VALIDO = re.compile(r"^(adoptada|#\d+|no: .{10,}|pendiente: \S+)$")
+SALTEAR = {".git", "node_modules", ".venv", "venv", "dist", "build", "__pycache__", ".worktrees", ".mypy_cache",
+           ".next", "worktrees"}
 CODIGO = {".py", ".js", ".jsx", ".ts", ".tsx", ".mjs", ".cs", ".go", ".rs", ".java", ".rb", ".php", ".sql",
           ".sh", ".ps1", ".kt", ".swift", ".vue", ".svelte"}
 FECHA_EN_COMENTARIO = re.compile(r"(#|//|/\*|^\s*\*|--)\s.*\b20\d\d-[01]\d-[0-3]\d\b")
@@ -37,13 +42,26 @@ INFRA_PROPIA = {"DATABASE", "DB", "POSTGRES", "PG", "MYSQL", "REDIS", "SUPABASE"
                 "APP", "AUTH", "NEXTAUTH", "JWT", "CSRF", "SITE", "BASE"}
 
 
-def _archivos(raiz, sufijos):
+@functools.lru_cache(maxsize=None)
+def _todos(raiz):
+    """Los archivos del proyecto: los que git no ignora (así no entran la salida de un build ni lo generado), o,
+    fuera de un repo, un recorrido que poda lo conocido."""
+    r = subprocess.run(["git", "-C", str(raiz), "ls-files", "-z", "--cached", "--others", "--exclude-standard"],
+                       capture_output=True, text=True, encoding="utf-8", env=git_sin_herencia())
+    if r.returncode == 0:
+        return tuple(raiz / p for p in r.stdout.split("\0") if p and not SALTEAR.intersection(Path(p).parts))
+    rutas = []
     # os.walk podando, no rglob filtrando: rglob recorre node_modules entero antes de descartarlo (5 s contra 0,7).
     for carpeta, subcarpetas, nombres in os.walk(raiz):
         subcarpetas[:] = [s for s in subcarpetas if s not in SALTEAR]
-        for nombre in nombres:
-            if Path(nombre).suffix.lower() in sufijos:
-                yield Path(carpeta) / nombre
+        rutas.extend(Path(carpeta) / n for n in nombres)
+    return tuple(rutas)
+
+
+def _archivos(raiz, sufijos):
+    for ruta in _todos(raiz):
+        if ruta.suffix.lower() in sufijos and ruta.is_file():
+            yield ruta
 
 
 def _leer(ruta):
@@ -70,6 +88,14 @@ def _etiquetas(raiz):
     return [t for t in r.stdout.split() if t] if r.returncode == 0 else []
 
 
+def _paquete_publicable(ruta):
+    try:
+        datos = json.loads(_leer(ruta) or "{}")
+    except json.JSONDecodeError:
+        return False
+    return "publishConfig" in datos or ("bin" in datos and not datos.get("private"))
+
+
 def _algo_publicado(raiz):
     etiquetas = _etiquetas(raiz)
     if etiquetas:
@@ -79,6 +105,13 @@ def _algo_publicado(raiz):
         for f in flujos.iterdir():
             if re.search(r"publi|release|deploy|despleg", f.name, re.IGNORECASE):
                 return f"hay un workflow de publicar ({f.name})"
+    # Se publica desde la máquina, sin etiquetas ni workflow: un proyecto atado a una plataforma, o un paquete.
+    for marca in (".vercel/project.json", "vercel.json", "netlify.toml", "fly.toml", "render.yaml", "Procfile"):
+        if (raiz / marca).is_file():
+            return f"está atado a una plataforma de publicación ({marca})"
+    for ruta in [raiz / "package.json", *raiz.glob("*/package.json")]:
+        if ruta.is_file() and _paquete_publicable(ruta):
+            return f"hay un paquete que se publica ({ruta.relative_to(raiz).as_posix()})"
     return None
 
 
@@ -180,7 +213,15 @@ def chequear(raiz):
             if nombre not in GATILLOS:
                 errores.append(f"{DECLARACION.as_posix()} declara «{nombre}», que no es un gatillo medido: borrarlo")
             elif not isinstance(valor, str) or not VALOR_VALIDO.match(valor):
-                errores.append(f"«{nombre}»: el valor tiene que ser \"adoptada\", \"#N\" o \"no: <motivo>\"")
+                errores.append(f"«{nombre}»: el valor tiene que ser \"adoptada\", \"#N\", \"no: <motivo>\" "
+                               "o \"pendiente: <archivo>\"")
+            elif valor.startswith("pendiente: "):
+                # Un proyecto sin tickets lleva lo pendiente en un archivo: ese archivo tiene que nombrar el
+                # gatillo, o la declaración apunta a la nada (alguien lo borró de la lista sin resolverlo).
+                lista = raiz / valor.split(": ", 1)[1]
+                if nombre not in _leer(lista):
+                    errores.append(f"«{nombre}» se declaró pendiente en {lista.relative_to(raiz).as_posix()}, "
+                                   "y ese archivo no lo nombra: o volvió a la lista, o se resolvió y se declara")
 
     for nombre, medir in GATILLOS.items():
         if nombre not in declarado:
@@ -209,7 +250,7 @@ def main(argv=None):
     for a in avisos:
         print(f"  - {a}")
     if avisos:
-        print(f"  Decidir cada uno: adoptarlo, abrir su ticket o declararlo en {DECLARACION.as_posix()}.")
+        print(f"  Decidir cada uno en {DECLARACION.as_posix()}: adoptada, su ticket, o «no» con motivo.")
     for d in desajustes:
         print(f"{'ERROR' if args.estricto else 'AVISO'}: {d}")
     for e in errores:

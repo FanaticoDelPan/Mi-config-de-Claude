@@ -35,5 +35,5 @@ description: Commitear y pushear sin las trampas de git en Windows. Usar SIEMPRE
    `--rebase` ni `--autostash`** con trabajo de otro chat en el disco.
 4. Verificar que el push reportó la rama, y borrar el archivo del mensaje.
 5. **Si el pre-commit avisó gatillos cumplidos sin decisión** (`chequear_gatillos.py`): adoptar, abrir el ticket
-   o declarar «no» con motivo en `docs/gatillos.json`, en ese mismo trabajo, y decírselo al dueño en una línea
+   o declarar «no» con motivo en `docs/gatillos.json` (los formatos, en el encabezado del script), en ese mismo trabajo, y decírselo al dueño en una línea
    y en lenguaje de negocio. Un aviso que se deja pasar commit tras commit entrena a no leerlo.
