@@ -196,5 +196,9 @@ con 0-1 defecto real, y las pantallas de lo tocado se llevaron ~5,6 h de PC en 9
 - **Dónde llega una regla, de más fuerte a más débil:** un freno · un aviso automático en el momento · el
   mensaje del propio control cuando falla · una guía que se carga sola al tocar el área · el docstring. La
   prosa que nadie abre está debajo de todo.
+- **Un test que arma un repo descartable y corre adentro de un hook de git tiene que borrar las variables
+  `GIT_*` del entorno de cada `git` que lance.** Git las fija para el hook, y un `git -C <carpeta temporal>`
+  termina commiteando o etiquetando en el repo real. Lo cazó el propio pre-commit del kit la primera vez que
+  corrió el test del chequeo de gatillos.
 - **El texto que un freno reemplaza se borra en el mismo commit** (en el origen, el commit que sumó unos
   pocos frenos borró ~130 renglones de instrucciones).

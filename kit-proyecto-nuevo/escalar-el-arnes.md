@@ -3,6 +3,12 @@
 > **Qué contesta:** qué piezas de control y de proceso se suman a un repo DESPUÉS del día 1, y cuándo. Existe
 > para que no se copie todo de entrada: el arnés maduro en un repo con cero usuarios no protege nada, compite
 > por el contexto con el trabajo real y se abandona. **Hasta que el gatillo no se cumple, la pieza no se escribe.**
+>
+> 🔔 **Los gatillos que se pueden contar mirando el repo los vigila `chequear_gatillos.py`** (va a `scripts/`
+> con su test; corre en el pre-commit como aviso y en la CI con `--estricto`). Cuando uno se cumple, lo nombra
+> hasta que haya una decisión en `docs/gatillos.json`: adoptada, un ticket, o «no» con su motivo. La llave es
+> el nombre en negrita de la fila: **renombrar una fila es cambiar el chequeo en el mismo commit**, y su test
+> lo verifica. Los demás gatillos siguen dependiendo de que alguien los vea.
 
 ## Proceso de trabajo con varios chats
 
@@ -45,6 +51,7 @@
 | **Interfaz declarada + descubrimiento automático** | …hay un **tercero** escribiendo piezas | Un `Protocol` mínimo y un `discover()` con cada carga en su `try`. Antes alcanza la carga defensiva por ítem y una **clave estable** por pieza. ⚠ Para la superficie sensible, lista explícita, nunca descubrimiento. |
 | **Autorización por (usuario, componente)** | …va a haber embeds, plugins o integraciones de terceros | 🔴 **La decisión se toma el día 1 aunque la respuesta sea «nunca» — y se escribe.** Agregar el segundo eje después obliga a auditar cada llamada existente. |
 | **Aislar en marcos separados** | …embebés contenido que **no escribiste vos** | Nunca para tus propias pantallas. La identidad de quien manda un mensaje entre ventanas se prueba por la **referencia** de la ventana, jamás por el texto del origen (un marco aislado tiene origen `null`). |
+| **Método para conectar sistemas de otros** | …el proyecto se conecta por primera vez a un sistema que no es suyo (un ERP, un programa instalado, una casilla, la base de un cliente) | `conectar-herramientas.md` a `docs/`: investigar en la documentación del fabricante con fecha, la vía menos peligrosa, solo lectura de entrada, nunca escribir en la base de un programa instalado, y una prueba que demuestra que escribir falla por permiso. |
 | **Novedades acumuladas por persona** | …el producto se **instala** y alguien puede saltearse versiones | Desde el día 1 y gratis: la carpeta de renglones pendientes de publicar. |
 | **Piso de rollback** | …la **primera** migración destructiva de verdad | Escribir cuál es la versión más vieja a la que se puede volver, y que el botón de rollback lea ese dato. |
 | **Ley de dónde vive cada hecho, extendida** | …hay más de ~10 documentos, **y solo con un control** | La semilla ya trae los cinco destinos. La tabla de dueños por tema sin control ya se demostró insuficiente. |

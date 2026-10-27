@@ -38,6 +38,11 @@ frena si se cuela un nombre de producto, persona o cliente en el kit, o si el `C
 6. `ci-ejemplo.yml` → `.github/workflows/ci.yml`, adaptado al stack.
 7. `patrones-de-control.md` y `checklist-pantalla.md` → a `docs/`, citados desde el `CLAUDE.md`.
 8. `escalar-el-arnes.md` y `lo-que-no-se-lleva.md` → a `docs/`: son la lista de lo que **todavía no** se hace.
+9. `chequear_gatillos.py` y `test_chequear_gatillos.py` → a `scripts/`, enganchados al pre-commit (aviso) y a
+   la CI (el test, y el chequeo con `--estricto`; `ci-ejemplo.yml` ya trae los dos pasos). Es lo que avisa
+   cuando un gatillo de `escalar-el-arnes.md` se cumple.
+10. `conectar-herramientas.md` → a `docs/` **recién cuando el proyecto se conecta a un sistema que no es suyo**
+    (el chequeo de gatillos lo avisa si aparece una credencial externa).
 
 ## En un repo que ya existe
 
@@ -47,6 +52,8 @@ El kit no se copia entero sobre un repo vivo. Lo que sí se aplica, con su gatil
   Es lo primero: un `CLAUDE.md` de 40-60 KB se paga en cada chat.
 - **El estado vive en prosa** (pendientes, avances en docs) → a tickets, y se borra de la prosa.
 - **El cierre de chat usa subagentes o tarda más de 2-3 turnos** → el §12 del global, o `skills/cerrar-chat`.
+- **El chequeo de gatillos** entra a cualquier repo vivo: en la primera corrida avisa todo lo que ya se cumplió,
+  y cada aviso se resuelve una vez (adoptar, ticket, o «no» con motivo en `docs/gatillos.json`).
 - El resto, solo cuando su gatillo de `escalar-el-arnes.md` se cumple en ese repo.
 
 ## Los archivos
@@ -62,6 +69,8 @@ El kit no se copia entero sobre un repo vivo. Lo que sí se aplica, con su gatil
 | [`ci-ejemplo.yml`](ci-ejemplo.yml) | El pipeline mínimo del primer commit. |
 | [`skills/`](skills/) | `cerrar-chat` (liviano, sin subagentes) y `commitear` (solo lo del chat), como plantillas. |
 | [`escalar-el-arnes.md`](escalar-el-arnes.md) | Qué se agrega **después**, con el gatillo concreto. Existe para que no se copie todo el día 1. |
+| [`chequear_gatillos.py`](chequear_gatillos.py) | Avisa los gatillos de `escalar-el-arnes.md` que ya se cumplieron sin decisión. Su test fabrica cada señal y verifica que la siga cazando. |
+| [`conectar-herramientas.md`](conectar-herramientas.md) | Cómo se conecta a un sistema de otro: la vía menos peligrosa, solo lectura de entrada, y una prueba que demuestra que escribir falla por permiso. |
 | [`lo-que-no-se-lleva.md`](lo-que-no-se-lleva.md) | Lo que funcionó (o se probó y se revirtió) en el origen y NO se copia, y las ideas de fondo. |
 
 ## Cómo se actualiza

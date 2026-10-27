@@ -33,6 +33,8 @@ jobs:
       - run: uv run ruff check .
       - run: uv run ruff format --check .
       - run: uv run mypy --strict src/   # empezar estricto: endurecer sobre 50k líneas no se hace nunca
+      - run: uv run python -I scripts/test_chequear_gatillos.py          # el chequeo todavía caza cada señal
+      - run: uv run python -I scripts/chequear_gatillos.py --estricto    # avisa; frena solo si se rompió
       - uses: gitleaks/gitleaks-action@v2 # secretos: el escáner, no la convención
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

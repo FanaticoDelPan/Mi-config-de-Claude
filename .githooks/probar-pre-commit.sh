@@ -1,5 +1,5 @@
 #!/bin/sh
-# Prueba de mutacion del pre-commit: le mete las dos violaciones en un repo descartable y
+# Prueba de mutacion del pre-commit: le mete las violaciones en un repo descartable y
 # verifica que TODAVIA las caza, y que un estado limpio pasa. Si esto falla, el control puede
 # estar en verde sin revisar nada. Uso: sh .githooks/probar-pre-commit.sh
 
@@ -24,5 +24,12 @@ caso 1 "un nombre de producto en el kit frena"
 echo "texto neutro" > kit-proyecto-nuevo/a.md
 head -c 23000 /dev/zero | tr '\0' 'x' > CLAUDE.md
 caso 1 "CLAUDE.md por encima del tope frena"
+
+echo "chico" > CLAUDE.md
+echo "import sys; sys.exit(1)" > kit-proyecto-nuevo/test_chequear_gatillos.py
+caso 1 "el test del chequeo de gatillos en rojo frena"
+
+echo "import sys; sys.exit(0)" > kit-proyecto-nuevo/test_chequear_gatillos.py
+caso 0 "el test del chequeo de gatillos en verde pasa"
 
 exit $mal
