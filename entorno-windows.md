@@ -171,6 +171,17 @@ incluidos— y no necesita que el comando borre nada**: los falsos positivos son
   cada 1 min). `-Instalar -Hasta '…' [-Minutos N]` / `-Desinstalar`. Sirve igual para medir la PC nueva.
 * **El selector de esfuerzo** de la app se revierte solo a los ~6 s si se elige ANTES de abrir el chat (bug de la
   app, no de su config). Rodeo: elegirlo con el chat ya abierto.
+* **Abrir chats NUEVOS desde el teléfono en esta PC (2026-10-27, armado en Ocaso):** la app de escritorio no
+  lo hace sola (Remote Control de la app solo continúa un chat ya abierto; Dispatch vive en Cowork y está en beta
+  limitada). La vía es `claude remote-control` (modo servidor) en una ventana de PowerShell propia, dentro del
+  repo: es el mismo motor de Claude Code (CLAUDE.md, permisos, hooks, memoria), sin el navegador del panel ni la
+  lista de tareas de la app. Dos trampas: **(1)** el usuario de Windows tiene `ANTHROPIC_API_KEY` guardada
+  (alcance User, `sk-ant-…`); con ella cargada Remote Control no arranca y cualquier `claude` de terminal podría
+  facturar por API. Se vacía solo en esa ventana (`$env:ANTHROPIC_API_KEY = ''`); no se borró, el dueño no
+  confirmó todavía si la usa. **(2)** El login de la terminal es aparte del de la app y vence: `claude` → `/login`
+  (cuenta con suscripción) → `/exit`. Sin `origin/HEAD` local los chats remotos van a una rama inventada:
+  `git remote set-head origin -a`. Plantilla: `Ocaso/herramientas/remoto.ps1`. Cerrar la ventana NO frena el
+  proceso: queda de fondo (buscar `claude.exe remote-control` y frenarlo).
 * **Un ayudante «placeholder» con encargo «noop»** que aparece rechazado en rojo lo lanza la app, no un chat; el
   rojo es el bloqueo por precaución cuando el control de seguridad no contesta. Solo se reporta a Anthropic si
   pasa seguido.
