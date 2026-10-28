@@ -25,13 +25,14 @@ from collections import defaultdict
 from datetime import date, datetime, timedelta, timezone
 
 AR = timezone(timedelta(hours=-3))
-USD_POR_PUNTO = 29.6  # 25/09, mitad de semana al 36 %, casi todo Opus 5.5 (35 y 33 de antes se midieron
-                      # con la salida subcontada y sin la escritura de caché de 1 hora: eran más)
+USD_POR_PUNTO = 26.6  # 28/10, cierre de la semana del 21/10 al 87 %, las dos PC sumadas (66,7M tokens/pt). Antes:
+                      # 29,6 el 25/09 (mitad de semana al 36 %, una sola PC); 35 y 33 se midieron con la salida
+                      # subcontada y sin la escritura de caché de 1 hora
 RAIZ = os.path.expanduser("~/.claude/projects")
 REPO = os.path.dirname(os.path.abspath(__file__))
 CARPETA_PC = os.path.join(REPO, "consumo")
 PC = os.environ.get("COMPUTERNAME") or platform.node() or "pc"
-NOMBRES_PC = {"DESKTOP-1FBVMK9": "casa"}  # la notebook de la oficina sale con su nombre de equipo hasta anotarla
+NOMBRES_PC = {"DESKTOP-1FBVMK9": "casa", "NOTEBOOKJOA": "oficina"}
 DIAS_GUARDADOS = 70
 
 

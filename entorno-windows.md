@@ -226,8 +226,8 @@ Lo que sostiene una regla, cuando el porqué no entra en el renglón que la enun
 
 ### Subagentes: de dónde salen los números
 
-* **Equivalencia vigente para estimar:** 1 punto de cuota ≈ **82M tokens ≈ 30 USD de lista** (medido a mitad de
-  la semana del 23/09 con 36 %, casi todo Opus 5.5). Para estimar sirven los tokens: los dólares por punto se
+* **Equivalencia vigente para estimar:** 1 punto de cuota ≈ **67M tokens ≈ 26,6 USD de lista** (cierre de la
+  semana del 21/10 con 87 %, las dos PC sumadas; antes 82M / 30 USD, medido a mitad de semana en una sola PC). Para estimar sirven los tokens: los dólares por punto se
   movieron más de lo que explica el precio del modelo. Se recalibra al cierre de cada semana con
   `medir-consumo-semanal.py <miércoles del reinicio> <% de get_usage>`, **sumando las dos PC** (ver §Las dos PC).
 * **Otro chat en vez de subagentes (decidido que no, 2026-10-16):** se revisa si la app mejora cómo un chat
