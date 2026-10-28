@@ -150,7 +150,9 @@ hablado, no es un problema). Cuál es cuál: `$env:COMPUTERNAME`.
   de veces, sin estar encima: en esas corridas, decidir y anotar en vez de frenar a preguntar. Mejor de noche que
   de día en la PC que está usando.
 * **La configuración se aplica en cada una por separado:** `settings.json` es local. Si cambia `setup-symlink.ps1`,
-  volver a correrlo en las dos (el 2026-10-27 la de casa seguía compactando al ~97 % por eso).
+  volver a correrlo en las dos (el 2026-10-27 la de casa seguía compactando al ~97 % por eso). **Y cerrar los
+  chats abiertos antes del cambio:** los de antes de las 15:10 del 27/10 se quedaron con el porcentaje viejo
+  (60) Y la ventana nueva (633k) a la vez y compactaron a los ~368k (60 % de 633k, el 37 % del millón).
 
 ## Rarezas conocidas de la máquina y de la app (contestar sin re-investigar)
 
