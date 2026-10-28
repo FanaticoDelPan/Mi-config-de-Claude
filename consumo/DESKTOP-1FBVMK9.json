@@ -1,0 +1,108 @@
+{
+ "actualizado": "2026-10-27T23:38-03:00",
+ "pc": "DESKTOP-1FBVMK9",
+ "tramos": {
+  "2026-10-15": {
+   "C--GitHub-PC": {
+    "subs": 0,
+    "tok": 203495,
+    "usd": 0.49,
+    "usd_sub": 0.0
+   }
+  },
+  "2026-10-16": {
+   "C--GitHub-ZZ-Sin-repo-todavia-Nada": {
+    "subs": 1,
+    "tok": 8656422,
+    "usd": 5.29,
+    "usd_sub": 1.07
+   }
+  },
+  "2026-10-21": {
+   "C--GitHub-ZZ-Sin-repo-todavia-Nada": {
+    "subs": 2,
+    "tok": 34079032,
+    "usd": 14.49,
+    "usd_sub": 4.34
+   },
+   "C--GitHub-agent-card": {
+    "subs": 7,
+    "tok": 197912463,
+    "usd": 61.94,
+    "usd_sub": 13.42
+   },
+   "C--Users-gokue-AppData-Local-Claude-Data-claude-pzs8sxrjxfjjc-scratch-workspaces-3969da94-82ea-40f4-aa6f-ac2a1b62c906-b724e01e-88d6-4457-9d58-2e48f47bf408-scratch-2026-10-21-268864": {
+    "subs": 0,
+    "tok": 927114,
+    "usd": 0.73,
+    "usd_sub": 0.0
+   }
+  },
+  "2026-10-22": {
+   "C--GitHub-ZZ-Sin-repo-todavia-Nada": {
+    "subs": 0,
+    "tok": 1183251,
+    "usd": 0.3,
+    "usd_sub": 0.0
+   },
+   "C--GitHub-agent-card": {
+    "subs": 4,
+    "tok": 27412060,
+    "usd": 14.4,
+    "usd_sub": 5.65
+   }
+  },
+  "2026-10-23": {
+   "C--GitHub-ZZ-Sin-repo-todavia-Nada": {
+    "subs": 0,
+    "tok": 34960629,
+    "usd": 20.08,
+    "usd_sub": 0.0
+   }
+  },
+  "2026-10-24": {
+   "C--GitHub-ZZ-Sin-repo-todavia-Nada": {
+    "subs": 0,
+    "tok": 12840650,
+    "usd": 5.14,
+    "usd_sub": 0.0
+   }
+  },
+  "2026-10-25": {
+   "C--GitHub-ZZ-Sin-repo-todavia-Nada": {
+    "subs": 0,
+    "tok": 1651405,
+    "usd": 1.7,
+    "usd_sub": 0.0
+   }
+  },
+  "2026-10-26": {
+   "C--GitHub-ZZ-Sin-repo-todavia-Nada": {
+    "subs": 4,
+    "tok": 77948965,
+    "usd": 33.11,
+    "usd_sub": 12.95
+   },
+   "C--GitHub-ZZ-Sin-repo-todavia-Ocaso": {
+    "subs": 29,
+    "tok": 1027454214,
+    "usd": 398.86,
+    "usd_sub": 361.67
+   }
+  },
+  "2026-10-27": {
+   "C--GitHub-ZZ-Sin-repo-todavia-Nada": {
+    "subs": 0,
+    "tok": 102682,
+    "usd": 0.45,
+    "usd_sub": 0.0
+   },
+   "C--GitHub-ZZ-Sin-repo-todavia-Ocaso": {
+    "subs": 3,
+    "tok": 107225927,
+    "usd": 44.04,
+    "usd_sub": 18.7
+   }
+  }
+ }
+}
