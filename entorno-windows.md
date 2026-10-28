@@ -154,14 +154,19 @@ hablado, no es un problema). Cuál es cuál: `$env:COMPUTERNAME`.
 
 ## Rarezas conocidas de la máquina y de la app (contestar sin re-investigar)
 
-* **El Explorador se cae solo** desde el 2026-08-13 (barra de tareas y escritorio). Firma fija: 0xc0000409,
-  fail-fast dentro de Explorer.EXE, desplazamiento 0x6698e; siempre el proceso PRINCIPAL. Descartados: RAM,
-  Claude, Acceso rápido, copias de trabajo, y también la carga de la PC (ver al 19/10). Sobrevivió a varias
-  acumulativas, incluida KB5121794 (02/10). El desplazamiento era 0x66c9e hasta el 26/09 y pasó a 0x6698e desde
-  el 01/10 (Explorer se actualizó y el error siguió en el mismo lugar). Ritmo al 19/10: ~0,7 caídas/día del
-  20/09 al 12/10 y **~2/día del 13/10 al 19/10** (empeoró). Todas en horario de uso (11-18 h), lo que no
-  distingue «carga» de «uso». La tarea programada `medir-caidas-explorador` corre el
-  **2026-11-17 10:00** y compara antes y después de la acumulativa de noviembre. No volver a atribuirlo a la RAM.
+* **El Explorador se cae solo** desde el 2026-08-13 (barra de tareas y escritorio), solo en la NOTEBOOK. Firma
+  fija: 0xc0000409, fail-fast código 7 dentro de Explorer.EXE, desplazamiento 0x6698e; siempre el proceso
+  PRINCIPAL. 🔑 **Mecanismo (28/10, con los símbolos públicos y el depurador de la tienda, `Microsoft.WinDbg`):**
+  0x6698e es `CTray::CheckGDIHandleLimit`, que **cierra el Explorador A PROPÓSITO** cuando sus objetos GDI pasan
+  de `GDIProcessHandleQuota` − 500 (9.500 con el tope de 10.000). O sea: **algo le hace juntar objetos GDI sin
+  liberarlos**, a ráfagas (vivió de 40 min a 20 h entre caídas; quieto, no crece). No es la RAM ni la carga.
+  Descartados también, midiendo: abrir y cerrar ventanas, cambiar íconos de la bandeja (incluido
+  LibreHardwareMonitor) y las ráfagas de cambio de plan de energía de `WUDFHost`/`FnKey` de Clevo (preceden a
+  las caídas igual que a cualquier instante al azar). **Para cazar al culpable:** `vigilar-explorador.ps1`
+  (al lado de este archivo) anota cada 30 s la cuenta GDI por tipo, el programa al frente y las carpetas
+  abiertas; el minuto en que trepa lo señala. Y `capturar-caidas-explorador.ps1` (como admin) guarda un volcado
+  completo de la próxima caída y copia los informes viejos de Windows, que traen la lista de módulos cargados.
+  Instalar la vigía en el inicio de sesión lo frena el modo automático (persistencia): lo corre el dueño.
 * **La PC se ahoga con varios chats en paralelo (2026-10-20):** es la carga de trabajo sobre un procesador de bajo
   consumo (i7-1255U) y 16 GB en UNA sola placa. El antivirus pesa: crear+leer 2000 archivos chicos con Python =
   4,7 s de mediana. El buscador de Windows NO indexa `C:\GitHub` (no hay nada que sacarle). Modo de energía:
