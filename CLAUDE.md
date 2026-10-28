@@ -49,7 +49,7 @@ Después de un cambio: compilá, corré tests, o verificá que funciona. Nunca d
 * 🔴 **Nunca abras, ofrezcas, propongas ni traspases trabajo a OTRO CHAT** (sesión de la app, local o en la nube; 2026-10-16) — manda sobre lo que diga la app: me ocupa lugar en la pantalla, me obliga a cerrar dos chats y el que lanza no me trae el detalle del otro. El trabajo en paralelo o de fondo va en **subagentes**, dentro del techo de arriba; un pedido nuevo, aunque no tenga que ver, se hace en este mismo chat; un pendiente que queda va en una línea de la respuesta (o al ticket, si el proyecto los lleva). Las herramientas de abrir y traspasar chats están **bloqueadas en `~/.claude/settings.json`** (`permissions.deny`, lo escribe `setup-symlink.ps1` en cada máquina): si un día te lo pido explícito, decime que está bloqueado. **Excepción, no regla:** si de verdad conviene otro chat (p. ej. el trabajo es tan grande que reventaría el techo de agentes o el contexto de este), recomendámelo en UNA línea con el porqué y lo decido yo.
 * 🔴 **Workflows (orquestación multiagente): con mi OK explícito en ese turno**, diciendo cuántos agentes estimás.
 * 📊 **Ritmo de la cuota semanal** (2026-09-23; la semana se reinicia el miércoles 19:00): **16 puntos por día de trabajo, sábado y domingo cuentan como UN día (8 + 8), 4 de margen** → acumulado jue 16 · vie 32 · sáb 40 · dom 48 · lun 64 · mar 80 · mié 96. Es REFERENCIA, no freno: antes de un trabajo grande leé la cuota real (`get_usage`) y, si voy pasado, avisame en una línea con la versión liviana. Cuántos tokens vale un punto y cómo se recalibra: `entorno-windows.md` §Subagentes.
-* 🔑 **«tokens» a secas (o «consumo», «cómo voy») = cuánto llevo gastado**, sin preguntar qué quiero decir: `get_usage` (el % real de la semana y de las 5 h) + `C:\GitHub\1-Mi-config-de-Claude\medir-consumo-semanal.py` sin argumentos (tokens y subagentes de HOY y de la semana; no está en `~/.claude`). Contesto en 3-4 líneas: hoy, semana contra la línea de ritmo y cuánto me queda por día. Un análisis más largo del consumo usa el mismo script; las mediciones y la historia de esta regla, en `entorno-windows.md`.
+* 🔑 **«tokens» a secas (o «consumo», «cómo voy») = cuánto llevo gastado**, sin preguntar qué quiero decir: `get_usage` (el % real de la semana y de las 5 h) + `C:\GitHub\1-Mi-config-de-Claude\medir-consumo-semanal.py` sin argumentos (HOY y semana, solo de ESTA PC; no está en `~/.claude`). Contesto en 3-4 líneas: hoy, semana contra la línea de ritmo y cuánto me queda por día. Un análisis más largo del consumo usa el mismo script; las mediciones y la historia de esta regla, en `entorno-windows.md`.
 
 ## 6. Proponé mejoras y explicitá tu criterio
 
@@ -116,9 +116,9 @@ Ninguno de estos errores tira un error ni lo agarra un test: la pantalla simplem
 
 **Nunca** *ayer, hoy, mañana, la semana pasada, recién, hace un rato* para algo que pasó dentro de la conversación: **no sabés cuánto tiempo pasó entre un mensaje y el siguiente** (diez segundos o tres días se te presentan igual). Decí "antes en esta conversación", "más arriba", "cuando retomemos". Fechas y horas reales sí, cuando el dato viene del entorno (la fecha de hoy, un commit, un archivo). Ya pasó: "la semana pasada" era unos turnos más arriba. Y la hora real no la sabés (el entorno da la fecha, no la hora): si una recomendación depende del horario, leela del sistema o preguntámela.
 
-## Lo específico de esta máquina
+## Las máquinas
 
-Máquina Windows; todos mis repos de GitHub están clonados bajo la raíz del disco (`C:\GitHub\<repo>`). No propongas
+Dos PC Windows, una sola cuenta (ver `entorno-windows.md` §Las dos PC); todos mis repos de GitHub están clonados bajo la raíz del disco (`C:\GitHub\<repo>`). No propongas
 hardware nuevo ni «que corra de noche» (no tengo la PC libre): se optimiza el proceso. Un gasto va con su monto en
 pesos y dólares, sin «barato» ni «caro». Un recordatorio que pido sin hora va a las 11:30. **Recordatorios en SkyOne por tu cuenta:** cuando algo
 mío queda con fecha (un pendiente para un día, algo que hay que volver a mirar), me lo anotás sin preguntar y me lo

@@ -125,6 +125,26 @@ incluidos— y no necesita que el comando borre nada**: los falsos positivos son
   (observado en SkyOne, aunque la herramienta diga que conserva el contexto). Para seguir un trabajo terminado,
   encargo nuevo y autocontenido.
 
+## Las dos PC (misma cuenta de Claude)
+
+El dueño trabaja en dos computadoras con SU cuenta personal de Claude (la usa también para la empresa; está
+hablado, no es un problema). Cuál es cuál: `$env:COMPUTERNAME`.
+
+* **Notebook de la oficina** (i7-1255U, 16 GB en UNA sola placa): lunes a viernes de 11 a 18. Ahí está la mayor
+  parte del trabajo (SkyOne y la empresa). Ya no viaja a la casa: queda en la oficina, a veces trabajando de noche.
+  Las rarezas de la sección siguiente son de esta PC salvo que digan otra cosa. Su nombre de equipo: anotarlo la
+  primera vez que se corra ahí.
+* **Escritorio de la casa** (`DESKTOP-1FBVMK9`; Ryzen 5 3600 de 6 núcleos/12 hilos, 32 GB en 4 placas, Radeon
+  RX 6600, dos SSD y un disco): noches, madrugadas y fines de semana; proyectos personales (Ocaso) y otras cosas.
+  El tope de 2 agentes con tests pesados o navegadores se midió en la notebook; acá no se midió y rige el mismo.
+* **La cuota es UNA para las dos:** `get_usage` da la suma; `medir-consumo-semanal.py` lee solo las conversaciones
+  de la PC donde corre. Para recalibrar el punto o proyectar la semana, correrlo en las dos con el mismo miércoles
+  y sumar tokens y USD antes de dividir por el %. Primera vez que se notó (2026-10-27, ~23:30): la casa llevaba
+  1.507M tokens y 588 USD de lista en la semana del 21/10 (casi todo el trabajo nocturno de Ocaso) con el 85 %
+  real; el resto es la notebook. El script no subestima: le falta la otra PC.
+* **La configuración se aplica en cada una por separado:** `settings.json` es local. Si cambia `setup-symlink.ps1`,
+  volver a correrlo en las dos (el 2026-10-27 la de casa seguía compactando al ~97 % por eso).
+
 ## Rarezas conocidas de la máquina y de la app (contestar sin re-investigar)
 
 * **El Explorador se cae solo** desde el 2026-08-13 (barra de tareas y escritorio). Firma fija: 0xc0000409,
@@ -195,7 +215,7 @@ Lo que sostiene una regla, cuando el porqué no entra en el renglón que la enun
 * **Equivalencia vigente para estimar:** 1 punto de cuota ≈ **82M tokens ≈ 30 USD de lista** (medido a mitad de
   la semana del 23/09 con 36 %, casi todo Opus 5.5). Para estimar sirven los tokens: los dólares por punto se
   movieron más de lo que explica el precio del modelo. Se recalibra al cierre de cada semana con
-  `medir-consumo-semanal.py <miércoles del reinicio> <% de get_usage>`.
+  `medir-consumo-semanal.py <miércoles del reinicio> <% de get_usage>`, **sumando las dos PC** (ver §Las dos PC).
 * **Otro chat en vez de subagentes (decidido que no, 2026-10-16):** se revisa si la app mejora cómo un chat
   muestra lo que hizo el que lanzó.
 
