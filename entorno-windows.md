@@ -137,11 +137,18 @@ hablado, no es un problema). Cuál es cuál: `$env:COMPUTERNAME`.
 * **Escritorio de la casa** (`DESKTOP-1FBVMK9`; Ryzen 5 3600 de 6 núcleos/12 hilos, 32 GB en 4 placas, Radeon
   RX 6600, dos SSD y un disco): noches, madrugadas y fines de semana; proyectos personales (Ocaso) y otras cosas.
   El tope de 2 agentes con tests pesados o navegadores se midió en la notebook; acá no se midió y rige el mismo.
-* **La cuota es UNA para las dos:** `get_usage` da la suma; `medir-consumo-semanal.py` lee solo las conversaciones
-  de la PC donde corre. Para recalibrar el punto o proyectar la semana, correrlo en las dos con el mismo miércoles
-  y sumar tokens y USD antes de dividir por el %. Primera vez que se notó (2026-10-27, ~23:30): la casa llevaba
-  1.507M tokens y 588 USD de lista en la semana del 21/10 (casi todo el trabajo nocturno de Ocaso) con el 85 %
-  real; el resto es la notebook. El script no subestima: le falta la otra PC.
+* **La cuota es UNA para las dos:** `get_usage` da la suma. `medir-consumo-semanal.py` lee las conversaciones de
+  la PC donde corre, deja ese consumo (por tramo de 24 h y proyecto, esa semana y la anterior, 70 días de historia)
+  en `consumo/<COMPUTERNAME>.json`, lo commitea y sube solo, y suma lo que dejó la otra (dice de cuándo es). Lo
+  corre de fondo el hook de arranque si el archivo propio tiene más de 2 días; preguntar «tokens» también lo
+  actualiza. Lo de hoy, los subagentes y los chats por tamaño quedan solo de la PC donde corre. Se notó el
+  2026-10-27 (~23:30): la casa llevaba 1.507M tokens y 588 USD de lista en la semana del 21/10 (casi todo el
+  trabajo nocturno de Ocaso) con el 85 % real; el resto era la notebook, que el script no veía.
+* **Tareas pesadas sin nadie mirando (2026-10-27): se pueden proponer, sobre todo las de varias horas o que
+  ahogan la PC.** La notebook queda en la oficina y está libre de noche; la de casa, de día (y de noche sin
+  problema para proyectos personales como Ocaso). El dueño lo deja corriendo con Remote Control y lo mira un par
+  de veces, sin estar encima: en esas corridas, decidir y anotar en vez de frenar a preguntar. Mejor de noche que
+  de día en la PC que está usando.
 * **La configuración se aplica en cada una por separado:** `settings.json` es local. Si cambia `setup-symlink.ps1`,
   volver a correrlo en las dos (el 2026-10-27 la de casa seguía compactando al ~97 % por eso).
 

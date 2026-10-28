@@ -222,6 +222,7 @@ $faltan = @()
 try {
     $s = Get-Content -LiteralPath $settingsFile -Raw -Encoding UTF8 | ConvertFrom-Json
     if ([string]$s.model -notlike 'opus*') { $faltan += "modelo por defecto en '$($s.model)', no en opus" }
+    if ([string]$s.env.CLAUDE_CODE_AUTO_COMPACT_WINDOW -ne '633000') { $faltan += 'compactar al 60 % (CLAUDE_CODE_AUTO_COMPACT_WINDOW)' }
     foreach ($t in @('mcp__ccd_session__start_session', 'mcp__ccd_session__hand_off_to_session')) {
         if (@($s.permissions.deny) -notcontains $t) { $faltan += 'el bloqueo de abrir o traspasar chats' ; break }
     }
@@ -244,6 +245,16 @@ if (Get-Command git -ErrorAction SilentlyContinue) {
         Aviso 'repo' "Mi-config-de-Claude tiene $($pendientes.Count) cambio(s) sin commitear: la otra computadora no los ve. Commitealos y subilos (no hace falta preguntar)."
         $fallas++
     }
+}
+
+# Consumo de esta PC para la otra (las dos comparten la cuota): medir-consumo-semanal.py lo deja en
+# consumo/<PC>.json y lo sube. De fondo, para no demorar el arranque, y solo si el ultimo tiene mas de
+# 2 dias: queda al dia 2-3 veces por semana sin que nadie lo pida.
+$consumoPc = Join-Path $PSScriptRoot (Join-Path 'consumo' "$env:COMPUTERNAME.json")
+$py = Get-Command python -ErrorAction SilentlyContinue
+if ($py -and ((-not (Test-Path $consumoPc)) -or (Get-Item $consumoPc).LastWriteTime -lt (Get-Date).AddDays(-2))) {
+    $medidor = Join-Path $PSScriptRoot 'medir-consumo-semanal.py'
+    Start-Process -FilePath $py.Source -ArgumentList @('-I', "`"$medidor`"") -WindowStyle Hidden
 }
 
 if ($Quiet) { exit 0 }
