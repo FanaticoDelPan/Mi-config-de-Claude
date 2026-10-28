@@ -1,0 +1,318 @@
+{
+ "actualizado": "2026-10-28T11:02-03:00",
+ "pc": "NOTEBOOKJOA",
+ "tramos": {
+  "2026-10-14": {
+   "C--GitHub-skyone": {
+    "subs": 16,
+    "tok": 481871277,
+    "usd": 162.68,
+    "usd_sub": 50.12
+   },
+   "C--GitHub-skyone--claude-worktrees-alta-web-ferrarese": {
+    "subs": 1,
+    "tok": 8494821,
+    "usd": 3.27,
+    "usd_sub": 3.27
+   },
+   "C--GitHub-skyone--claude-worktrees-desarmar-escritorio-2c1c0a": {
+    "subs": 10,
+    "tok": 497628696,
+    "usd": 141.87,
+    "usd_sub": 100.01
+   },
+   "C--GitHub-skyone--claude-worktrees-puerta-copia-adelantada": {
+    "subs": 0,
+    "tok": 9761178,
+    "usd": 4.52,
+    "usd_sub": 0.0
+   }
+  },
+  "2026-10-15": {
+   "C--GitHub-skyia-vision": {
+    "subs": 6,
+    "tok": 126387391,
+    "usd": 53.75,
+    "usd_sub": 42.32
+   },
+   "C--GitHub-skyone": {
+    "subs": 8,
+    "tok": 208927755,
+    "usd": 85.31,
+    "usd_sub": 17.84
+   },
+   "C--GitHub-skyone--claude-worktrees-achicar-claude-md": {
+    "subs": 1,
+    "tok": 3465492,
+    "usd": 1.59,
+    "usd_sub": 1.59
+   },
+   "C--GitHub-skyone--claude-worktrees-adoring-wilson-737006": {
+    "subs": 0,
+    "tok": 6266577,
+    "usd": 2.89,
+    "usd_sub": 0.0
+   },
+   "C--GitHub-skyone--claude-worktrees-boceto-paso-web": {
+    "subs": 4,
+    "tok": 75520917,
+    "usd": 30.15,
+    "usd_sub": 30.15
+   },
+   "C--GitHub-skyone--claude-worktrees-desarmar-escritorio-2c1c0a": {
+    "subs": 0,
+    "tok": 3916215,
+    "usd": 6.62,
+    "usd_sub": 0.0
+   },
+   "C--GitHub-skyone--claude-worktrees-enganchar-charla-dermis": {
+    "subs": 1,
+    "tok": 8341550,
+    "usd": 3.41,
+    "usd_sub": 0.67
+   },
+   "C--GitHub-skyone--claude-worktrees-friendly-cannon-ffa6e3": {
+    "subs": 1,
+    "tok": 10673105,
+    "usd": 4.3,
+    "usd_sub": 0.71
+   },
+   "C--GitHub-skyone--claude-worktrees-informe-bot-grupos": {
+    "subs": 18,
+    "tok": 267119321,
+    "usd": 98.58,
+    "usd_sub": 82.94
+   }
+  },
+  "2026-10-16": {
+   "C--GitHub-skyone--claude-worktrees-informe-bot-grupos": {
+    "subs": 0,
+    "tok": 1855423,
+    "usd": 0.47,
+    "usd_sub": 0.0
+   }
+  },
+  "2026-10-18": {
+   "C--GitHub-Migracion-SkyIA": {
+    "subs": 2,
+    "tok": 23547334,
+    "usd": 12.72,
+    "usd_sub": 4.77
+   },
+   "C--GitHub-skyia-vision": {
+    "subs": 0,
+    "tok": 14626821,
+    "usd": 6.72,
+    "usd_sub": 0.0
+   },
+   "C--GitHub-skyone": {
+    "subs": 32,
+    "tok": 733760920,
+    "usd": 365.36,
+    "usd_sub": 279.21
+   },
+   "C--GitHub-skyone--claude-worktrees-academy-606": {
+    "subs": 5,
+    "tok": 98303083,
+    "usd": 28.21,
+    "usd_sub": 28.21
+   }
+  },
+  "2026-10-19": {
+   "C--GitHub-skyone": {
+    "subs": 28,
+    "tok": 857699135,
+    "usd": 382.49,
+    "usd_sub": 295.24
+   },
+   "C--GitHub-skyone--claude-worktrees-soporte-sesiones-608": {
+    "subs": 6,
+    "tok": 57151402,
+    "usd": 24.31,
+    "usd_sub": 24.31
+   },
+   "C--GitHub-skyone--claude-worktrees-tests-al-azar": {
+    "subs": 2,
+    "tok": 70790151,
+    "usd": 21.72,
+    "usd_sub": 21.72
+   }
+  },
+  "2026-10-20": {
+   "C--GitHub-skyone": {
+    "subs": 30,
+    "tok": 942266326,
+    "usd": 398.89,
+    "usd_sub": 259.92
+   },
+   "C--GitHub-skyone--claude-worktrees-academy-pedido-colgado": {
+    "subs": 1,
+    "tok": 4615998,
+    "usd": 1.55,
+    "usd_sub": 1.55
+   },
+   "C--GitHub-skyone--claude-worktrees-boceto-libretos-pedido": {
+    "subs": 1,
+    "tok": 3247326,
+    "usd": 1.59,
+    "usd_sub": 1.59
+   },
+   "C--GitHub-skyone--claude-worktrees-pruebas-sin-contagio": {
+    "subs": 1,
+    "tok": 7828783,
+    "usd": 3.39,
+    "usd_sub": 3.39
+   }
+  },
+  "2026-10-21": {
+   "C--GitHub-skyone": {
+    "subs": 11,
+    "tok": 595961213,
+    "usd": 257.65,
+    "usd_sub": 137.58
+   },
+   "C--GitHub-skyone--claude-worktrees-barra-arriba-liviana": {
+    "subs": 1,
+    "tok": 35445443,
+    "usd": 20.7,
+    "usd_sub": 20.7
+   },
+   "C--GitHub-skyone--claude-worktrees-pantallas-selector-624": {
+    "subs": 1,
+    "tok": 11064634,
+    "usd": 3.29,
+    "usd_sub": 3.29
+   },
+   "C--GitHub-skyone--claude-worktrees-soporte-llave-testing": {
+    "subs": 1,
+    "tok": 2344042,
+    "usd": 1.6,
+    "usd_sub": 1.6
+   }
+  },
+  "2026-10-22": {
+   "C--GitHub-Migracion-SkyIA": {
+    "subs": 2,
+    "tok": 19192963,
+    "usd": 9.81,
+    "usd_sub": 2.47
+   },
+   "C--GitHub-skyone": {
+    "subs": 21,
+    "tok": 671480492,
+    "usd": 294.21,
+    "usd_sub": 139.83
+   },
+   "C--GitHub-skyone--claude-worktrees-barra-arriba-liviana": {
+    "subs": 1,
+    "tok": 1509557,
+    "usd": 2.12,
+    "usd_sub": 2.12
+   },
+   "C--GitHub-skyone--claude-worktrees-certifi-pillow-pisos": {
+    "subs": 1,
+    "tok": 8284481,
+    "usd": 4.47,
+    "usd_sub": 4.47
+   },
+   "C--GitHub-skyone--claude-worktrees-deps-nube-excepciones": {
+    "subs": 1,
+    "tok": 6439291,
+    "usd": 4.27,
+    "usd_sub": 4.27
+   },
+   "C--GitHub-skyone--claude-worktrees-libretos-sin-actualizar": {
+    "subs": 1,
+    "tok": 31010443,
+    "usd": 19.93,
+    "usd_sub": 19.93
+   },
+   "C--GitHub-skyone--claude-worktrees-recordatorios-sin-confirmar": {
+    "subs": 2,
+    "tok": 34277242,
+    "usd": 12.77,
+    "usd_sub": 4.62
+   }
+  },
+  "2026-10-23": {
+   "C--GitHub-skyone": {
+    "subs": 7,
+    "tok": 47620142,
+    "usd": 17.68,
+    "usd_sub": 10.13
+   }
+  },
+  "2026-10-25": {
+   "C--GitHub-Migracion-SkyIA": {
+    "subs": 0,
+    "tok": 3198243,
+    "usd": 2.11,
+    "usd_sub": 0.0
+   },
+   "C--GitHub-skyone": {
+    "subs": 22,
+    "tok": 884471358,
+    "usd": 307.31,
+    "usd_sub": 62.39
+   },
+   "C--GitHub-skyone--claude-worktrees-asistente-arreglos-641": {
+    "subs": 3,
+    "tok": 15194653,
+    "usd": 9.05,
+    "usd_sub": 9.05
+   },
+   "C--GitHub-skyone--claude-worktrees-gh-636-deshacer-mcp": {
+    "subs": 3,
+    "tok": 42133522,
+    "usd": 16.36,
+    "usd_sub": 16.36
+   },
+   "C--GitHub-skyone--claude-worktrees-hotfix-soporte-accesos": {
+    "subs": 1,
+    "tok": 3383312,
+    "usd": 1.72,
+    "usd_sub": 1.72
+   },
+   "C--GitHub-skyone--claude-worktrees-ia-en-el-buscador": {
+    "subs": 2,
+    "tok": 8461943,
+    "usd": 6.88,
+    "usd_sub": 6.88
+   },
+   "C--GitHub-skyone--claude-worktrees-lineas-whatsapp-por-persona": {
+    "subs": 1,
+    "tok": 10343886,
+    "usd": 3.87,
+    "usd_sub": 3.87
+   }
+  },
+  "2026-10-26": {
+   "C--GitHub-skyone": {
+    "subs": 40,
+    "tok": 1417530640,
+    "usd": 544.63,
+    "usd_sub": 391.44
+   },
+   "C--GitHub-skyone--claude-worktrees-gh649-lineas-empresa": {
+    "subs": 7,
+    "tok": 120779153,
+    "usd": 47.36,
+    "usd_sub": 47.36
+   },
+   "C--GitHub-skyone--claude-worktrees-mi-whatsapp-y-vencidos": {
+    "subs": 1,
+    "tok": 12571356,
+    "usd": 4.71,
+    "usd_sub": 4.71
+   }
+  },
+  "2026-10-27": {
+   "C--GitHub-skyone": {
+    "subs": 6,
+    "tok": 156530702,
+    "usd": 68.23,
+    "usd_sub": 55.5
+   }
+  }
+ }
+}
