@@ -3,7 +3,9 @@
 # carpeta del usuario. Sin el volcado solo se sabe DONDE se cae el Explorador, no QUIEN lo provoca.
 #
 # Corre COMO ADMINISTRADOR (lo pide solo si hace falta). Deshacer: el mismo script con -Deshacer.
-# Volcados e informes quedan en %LOCALAPPDATA%\CrashDumps\explorer. Cada volcado pesa cientos de MB:
+# Volcados e informes quedan en %USERPROFILE%\registro-consumo-pc\caidas-explorador. NO en AppData: la app de
+# Claude es un paquete MSIX y ve una copia privada de AppData, donde no aparece lo que escribe Windows.
+# Cada volcado pesa cientos de MB:
 # se guardan los 3 ultimos y se borran a mano una vez analizados.
 param([switch]$Deshacer)
 
@@ -17,7 +19,7 @@ if (-not $esAdmin) {
 }
 
 $clave = 'HKLM:\SOFTWARE\Microsoft\Windows\Windows Error Reporting\LocalDumps\explorer.exe'
-$destino = Join-Path $env:LOCALAPPDATA 'CrashDumps\explorer'
+$destino = Join-Path $env:USERPROFILE 'registro-consumo-pc\caidas-explorador'
 
 if ($Deshacer) {
     if (Test-Path $clave) { Remove-Item -Path $clave -Recurse }
