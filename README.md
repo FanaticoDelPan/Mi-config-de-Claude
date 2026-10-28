@@ -85,7 +85,10 @@ Listo. Desde ahí, el global de esa máquina queda atado a este repo.
   de la ruta de `entorno-windows.md`, avisa si las skills se desataron del repo, si al
   `settings.json` le falta algo de lo de arriba (señal de que el script no se corrió después de
   un `git pull`) o si hay cambios sin commitear que la otra computadora no está viendo. En modo hook sale siempre con 0: Claude
-  Code solo le pasa a la sesión lo que imprime un hook que sale con 0.
+  Code solo le pasa a la sesión lo que imprime un hook que sale con 0. Al final, si el consumo de esta PC
+  tiene más de 2 días, corre de fondo `medir-consumo-semanal.py`.
+- **`medir-consumo-semanal.py`**: consumo de la semana de cuota a precio de lista. Las dos PC comparten la
+  cuenta: cada una deja el suyo en `consumo/<PC>.json` (lo commitea y sube solo) y el script suma los dos.
 - **`guardar-secreto.ps1`**: pasarle un secreto a Claude sin chat ni TXT en el escritorio.
   Copiás el secreto y Claude corre el script con el nombre de la variable desde la carpeta del
   proyecto; lo escribe en el `.env` sin mostrarlo y vacía el portapapeles.
