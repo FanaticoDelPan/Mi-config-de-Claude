@@ -169,8 +169,11 @@ hablado, no es un problema). Cuál es cuál: `$env:COMPUTERNAME`.
   y ~3 USER (proporción 2:1 = íconos); la corrida de publicar (`--vistas --jobs 8`, todas) lo llevó de 195 a
   9.995 entre 18:21 y 18:37 del 28/10 y murió al tocarlo a la mañana siguiente. Prueba controlada: agenda+clientes
   con `--vistas` (224 pantallas) = 216 → 1.545. Con la vigía: 19 de 19 minutos con el chequeo corriendo suben
-  (9.366 objetos), 7 de 408 sin él (359). NO lo provoca Edge invisible solo, ni Playwright, ni 30 páginas o
-  contextos sueltos: es algo de las páginas de SkyOne que todavía no se aisló. La caída del 28/10 18:04 es
+  (9.366 objetos), 7 de 408 sin él (359). **Causa exacta:** cada contexto de incógnito de Playwright
+  (`new_context`) en Edge que vive más de ~1 s le deja al Explorador su ícono de InPrivate (8 páginas de 3 s:
+  incógnito +48, perfil normal 0; el contenido de la página no importa). **Arreglado en SkyOne:** el chequeo usa
+  un perfil normal y una página por pantalla (224 pantallas: +0); un test impide volver. Cualquier otra
+  herramienta que abra MUCHAS páginas con `new_context` en Edge haría lo mismo. La caída del 28/10 18:04 es
   OTRA (0xc0000005 en `Windows.UI.Xaml.dll`, con el menú Inicio al frente y solo 643 objetos).
   `vigilar-explorador.ps1` (al lado de este archivo) anota cada 30 s la cuenta GDI, el programa al frente y las
   carpetas abiertas (la cuenta por tipo lee mal la tabla en Windows 11: no ve los objetos que se acumulan). Y
