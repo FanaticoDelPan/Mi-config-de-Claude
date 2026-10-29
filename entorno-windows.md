@@ -164,11 +164,18 @@ hablado, no es un problema). Cuál es cuál: `$env:COMPUTERNAME`.
   liberarlos**, a ráfagas (vivió de 40 min a 20 h entre caídas; quieto, no crece). No es la RAM ni la carga.
   Descartados también, midiendo: abrir y cerrar ventanas, cambiar íconos de la bandeja (incluido
   LibreHardwareMonitor) y las ráfagas de cambio de plan de energía de `WUDFHost`/`FnKey` de Clevo (preceden a
-  las caídas igual que a cualquier instante al azar). **Para cazar al culpable:** `vigilar-explorador.ps1`
-  (al lado de este archivo) anota cada 30 s la cuenta GDI por tipo, el programa al frente y las carpetas
-  abiertas; el minuto en que trepa lo señala. Y `capturar-caidas-explorador.ps1` (como admin) guarda un volcado
-  completo de la próxima caída y copia los informes viejos de Windows, que traen la lista de módulos cargados.
-  Instalar la vigía en el inicio de sesión lo frena el modo automático (persistencia): lo corre el dueño.
+  las caídas igual que a cualquier instante al azar). 🔑 **Culpable (29/10, reproducido):** el **chequeo de
+  pantallas de SkyOne** (`scripts/dev/chequeo-pantallas.py`). Cada pantalla le deja al Explorador ~6 objetos GDI
+  y ~3 USER (proporción 2:1 = íconos); la corrida de publicar (`--vistas --jobs 8`, todas) lo llevó de 195 a
+  9.995 entre 18:21 y 18:37 del 28/10 y murió al tocarlo a la mañana siguiente. Prueba controlada: agenda+clientes
+  con `--vistas` (224 pantallas) = 216 → 1.545. Con la vigía: 19 de 19 minutos con el chequeo corriendo suben
+  (9.366 objetos), 7 de 408 sin él (359). NO lo provoca Edge invisible solo, ni Playwright, ni 30 páginas o
+  contextos sueltos: es algo de las páginas de SkyOne que todavía no se aisló. La caída del 28/10 18:04 es
+  OTRA (0xc0000005 en `Windows.UI.Xaml.dll`, con el menú Inicio al frente y solo 643 objetos).
+  `vigilar-explorador.ps1` (al lado de este archivo) anota cada 30 s la cuenta GDI, el programa al frente y las
+  carpetas abiertas (la cuenta por tipo lee mal la tabla en Windows 11: no ve los objetos que se acumulan). Y
+  `capturar-caidas-explorador.ps1` (como admin) guarda un volcado completo de la próxima caída. Instalar la vigía
+  en el inicio de sesión lo frena el modo automático (persistencia): lo corre el dueño.
 * **La PC se ahoga con varios chats en paralelo (2026-10-20):** es la carga de trabajo sobre un procesador de bajo
   consumo (i7-1255U) y 16 GB en UNA sola placa. El antivirus pesa: crear+leer 2000 archivos chicos con Python =
   4,7 s de mediana. El buscador de Windows NO indexa `C:\GitHub` (no hay nada que sacarle). Modo de energía:

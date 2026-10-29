@@ -91,7 +91,9 @@ $shell = New-Object -ComObject Shell.Application
 while ($true) {
     $ahora = Get-Date
     $exp = Get-Process explorer -ErrorAction SilentlyContinue | Sort-Object StartTime | Select-Object -First 1
-    if ($exp) {
+    # Si el Explorador se cae entre que se lo busca y se lo mide, su Handle viene vacío: se saltea la muestra
+    # en vez de morir (el trap cortaba la vigía justo en la caída que tenía que registrar).
+    if ($exp -and $exp.Handle) {
         $t = [VigiaGdi]::Contar($exp.Id)
         $frente = ''
         try { $frente = (Get-Process -Id ([VigiaGdi]::PidAlFrente()) -ErrorAction Stop).ProcessName } catch {}
