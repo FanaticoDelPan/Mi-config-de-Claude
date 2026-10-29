@@ -200,5 +200,10 @@ con 0-1 defecto real, y las pantallas de lo tocado se llevaron ~5,6 h de PC en 9
   `GIT_*` del entorno de cada `git` que lance.** Git las fija para el hook, y un `git -C <carpeta temporal>`
   termina commiteando o etiquetando en el repo real. Lo cazó el propio pre-commit del kit la primera vez que
   corrió el test del chequeo de gatillos.
+- **Un hook del arnés se paga en ARRANCAR, por cada herramienta de cada chat abierto.** Con varios chats a la
+  vez, los procesos de vida corta pueden comerse la máquina. Desde el primer hook: Python (no PowerShell),
+  registrado con `command` + `args` (con `command` suelto pasa por bash), `-S` si solo usa la biblioteca
+  estándar, y UN proceso por evento que corre adentro los controles de ese evento. Detalle y números:
+  `entorno-windows.md` §Aviso de contexto.
 - **El texto que un freno reemplaza se borra en el mismo commit** (en el origen, el commit que sumó unos
   pocos frenos borró ~130 renglones de instrucciones).

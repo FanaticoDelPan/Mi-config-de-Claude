@@ -337,6 +337,13 @@ Lo que sostiene una regla, cuando el porqué no entra en el renglón que la enun
   variable `AVISO_CONTEXTO_VENTANA`. El costo usa `precio()` y `USD_POR_PUNTO` de `medir-consumo-semanal.py`:
   se recalibra ahí y el aviso lo toma solo. Lee cada archivo desde donde quedó la vez anterior (marcas en
   `~/.claude/aviso-contexto/`, fuera de `AppData` por el MSIX) y dentro de un subagente no avisa.
+* 🔑 **Un hook se paga en ARRANCAR, no en lo que hace, y se paga por herramienta y por chat abierto.** Con 7
+  chats, más de la mitad de la notebook se iba en procesos de vida corta (git, hooks, sus consolas). Las tres
+  reglas: Python y no PowerShell (PowerShell 5.1 se comió ~2,5 s de procesador por arranque con la máquina
+  cargada); registrarlo con `command` + `args` (con `command` suelto el arnés lo lanza por bash: un proceso y
+  una consola más); `-S` si solo usa la biblioteca estándar (359 → 234 ms de procesador, medido 2026-10-29).
+  Varios hooks del mismo evento en un proyecto: UN proceso que los corre adentro (SkyOne,
+  `controles-al-editar.ps1`: −37 % por edición). Medirlo: `TotalProcessorTime` del proceso hijo, A/B intercalado.
 * **Python y no PowerShell:** corre en cada herramienta, y Python tarda ~0,3 s contra ~1 s. Probarlo sobre un
   chat ya hecho: `python -I hooks/aviso-contexto.py --probar <ruta del .jsonl>`. Referencia del 24/10: el chat
   más grande de la máquina llegó a 61 % y 1,5 puntos; ninguno pasó de 2.
