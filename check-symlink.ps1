@@ -227,8 +227,10 @@ try {
         if (@($s.permissions.deny) -notcontains $t) { $faltan += 'el bloqueo de abrir o traspasar chats' ; break }
     }
     foreach ($evento in @('UserPromptSubmit', 'PostToolUse')) {
-        $cmds = @($s.hooks.$evento | ForEach-Object { $_.hooks } | ForEach-Object { $_.command })
-        if (-not ($cmds -match 'aviso-contexto')) { $faltan += "el aviso de contexto ($evento)" }
+        # Liviano = Python directo (args, sin pasar por bash) y con -S: corre en cada herramienta de cada chat.
+        $avisos = @($s.hooks.$evento | ForEach-Object { $_.hooks } | Where-Object { ((@($_.command) + @($_.args)) -join ' ') -match 'aviso-contexto' })
+        if (-not $avisos) { $faltan += "el aviso de contexto ($evento)" }
+        elseif (-not ($avisos | Where-Object { @($_.args) -contains '-S' })) { $faltan += "el aviso de contexto liviano ($evento)" }
     }
 } catch {
     $faltan += 'el settings.json no se puede leer'

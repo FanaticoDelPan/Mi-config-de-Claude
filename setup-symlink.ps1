@@ -202,9 +202,11 @@ $settings.hooks.SessionStart = @($kept) + $newGroup
 # --- Aviso de contexto y de costo del chat (CLAUDE.md regla 3) ---
 # Corre al mandar cada mensaje y despues de cada herramienta, para que el aviso llegue tambien en
 # los turnos largos que Claude hace solo. Va en Python (~0,3 s) y no en PowerShell (~1 s por llamada).
+# Corre en CADA herramienta de CADA chat, asi que el arranque es lo que pesa: va con `args` (el arnes
+# lanza Python directo; con `command` suelto pasaba por bash, un proceso y una consola mas por llamada) y
+# con -S (sin site-packages: solo usa la biblioteca estandar, y cargar el site era la mitad del arranque).
 # Como el de arriba, se saca el registro previo y se vuelve a poner con la ruta de ESTA maquina.
 $avisoScript = Join-Path $PSScriptRoot 'hooks\aviso-contexto.py'
-$avisoCmd    = "python -I `"$avisoScript`""
 foreach ($evento in @('UserPromptSubmit', 'PostToolUse')) {
     if (-not ($settings.hooks.PSObject.Properties.Name -contains $evento)) {
         $settings.hooks | Add-Member -NotePropertyName $evento -NotePropertyValue @()
@@ -213,12 +215,12 @@ foreach ($evento in @('UserPromptSubmit', 'PostToolUse')) {
     foreach ($group in @($settings.hooks.$evento)) {
         $refsAviso = $false
         foreach ($h in @($group.hooks)) {
-            if ($h.command -and $h.command -match 'aviso-contexto') { $refsAviso = $true }
+            if (((@($h.command) + @($h.args)) -join ' ') -match 'aviso-contexto') { $refsAviso = $true }
         }
         if (-not $refsAviso) { $kept += $group }
     }
     $settings.hooks.$evento = @($kept) + [pscustomobject]@{
-        hooks = @( [pscustomobject]@{ type = 'command'; command = $avisoCmd; timeout = 10 } )
+        hooks = @( [pscustomobject]@{ type = 'command'; command = 'python'; args = @('-I', '-S', $avisoScript); timeout = 10 } )
     }
 }
 if (-not (Get-Command python -ErrorAction SilentlyContinue)) {
