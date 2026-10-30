@@ -240,6 +240,12 @@ Lo que sostiene una regla, cuando el porqué no entra en el renglón que la enun
   semana del 21/10 con 87 %, las dos PC sumadas; antes 82M / 30 USD, medido a mitad de semana en una sola PC). Para estimar sirven los tokens: los dólares por punto se
   movieron más de lo que explica el precio del modelo. Se recalibra al cierre de cada semana con
   `medir-consumo-semanal.py <miércoles del reinicio> <% de get_usage>`, **sumando las dos PC** (ver §Las dos PC).
+* **Fable no es superior (2026-10-19):** en Artificial Analysis Opus 5.5 rinde más que Fable 5.1 y cuesta la
+  mitad en cada nivel de esfuerzo, y en tres publicaciones de SkyOne trajo más hallazgos reales y menos falsas alarmas.
+* **Piso para delegar construcción (2026-10-29, regla 3):** sale de Gentle-AI (`internal/assets/claude/orchestrator.md`
+  y la tabla «Measured» de su README): un arreglo de 3 líneas costó 0,339 USD delegado contra 0,105 directo, porque
+  un subagente pasa 1-2 min leyendo antes de escribir. Es UNA corrida y en otro entorno: se recalibra con
+  `medir-consumo-semanal.py` si aparece un caso propio que lo contradiga.
 * **Otro chat en vez de subagentes (decidido que no, 2026-10-16):** se revisa si la app mejora cómo un chat
   muestra lo que hizo el que lanzó.
 

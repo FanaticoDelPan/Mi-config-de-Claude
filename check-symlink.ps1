@@ -226,6 +226,9 @@ try {
     foreach ($t in @('mcp__ccd_session__start_session', 'mcp__ccd_session__hand_off_to_session')) {
         if (@($s.permissions.deny) -notcontains $t) { $faltan += 'el bloqueo de abrir o traspasar chats' ; break }
     }
+    foreach ($t in @('Read(**/.env)', 'Read(**/.env.local)', 'Read(//**/.env)', 'Read(//**/.env.local)')) {
+        if (@($s.permissions.deny) -notcontains $t) { $faltan += 'el bloqueo de leer archivos de secretos' ; break }
+    }
     foreach ($evento in @('UserPromptSubmit', 'PostToolUse')) {
         # Liviano = Python directo (args, sin pasar por bash) y con -S: corre en cada herramienta de cada chat.
         $avisos = @($s.hooks.$evento | ForEach-Object { $_.hooks } | Where-Object { ((@($_.command) + @($_.args)) -join ' ') -match 'aviso-contexto' })

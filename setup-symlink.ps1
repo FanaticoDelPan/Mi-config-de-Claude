@@ -248,6 +248,10 @@ if ($settings.PSObject.Properties.Name -contains 'model') {
 # Bloquear abrir y traspasar trabajo a otro chat (CLAUDE.md §5), sumando a los
 # bloqueos que ya haya sin pisarlos.
 $bloqueos = @('mcp__ccd_session__start_session', 'mcp__ccd_session__hand_off_to_session')
+# Y que Claude no lea los archivos de secretos (CLAUDE.md §14: los escribe guardar-secreto.ps1 sin mostrarlos).
+# Sin ancla cubre la carpeta del chat; con `//` cualquier ruta del disco. No va `.env.*`: tapa `.env.example`,
+# que es justo el que se tiene que poder leer. No frena un `cat` por consola: es el camino normal, no un muro.
+$bloqueos += @('Read(**/.env)', 'Read(**/.env.local)', 'Read(//**/.env)', 'Read(//**/.env.local)')
 if (-not ($settings.PSObject.Properties.Name -contains 'permissions')) {
     $settings | Add-Member -NotePropertyName 'permissions' -NotePropertyValue ([pscustomobject]@{})
 }
