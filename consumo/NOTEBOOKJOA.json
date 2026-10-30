@@ -1,5 +1,5 @@
 {
- "actualizado": "2026-10-28T12:46-03:00",
+ "actualizado": "2026-10-30T13:22-03:00",
  "pc": "NOTEBOOKJOA",
  "tramos": {
   "2026-10-14": {
@@ -167,8 +167,8 @@
   "2026-10-21": {
    "C--GitHub-skyone": {
     "subs": 11,
-    "tok": 595961213,
-    "usd": 257.65,
+    "tok": 596340230,
+    "usd": 257.78,
     "usd_sub": 137.58
    },
    "C--GitHub-skyone--claude-worktrees-barra-arriba-liviana": {
@@ -309,15 +309,61 @@
   "2026-10-27": {
    "C--GitHub-Migracion-SkyIA": {
     "subs": 1,
-    "tok": 5426830,
-    "usd": 4.12,
+    "tok": 8020885,
+    "usd": 6.11,
     "usd_sub": 1.99
    },
    "C--GitHub-skyone": {
-    "subs": 12,
-    "tok": 233558870,
-    "usd": 104.0,
-    "usd_sub": 67.26
+    "subs": 24,
+    "tok": 464639846,
+    "usd": 196.36,
+    "usd_sub": 129.99
+   }
+  },
+  "2026-10-28": {
+   "C--GitHub-skyone": {
+    "subs": 27,
+    "tok": 701761460,
+    "usd": 321.12,
+    "usd_sub": 219.79
+   },
+   "C--GitHub-skyone--claude-worktrees-boceto-caja-unica": {
+    "subs": 2,
+    "tok": 39596963,
+    "usd": 20.3,
+    "usd_sub": 20.3
+   },
+   "C--GitHub-skyone--claude-worktrees-bot-fotos-whatsapp-cortesia": {
+    "subs": 1,
+    "tok": 8809395,
+    "usd": 4.47,
+    "usd_sub": 4.47
+   },
+   "C--GitHub-skyone--claude-worktrees-explorador-objetos-chequeo": {
+    "subs": 1,
+    "tok": 4362321,
+    "usd": 2.23,
+    "usd_sub": 2.23
+   },
+   "C--GitHub-skyone--claude-worktrees-qr-espera-canal": {
+    "subs": 1,
+    "tok": 759179,
+    "usd": 0.76,
+    "usd_sub": 0.76
+   },
+   "C--GitHub-skyone--claude-worktrees-terra-asistente-resumen": {
+    "subs": 6,
+    "tok": 84551987,
+    "usd": 28.99,
+    "usd_sub": 28.99
+   }
+  },
+  "2026-10-29": {
+   "C--GitHub-skyone": {
+    "subs": 7,
+    "tok": 208137999,
+    "usd": 92.59,
+    "usd_sub": 64.13
    }
   }
  }
