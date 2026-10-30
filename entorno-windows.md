@@ -117,6 +117,12 @@ incluidos— y no necesita que el comando borre nada**: los falsos positivos son
   `node_modules`** (2026-10-26, agent-card): después lint, tipos y build fallan con `MODULE_NOT_FOUND` y se
   leen como si el arreglo hubiera roto algo. Volver con `npm ci`. ⚠ Y si después el build de Next sigue sin
   encontrar un módulo que `require.resolve` sí encuentra, es su caché: borrar `.next` y compilar de nuevo.
+* **Un Python de un `.venv` lanzado «al fondo» con `DETACHED_PROCESS` le abre al dueño una ventana negra en
+  primer plano** (Windows Terminal), aunque lleve también `CREATE_NO_WINDOW`: el `python.exe` del `.venv` es
+  un redirector que abre el Python base como HIJO, y ese hijo, sin consola heredada, recibe una nueva y visible
+  (además `CREATE_NO_WINDOW` se ignora junto con `DETACHED_PROCESS`). Va **`CREATE_NO_WINDOW` +
+  `CREATE_NEW_PROCESS_GROUP`, sin `DETACHED_PROCESS`**: la consola oculta la heredan los hijos. Lo mismo para
+  cualquier proceso de fondo que lance otros (2026-10-30, SkyOne: la auditoría de dependencias del arranque).
 * **Algo largo va con `run_in_background`, nunca con un `&` a mano en Bash**: ese proceso queda sin dueño en el
   acto y nadie lo puede cerrar después.
 * **Entrar a una copia aparte (`EnterWorktree`) con agentes corriendo les bloquea todos los comandos**: la sesión
