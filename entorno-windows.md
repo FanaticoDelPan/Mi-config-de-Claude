@@ -224,7 +224,7 @@ hablado, no es un problema). Cuál es cuál: `$env:COMPUTERNAME`.
   facturar por API. Se vacía solo en esa ventana (`$env:ANTHROPIC_API_KEY = ''`); no se borró, el dueño no
   confirmó todavía si la usa. **(2)** El login de la terminal es aparte del de la app y vence: `claude` → `/login`
   (cuenta con suscripción) → `/exit`. Sin `origin/HEAD` local los chats remotos van a una rama inventada:
-  `git remote set-head origin -a`. Plantilla: `Ocaso/herramientas/remoto.ps1`. Cerrar la ventana NO frena el
+  `git remote set-head origin -a`. Plantilla: `Monitoreo-clinicas/scripts/remoto.ps1` (la de Ocaso no está clonada en la PC de la casa). Cerrar la ventana NO frena el
   proceso: queda de fondo (buscar `claude.exe remote-control` y frenarlo).
 * **Un ayudante «placeholder» con encargo «noop»** que aparece rechazado en rojo lo lanza la app, no un chat; el
   rojo es el bloqueo por precaución cuando el control de seguridad no contesta. Solo se reporta a Anthropic si
