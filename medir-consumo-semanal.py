@@ -32,7 +32,8 @@ RAIZ = os.path.expanduser("~/.claude/projects")
 REPO = os.path.dirname(os.path.abspath(__file__))
 CARPETA_PC = os.path.join(REPO, "consumo")
 PC = os.environ.get("COMPUTERNAME") or platform.node() or "pc"
-NOMBRES_PC = {"DESKTOP-1FBVMK9": "casa", "NOTEBOOKJOA": "oficina"}
+# Varios nombres de equipo pueden ser la misma PC (si se renombra): se cuenta una vez, la que subió más reciente.
+NOMBRES_PC = {"PC-JOA-CASA": "casa", "DESKTOP-1FBVMK9": "casa", "NOTEBOOKJOA": "oficina"}
 DIAS_GUARDADOS = 70
 
 
@@ -91,14 +92,17 @@ def guardar_pc(desde, hasta, mio):
 
 
 def otras_pc():
+    ultimo = {}
     for ruta in sorted(glob.glob(os.path.join(CARPETA_PC, "*.json"))):
         try:
             with open(ruta, encoding="utf-8") as fh:
                 datos = json.load(fh)
         except (OSError, ValueError):
             continue
-        if datos.get("pc") != PC:
-            yield datos
+        nom = nombre_pc(datos.get("pc", "?"))
+        if nom != nombre_pc(PC) and datos.get("actualizado", "") >= ultimo.get(nom, {}).get("actualizado", ""):
+            ultimo[nom] = datos
+    yield from ultimo.values()
 
 
 def precio(modelo):
