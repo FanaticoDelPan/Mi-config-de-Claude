@@ -143,6 +143,13 @@ hablado, no es un problema). Cuál es cuál: `$env:COMPUTERNAME`.
 * **Escritorio de la casa** (`PC-JOA-CASA`, antes `DESKTOP-1FBVMK9`: renombrada el 30/10/2026; Ryzen 5 3600 de 6 núcleos/12 hilos, 32 GB en 4 placas, Radeon
   RX 6600, dos SSD y un disco): noches, madrugadas y fines de semana; proyectos personales (Ocaso) y otras cosas.
   El tope de 2 agentes con tests pesados o navegadores se midió en la notebook; acá no se midió y rige el mismo.
+  **El driver de la RX 6600 se cae de vez en cuando** (~25 veces desde feb-2026, la mayoría jugando; Windows lo
+  reinicia y AMD deja un cartel «caducó el tiempo de espera de un controlador»). Un proceso que usaba la placa
+  (DirectML, juegos) puede morir SIN imprimir nada, y un `| tail`/`| grep` le tapa el código de error: parece una
+  prueba vacía. Toda corrida en la placa muestra su código (`echo rc=${PIPESTATUS[0]}`) y, si algo raro, se mira el
+  registro de aplicaciones de Windows (evento LiveKernelEvent 141/117; la fecha real es la del nombre del volcado
+  `WATCHDOG-aaaammdd-hhmm.dmp`, porque el registro repite los viejos). Herramienta lista en Monitoreo-clinicas
+  (`scripts/chequear_placa.py`). Se notó el 30/10/2026 (12:45, un agente siguió de largo sin reportarlo).
 * **La cuota es UNA para las dos:** `get_usage` da la suma. `medir-consumo-semanal.py` lee las conversaciones de
   la PC donde corre, deja ese consumo (por tramo de 24 h y proyecto, esa semana y la anterior, 70 días de historia)
   en `consumo/<COMPUTERNAME>.json`, lo commitea y sube solo, y suma lo que dejó la otra (dice de cuándo es). Lo
