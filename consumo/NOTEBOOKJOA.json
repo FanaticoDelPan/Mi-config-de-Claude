@@ -1,5 +1,5 @@
 {
- "actualizado": "2026-10-30T13:22-03:00",
+ "actualizado": "2026-10-30T16:16-03:00",
  "pc": "NOTEBOOKJOA",
  "tramos": {
   "2026-10-14": {
@@ -359,11 +359,29 @@
    }
   },
   "2026-10-29": {
+   "C--GitHub-Migracion-SkyIA": {
+    "subs": 0,
+    "tok": 6475047,
+    "usd": 3.9,
+    "usd_sub": 0.0
+   },
    "C--GitHub-skyone": {
-    "subs": 7,
-    "tok": 208137999,
-    "usd": 92.59,
-    "usd_sub": 64.13
+    "subs": 13,
+    "tok": 332675260,
+    "usd": 138.5,
+    "usd_sub": 78.02
+   },
+   "C--GitHub-skyone--claude-worktrees-mcp-seguimiento-agenda": {
+    "subs": 1,
+    "tok": 64705202,
+    "usd": 19.83,
+    "usd_sub": 19.83
+   },
+   "C--GitHub-skyone--claude-worktrees-resumenes-caidos-openai": {
+    "subs": 2,
+    "tok": 29292357,
+    "usd": 11.32,
+    "usd_sub": 4.25
    }
   }
  }
