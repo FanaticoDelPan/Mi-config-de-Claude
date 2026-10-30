@@ -246,6 +246,8 @@ Lo que sostiene una regla, cuando el porqué no entra en el renglón que la enun
   semana del 21/10 con 87 %, las dos PC sumadas; antes 82M / 30 USD, medido a mitad de semana en una sola PC). Para estimar sirven los tokens: los dólares por punto se
   movieron más de lo que explica el precio del modelo. Se recalibra al cierre de cada semana con
   `medir-consumo-semanal.py <miércoles del reinicio> <% de get_usage>`, **sumando las dos PC** (ver §Las dos PC).
+  **La estimación nunca se informa como real** (2026-10-30): el script dio 30,7 contra **34 %** de la app (subestima
+  ~10 %, y los datos de la otra PC llegan con atraso). Si la sesión no tiene `get_usage`, se dice y se pide el % al dueño.
 * **Fable no es superior (2026-10-19):** en Artificial Analysis Opus 5.5 rinde más que Fable 5.1 y cuesta la
   mitad en cada nivel de esfuerzo, y en tres publicaciones de SkyOne trajo más hallazgos reales y menos falsas alarmas.
 * **Piso para delegar construcción (2026-10-29, regla 3):** sale de Gentle-AI (`internal/assets/claude/orchestrator.md`
