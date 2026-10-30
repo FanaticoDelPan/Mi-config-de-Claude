@@ -34,6 +34,12 @@ lo cerrado se borra / B — la releen personas: se conserva el relato del porqu�
 - 🔴 **Un error repetido se vuelve un CONTROL, no un párrafo**: al segundo tropiezo de la misma clase, el
   chequeo se escribe en el mismo trabajo y **enganchado al pipeline en ese commit** → `docs/patrones-de-control.md`.
 - **Commit por PIEZA TERMINADA**, no por sesión: es el único deshacer cuando el que edita no recuerda qué editó.
+- **Un pedido largo se guarda LITERAL** (en el ticket o en un archivo), con sus puntos numerados (S1, S2…) y
+  cada corrección del dueño también textual. El encargo a un subagente apunta a ese texto y al punto que cubre;
+  nunca lo resume (un resumen pierde reglas de negocio). La verificación da un veredicto por punto, y un error
+  que reportó el dueño se reproduce antes de decir que ya anda.
+- **Cada regla de negocio pedida lleva un test que se vio FALLAR antes del cambio**, y cada comportamiento
+  existente que se toca, uno que pruebe que sigue igual. Nada de relleno: es la prueba de que el test mide la regla.
 - **Tickets:** un tipo y un área por ticket; el que espera algo lleva su **gatillo** en la primera línea. Se
   cierran con `Closes #N` en el commit; lo que queda para después sale antes a su propio ticket (un cierre
   automático no lee el cuerpo). Lo decidido que no se cierra con el motivo.
