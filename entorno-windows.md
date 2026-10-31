@@ -150,6 +150,13 @@ hablado, no es un problema). Cuál es cuál: `$env:COMPUTERNAME`.
   registro de aplicaciones de Windows (evento LiveKernelEvent 141/117; la fecha real es la del nombre del volcado
   `WATCHDOG-aaaammdd-hhmm.dmp`, porque el registro repite los viejos). Herramienta lista en Monitoreo-clinicas
   (`scripts/chequear_placa.py`). Se notó el 30/10/2026 (12:45, un agente siguió de largo sin reportarlo).
+  **Causa probable (volcados analizados el 30/10/2026, sin confirmar):** todas las caídas son el driver de AMD
+  (`amdkmdag`) con dos versiones distintas, y hay 3 pantallazos azules de memoria corrupta en piezas distintas
+  (núcleo al arrancar, audio, gráfico) → apunta a la RAM: 4×8 GB de dos marcas mezcladas (2 Kingston Fury
+  KF3200C16D4/8GX + 2 genéricas) a 3.200 en una placa B350. Ajustes de AMD en fábrica (dice el dueño). Siguiente
+  paso: MemTest86 de una noche; si falla, bajar a 2.933/2.666 o dejar solo el par Kingston. Los volcados se leen con
+  `cdbX64.exe` (alias del WinDbg de la tienda; el `cdb.exe` de su carpeta da «acceso denegado») después de copiarlos
+  como administrador desde `C:\Windows\LiveKernelReports` y `C:\Windows\Minidump`.
 * **La cuota es UNA para las dos:** `get_usage` da la suma. `medir-consumo-semanal.py` lee las conversaciones de
   la PC donde corre, deja ese consumo (por tramo de 24 h y proyecto, esa semana y la anterior, 70 días de historia)
   en `consumo/<COMPUTERNAME>.json`, lo commitea y sube solo, y suma lo que dejó la otra (dice de cuándo es). Lo
