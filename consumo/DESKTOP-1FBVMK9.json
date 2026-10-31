@@ -1,5 +1,5 @@
 {
- "actualizado": "2026-10-30T17:35-03:00",
+ "actualizado": "2026-10-31T11:26-03:00",
  "pc": "DESKTOP-1FBVMK9",
  "tramos": {
   "2026-10-15": {
@@ -115,15 +115,29 @@
   "2026-10-29": {
    "C--GitHub-Monitoreo-clinicas": {
     "subs": 21,
-    "tok": 428430382,
-    "usd": 232.39,
-    "usd_sub": 205.01
+    "tok": 440807826,
+    "usd": 237.99,
+    "usd_sub": 205.82
    },
    "C--GitHub-ZZ-Sin-repo-todavia-Nada": {
     "subs": 1,
     "tok": 12305863,
     "usd": 5.47,
     "usd_sub": 2.98
+   }
+  },
+  "2026-10-30": {
+   "C--GitHub-Monitoreo-clinicas": {
+    "subs": 0,
+    "tok": 8394771,
+    "usd": 6.46,
+    "usd_sub": 0.0
+   },
+   "C--GitHub-ZZ-Sin-repo-todavia-Ocaso": {
+    "subs": 2,
+    "tok": 53781058,
+    "usd": 24.49,
+    "usd_sub": 13.23
    }
   }
  }
