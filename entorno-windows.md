@@ -168,8 +168,9 @@ hablado, no es un problema). Cuál es cuál: `$env:COMPUTERNAME`.
   haya quedado subido desde esa PC (`.git/consumo-subido`; si el push falla, reintenta el chat siguiente), y con
   candado para que varios chats que arrancan juntos no lo corran a la vez (antes, cada 2 días; cambiado el
   01/11/2026 a pedido del dueño, con revisión adversarial y probado en copias con un remoto falso). Límite: lo que
-  una PC gasta después de su primer chat del día recién lo ve la otra al día siguiente. Preguntar «tokens» también
-  lo actualiza. Lo de hoy, los subagentes y los chats por tamaño quedan solo de la PC donde corre. Se notó el
+  una PC gasta después de su primer chat del día recién lo ve la otra al día siguiente. **Subir cada 3 h: decidido
+  que no** (dueño, 01/11/2026): eligió una vez por día sabiendo ese límite, porque la lectura dice de cuándo son los
+  datos de la otra PC. Preguntar «tokens» también lo actualiza. Lo de hoy, los subagentes y los chats por tamaño quedan solo de la PC donde corre. Se notó el
   2026-10-27 (~23:30): la casa llevaba 1.507M tokens y 588 USD de lista en la semana del 21/10 (casi todo el
   trabajo nocturno de Ocaso) con el 85 % real; el resto era la notebook, que el script no veía.
 * **Tareas pesadas sin nadie mirando (2026-10-27): se pueden proponer, sobre todo las de varias horas o que
