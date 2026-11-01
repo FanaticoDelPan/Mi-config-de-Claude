@@ -143,6 +143,10 @@ hablado, no es un problema). Cuál es cuál: `$env:COMPUTERNAME`.
 * **Escritorio de la casa** (`PC-JOA-CASA`, antes `DESKTOP-1FBVMK9`: renombrada el 30/10/2026; Ryzen 5 3600 de 6 núcleos/12 hilos, 32 GB en 4 placas, Radeon
   RX 6600, dos SSD y un disco): noches, madrugadas y fines de semana; proyectos personales (Ocaso) y otras cosas.
   El tope de 2 agentes con tests pesados o navegadores se midió en la notebook; acá no se midió y rige el mismo.
+  🔴 **El procesador calienta: nada al 100 % sostenido** (01/11/2026: 96 °C con un análisis largo de video; frecuencia
+  fija a mano en 4.000 MHz, que en Ryzen apaga el freno térmico automático, y pasta térmica vieja). Tope pedido por el
+  dueño: **80 % del procesador**. Lo pesado se ata a 8 de los 12 hilos (afinidad; los hijos la heredan) o se le pasan
+  menos hilos (`-threads`). Ejemplo en Monitoreo-clinicas (`monitoreo/prioridad.py`).
   **El driver de la RX 6600 se cae de vez en cuando** (~25 veces desde feb-2026, la mayoría jugando; Windows lo
   reinicia y AMD deja un cartel «caducó el tiempo de espera de un controlador»). Un proceso que usaba la placa
   (DirectML, juegos) puede morir SIN imprimir nada, y un `| tail`/`| grep` le tapa el código de error: parece una
@@ -262,6 +266,12 @@ Lo que sostiene una regla, cuando el porqué no entra en el renglón que la enun
   `medir-consumo-semanal.py <miércoles del reinicio> <% de get_usage>`, **sumando las dos PC** (ver §Las dos PC).
   **La estimación nunca se informa como real** (2026-10-30): el script dio 30,7 contra **34 %** de la app (subestima
   ~10 %, y los datos de la otra PC llegan con atraso). Si la sesión no tiene `get_usage`, se dice y se pide el % al dueño.
+* **El % del gasto que va a subagentes NO es un veredicto (dueño, 2026-11-01):** depende de cómo se reparte el
+  trabajo (un chat que orquesta 20 agentes y cinco chats con 4 cada uno pueden hacer lo mismo con porcentajes muy
+  distintos), así que solo, como el EBITDA, no dice si se gasta de más. Usar menos agentes solo es ir más lento. Se
+  puede dar como contexto, nunca como conclusión ni como «ojo, mucho en agentes». Lo que sí es un hallazgo, con el
+  caso concreto: agentes que releen lo mismo, que se lanzaron para algo chico, o cuyo resultado se rehízo; y la
+  palanca de fondo, cuando la cuota no alcanza, es cuánto trabajo se encara, no cuántos agentes.
 * **Fable no es superior (2026-10-19):** en Artificial Analysis Opus 5.5 rinde más que Fable 5.1 y cuesta la
   mitad en cada nivel de esfuerzo, y en tres publicaciones de SkyOne trajo más hallazgos reales y menos falsas alarmas.
 * **Piso para delegar construcción (2026-10-29, regla 3):** sale de Gentle-AI (`internal/assets/claude/orchestrator.md`
