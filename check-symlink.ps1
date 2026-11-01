@@ -253,13 +253,18 @@ if (Get-Command git -ErrorAction SilentlyContinue) {
 }
 
 # Consumo de esta PC para la otra (las dos comparten la cuota): medir-consumo-semanal.py lo deja en
-# consumo/<PC>.json y lo sube. De fondo, para no demorar el arranque, y solo en el primer chat del dia
-# (el archivo no es de hoy): queda al dia cada dia que se usa la PC sin que nadie lo pida.
-$consumoPc = Join-Path $PSScriptRoot (Join-Path 'consumo' "$env:COMPUTERNAME.json")
+# consumo/<PC>.json y lo sube. De fondo y con prioridad baja, para no demorar el arranque ni trabar la PC, y
+# solo si hoy todavia no quedo subido desde esta PC (.git/consumo-subido, lo escribe el script cuando el push
+# salio bien; fuera de git, para que un checkout no le cambie la fecha). Si varios chats arrancan a la vez,
+# el script deja correr a uno solo (--de-fondo: los demas salen enseguida).
+$subido = Join-Path $PSScriptRoot (Join-Path '.git' 'consumo-subido')
 $py = Get-Command python -ErrorAction SilentlyContinue
-if ($py -and ((-not (Test-Path $consumoPc)) -or (Get-Item $consumoPc).LastWriteTime.Date -lt (Get-Date).Date)) {
+if ($py -and ((-not (Test-Path $subido)) -or (Get-Item $subido).LastWriteTime.Date -lt (Get-Date).Date)) {
     $medidor = Join-Path $PSScriptRoot 'medir-consumo-semanal.py'
-    Start-Process -FilePath $py.Source -ArgumentList @('-I', "`"$medidor`"") -WindowStyle Hidden
+    try {
+        $proc = Start-Process -FilePath $py.Source -ArgumentList @('-I', "`"$medidor`"", '--de-fondo') -WindowStyle Hidden -PassThru
+        $proc.PriorityClass = 'BelowNormal'
+    } catch {}
 }
 
 if ($Quiet) { exit 0 }

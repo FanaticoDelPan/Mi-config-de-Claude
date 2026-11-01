@@ -4,17 +4,21 @@ Uso:  python medir-consumo-semanal.py                          (la semana en cur
       python medir-consumo-semanal.py 2026-09-16 [porcentaje_usado]
       (la fecha es el miércoles del REINICIO que abre la semana; el reinicio es a las 19:00 de Argentina)
       --sin-subir   no guarda ni sube el consumo de esta PC (para pruebas)
+      --de-fondo    lo pone el hook de arranque: si otra corrida ya tiene el candado, sale sin hacer nada
 
 Sale: total en USD y puntos, por tramo de 24 h desde el reinicio (con el reparto por PC), por proyecto, subagentes y
 los chats por tamaño.
 Con el porcentaje final de la semana recalibra cuántos USD/tokens vale un punto.
 Las dos PC del dueño comparten la cuota: cada corrida deja el consumo de ESTA PC (por tramo y proyecto, esta semana
 y la anterior) en consumo/<PC>.json, lo sube, y suma lo que dejó la otra. Lo de hoy, los subagentes y los chats por
-tamaño son solo de esta PC. El hook de arranque (check-symlink.ps1) lo corre de fondo en el primer chat de cada día.
+tamaño son solo de esta PC. El hook de arranque (check-symlink.ps1) lo corre de fondo en el primer chat de cada día en cada PC: mira
+.git/consumo-subido, que se escribe solo cuando lo de esta PC quedó subido (si el push falla, reintenta el chat
+siguiente). Varios chats que arrancan a la vez no corren en paralelo: el primero toma .git/consumo.lock.
 La línea de base (semana 9/9 -> 16/9, 97 %): 33 USD y 48,6M tokens por punto; 292 subagentes (37 %);
 chats (todos los proyectos): consulta n=30 0,09 pt · chico n=42 0,44 · mediano n=19 1,46 (4,1 agentes)
 · grande n=11 4,37 (13,6 agentes; 48 de los 97 puntos).
 """
+import atexit
 import glob
 import json
 import os
@@ -22,6 +26,7 @@ import platform
 import statistics as st
 import subprocess
 import sys
+import time
 from collections import defaultdict
 from datetime import date, datetime, timedelta, timezone
 
@@ -36,6 +41,8 @@ PC = os.environ.get("COMPUTERNAME") or platform.node() or "pc"
 # Varios nombres de equipo pueden ser la misma PC (si se renombra): se cuenta una vez, la que subió más reciente.
 NOMBRES_PC = {"PC-JOA-CASA": "casa", "DESKTOP-1FBVMK9": "casa", "NOTEBOOKJOA": "oficina"}
 DIAS_GUARDADOS = 70
+CANDADO = os.path.join(REPO, ".git", "consumo.lock")
+SUBIDO = os.path.join(REPO, ".git", "consumo-subido")  # el hook mira su fecha: fuera de git, nada se la cambia
 
 
 def nombre_pc(pc):
@@ -63,8 +70,41 @@ def traer_repo():
             git("rebase", "--abort")
 
 
+def tomar_candado(esperar):
+    """Una corrida que sube por vez: dos rebases a la vez se abortan entre sí. Un candado de más de 10 min es de
+    una corrida que se cayó y se descarta. El hook no espera; una corrida a mano espera hasta ~1 min."""
+    for _ in range(30 if esperar else 2):  # el segundo intento es para después de descartar uno viejo
+        try:
+            os.close(os.open(CANDADO, os.O_CREAT | os.O_EXCL | os.O_WRONLY))
+            atexit.register(lambda: os.path.exists(CANDADO) and os.remove(CANDADO))
+            return True
+        except FileExistsError:
+            try:
+                if time.time() - os.path.getmtime(CANDADO) > 600:
+                    os.remove(CANDADO)
+                    continue
+            except OSError:
+                continue
+            if esperar:
+                time.sleep(2)
+    return False
+
+
+def solo_consumo_sin_subir():
+    """(hay commits sin subir, son todos de consumo/). Sin rama remota, (True, False): no se marca como subido."""
+    ok, n = git("rev-list", "--count", "@{u}..HEAD")
+    if not ok:
+        return True, False
+    if n.strip() == "0":
+        return False, True
+    ok, propios = git("diff", "--name-only", "@{u}...HEAD")
+    return True, ok and all(l.startswith("consumo/") for l in propios.split())
+
+
 def guardar_pc(desde, hasta, mio):
-    """Reemplaza en consumo/<PC>.json los tramos de [desde, hasta) y, si cambió algo, lo commitea solo y lo sube."""
+    """Reemplaza en consumo/<PC>.json los tramos de [desde, hasta) y, si cambió algo, lo commitea solo y lo sube.
+    Si quedó un consumo sin subir de una corrida anterior (sin conexión), lo reintenta. Marca SUBIDO solo si al final
+    no queda nada de esta PC sin subir."""
     os.makedirs(CARPETA_PC, exist_ok=True)
     ruta = os.path.join(CARPETA_PC, f"{PC}.json")
     try:
@@ -78,18 +118,23 @@ def guardar_pc(desde, hasta, mio):
     for (k, proy), (usd, tok, usd_sub, subs) in mio.items():
         tramos.setdefault(k, {})[proy] = {"usd": round(usd, 2), "tok": int(tok), "usd_sub": round(usd_sub, 2),
                                           "subs": len(subs)}
-    if tramos == viejo:
-        os.utime(ruta)  # el hook mira la fecha del archivo para no correrlo en cada chat
-        return
-    ahora = datetime.now(AR)
-    with open(ruta, "w", encoding="utf-8", newline="\n") as fh:
-        json.dump({"pc": PC, "actualizado": ahora.isoformat(timespec="minutes"), "tramos": tramos}, fh,
-                  ensure_ascii=False, indent=1, sort_keys=True)
-        fh.write("\n")
-    rel = f"consumo/{PC}.json"
-    git("add", "--", rel)
-    if git("commit", "-q", "-m", f"consumo: {nombre_pc(PC)} al {ahora:%d/%m %H:%M}", "--", rel)[0]:
+    if tramos != viejo:
+        ahora = datetime.now(AR)
+        with open(ruta, "w", encoding="utf-8", newline="\n") as fh:
+            json.dump({"pc": PC, "actualizado": ahora.isoformat(timespec="minutes"), "tramos": tramos}, fh,
+                      ensure_ascii=False, indent=1, sort_keys=True)
+            fh.write("\n")
+        rel = f"consumo/{PC}.json"
+        git("add", "--", rel)
+        if git("commit", "-q", "-m", f"consumo: {nombre_pc(PC)} al {ahora:%d/%m %H:%M}", "--", rel)[0]:
+            git("push", "-q")
+    falta, solo_consumo = solo_consumo_sin_subir()
+    if falta and solo_consumo:
         git("push", "-q")
+        falta = solo_consumo_sin_subir()[0]
+    if not falta:
+        with open(SUBIDO, "w", encoding="utf-8") as fh:
+            fh.write(datetime.now(AR).isoformat(timespec="minutes") + "\n")
 
 
 def otras_pc():
@@ -128,6 +173,12 @@ def main():
     ahora = datetime.now(AR)
     args = [a for a in sys.argv[1:] if not a.startswith("--")]
     subir = "--sin-subir" not in sys.argv
+    de_fondo = "--de-fondo" in sys.argv
+    if subir and not tomar_candado(esperar=not de_fondo):
+        if de_fondo:
+            return  # otro chat que arrancó a la vez ya lo está corriendo
+        subir = False
+        print("Otra corrida tiene tomado el candado: muestro sin guardar ni subir.")
     if args:
         t0 = datetime.fromisoformat(args[0]).replace(hour=19, tzinfo=AR)
     else:  # el último reinicio: miércoles 19:00
@@ -262,9 +313,10 @@ def main():
         cuota = por_dia[n] / total * pct if pct else pt(por_dia[n])
         acum += cuota
         print(f"  día {n+1}  {ini:%a %d/%m %H:%M} -> {ini + timedelta(days=1):%a %d/%m %H:%M}"
-              f"  {cuota:5.1f} %  {tramo_tok[n]/1e6:4.0f}M tok  agentes {tramo_sub[n]/por_dia[n]*100:3.0f} %"
+              f"  {cuota:5.1f} %  {tramo_tok[n]/1e6:4.0f}M tok  agentes {tramo_sub[n]/(por_dia[n] or 1)*100:3.0f} %"
               f"  acumulado {acum:5.1f} / línea {linea[min(n, 6)]}"
-              + ("  (" + ", ".join(f"{nom} {x / por_dia[n] * cuota:.1f}" for nom, x in sorted(tramo_pc[n].items()))
+              + ("  (" + ", ".join(f"{nom} {x / (por_dia[n] or 1) * cuota:.1f}"
+                                   for nom, x in sorted(tramo_pc[n].items()))
                  + ")" if len(por_pc) > 1 else ""))
     print("\nPor proyecto (los worktrees van aparte):")
     for k, v in sorted(por_proy.items(), key=lambda x: -x[1]):

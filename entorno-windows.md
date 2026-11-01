@@ -164,8 +164,12 @@ hablado, no es un problema). Cuál es cuál: `$env:COMPUTERNAME`.
 * **La cuota es UNA para las dos:** `get_usage` da la suma. `medir-consumo-semanal.py` lee las conversaciones de
   la PC donde corre, deja ese consumo (por tramo de 24 h y proyecto, esa semana y la anterior, 70 días de historia)
   en `consumo/<COMPUTERNAME>.json`, lo commitea y sube solo, y suma lo que dejó la otra (dice de cuándo es). Lo
-  corre de fondo el hook de arranque en el primer chat de cada día (el archivo propio no es de hoy; antes, cada
-  2 días: cambiado el 01/11/2026 a pedido del dueño); preguntar «tokens» también lo actualiza. Lo de hoy, los subagentes y los chats por tamaño quedan solo de la PC donde corre. Se notó el
+  corre de fondo (prioridad baja) el hook de arranque en el primer chat de cada día **en cada PC**, mientras hoy no
+  haya quedado subido desde esa PC (`.git/consumo-subido`; si el push falla, reintenta el chat siguiente), y con
+  candado para que varios chats que arrancan juntos no lo corran a la vez (antes, cada 2 días; cambiado el
+  01/11/2026 a pedido del dueño, con revisión adversarial y probado en copias con un remoto falso). Límite: lo que
+  una PC gasta después de su primer chat del día recién lo ve la otra al día siguiente. Preguntar «tokens» también
+  lo actualiza. Lo de hoy, los subagentes y los chats por tamaño quedan solo de la PC donde corre. Se notó el
   2026-10-27 (~23:30): la casa llevaba 1.507M tokens y 588 USD de lista en la semana del 21/10 (casi todo el
   trabajo nocturno de Ocaso) con el 85 % real; el resto era la notebook, que el script no veía.
 * **Tareas pesadas sin nadie mirando (2026-10-27): se pueden proponer, sobre todo las de varias horas o que
