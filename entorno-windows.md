@@ -145,7 +145,7 @@ hablado, no es un problema). Cuál es cuál: `$env:COMPUTERNAME`.
   El tope de 2 agentes con tests pesados o navegadores se midió en la notebook; acá no se midió y rige el mismo.
   🔴 **El procesador calienta: nada al 100 % sostenido** (01/11/2026: 96 °C con un análisis largo de video; frecuencia
   fija a mano en 4.000 MHz, que en Ryzen apaga el freno térmico automático, y pasta térmica vieja). Tope pedido por el
-  dueño: **80 % del procesador**. Lo pesado se ata a 8 de los 12 hilos (afinidad; los hijos la heredan) o se le pasan
+  dueño: **80 % del procesador**. Lo pesado se ata a 6 de los 12 hilos (con 8, al 70 %, seguía en 90 °C; afinidad, los hijos la heredan) o se le pasan
   menos hilos (`-threads`). Ejemplo en Monitoreo-clinicas (`monitoreo/prioridad.py`).
   **El driver de la RX 6600 se cae de vez en cuando** (~25 veces desde feb-2026, la mayoría jugando; Windows lo
   reinicia y AMD deja un cartel «caducó el tiempo de espera de un controlador»). Un proceso que usaba la placa
