@@ -149,10 +149,12 @@ hablado, no es un problema). Cuál es cuál: `$env:COMPUTERNAME`.
   menos hilos (`-threads`). Ejemplo en Monitoreo-clinicas (`monitoreo/prioridad.py`).
   **Temperaturas: Claude puede leer el registro de MSI Afterburner** (activado por el dueño el 01/11/2026, para revisar
   después de jugar o si toca algo de la PC): `%ProgramFiles(x86)%\MSI Afterburner\HardwareMonitoring.hml`, texto, una
-  fila por segundo solo mientras Afterburner está abierto (`HwPollPeriod=1000`), tope 10 MB ≈ 12 h de registro. Filas
+  fila por segundo solo mientras Afterburner está abierto (`HwPollPeriod=1000`), ~240 bytes por fila. Las sesiones se
+  SUMAN al mismo archivo y al llegar al tope (1.000 MB ≈ 1.150 h abierto) **deja de anotar**, no pisa lo viejo: si un día
+  no hay datos nuevos, es eso (vaciarlo o subir el tope). Filas
   `80,` = datos; la fila `02,` da las columnas (temperatura de placa y de procesador, uso, frecuencia, consumo, FPS).
-  Al llegar al tope Afterburner no pisa de a poco: verificar qué hace la primera vez que pase. Leerlo con PowerShell
-  (`Get-Content -Tail`), nunca un `grep` sobre todo el historial de chats (tarda minutos y carga el procesador).
+  **Nunca leer el archivo entero** (hasta 1 GB): `C:\GitHub\PC	emperaturas.py dd/mm/aaaa [--desde hh:mm --hasta hh:mm]`
+  lo recorre de a una línea y da máximo, promedio, minutos de 90 °C o más y máximo por hora.
   **El driver de la RX 6600 se cae de vez en cuando** (~25 veces desde feb-2026, la mayoría jugando; Windows lo
   reinicia y AMD deja un cartel «caducó el tiempo de espera de un controlador»). Un proceso que usaba la placa
   (DirectML, juegos) puede morir SIN imprimir nada, y un `| tail`/`| grep` le tapa el código de error: parece una
