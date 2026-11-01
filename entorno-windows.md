@@ -147,6 +147,12 @@ hablado, no es un problema). Cuál es cuál: `$env:COMPUTERNAME`.
   fija a mano: undervolt 40x / 1,100 V en BIOS, ver repo PC; en ese modo el Ryzen no tiene el freno térmico automático de los 95 °C; el voltaje NO es el problema: pasta térmica seca, cooler de stock, dos ventiladores de gabinete y la caja metida en un mueble cerrado). Tope pedido por el
   dueño: **80 % del procesador**. Lo pesado se ata a 6 de los 12 hilos (con 8, al 70 %, seguía en 90 °C; afinidad, los hijos la heredan) o se le pasan
   menos hilos (`-threads`). Ejemplo en Monitoreo-clinicas (`monitoreo/prioridad.py`).
+  **Temperaturas: Claude puede leer el registro de MSI Afterburner** (activado por el dueño el 01/11/2026, para revisar
+  después de jugar o si toca algo de la PC): `%ProgramFiles(x86)%\MSI Afterburner\HardwareMonitoring.hml`, texto, una
+  fila por segundo solo mientras Afterburner está abierto (`HwPollPeriod=1000`), tope 10 MB ≈ 12 h de registro. Filas
+  `80,` = datos; la fila `02,` da las columnas (temperatura de placa y de procesador, uso, frecuencia, consumo, FPS).
+  Al llegar al tope Afterburner no pisa de a poco: verificar qué hace la primera vez que pase. Leerlo con PowerShell
+  (`Get-Content -Tail`), nunca un `grep` sobre todo el historial de chats (tarda minutos y carga el procesador).
   **El driver de la RX 6600 se cae de vez en cuando** (~25 veces desde feb-2026, la mayoría jugando; Windows lo
   reinicia y AMD deja un cartel «caducó el tiempo de espera de un controlador»). Un proceso que usaba la placa
   (DirectML, juegos) puede morir SIN imprimir nada, y un `| tail`/`| grep` le tapa el código de error: parece una
