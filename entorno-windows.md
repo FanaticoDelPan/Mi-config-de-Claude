@@ -153,7 +153,7 @@ hablado, no es un problema). Cuál es cuál: `$env:COMPUTERNAME`.
   SUMAN al mismo archivo y al llegar al tope (1.000 MB ≈ 1.150 h abierto) **deja de anotar**, no pisa lo viejo: si un día
   no hay datos nuevos, es eso (vaciarlo o subir el tope). Filas
   `80,` = datos; la fila `02,` da las columnas (temperatura de placa y de procesador, uso, frecuencia, consumo, FPS).
-  **Nunca leer el archivo entero** (hasta 1 GB): `C:\GitHub\PC	emperaturas.py dd/mm/aaaa [--desde hh:mm --hasta hh:mm]`
+  **Nunca leer el archivo entero** (hasta 1 GB): `C:\GitHub\PC\temperaturas.py dd/mm/aaaa [--desde hh:mm --hasta hh:mm]`
   lo recorre de a una línea y da máximo, promedio, minutos de 90 °C o más y máximo por hora.
   **El driver de la RX 6600 se cae de vez en cuando** (~25 veces desde feb-2026, la mayoría jugando; Windows lo
   reinicia y AMD deja un cartel «caducó el tiempo de espera de un controlador»). Un proceso que usaba la placa
