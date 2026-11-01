@@ -5,11 +5,12 @@ Uso:  python medir-consumo-semanal.py                          (la semana en cur
       (la fecha es el miércoles del REINICIO que abre la semana; el reinicio es a las 19:00 de Argentina)
       --sin-subir   no guarda ni sube el consumo de esta PC (para pruebas)
 
-Sale: total en USD y puntos, por tramo de 24 h desde el reinicio, por proyecto, subagentes y los chats por tamaño.
+Sale: total en USD y puntos, por tramo de 24 h desde el reinicio (con el reparto por PC), por proyecto, subagentes y
+los chats por tamaño.
 Con el porcentaje final de la semana recalibra cuántos USD/tokens vale un punto.
 Las dos PC del dueño comparten la cuota: cada corrida deja el consumo de ESTA PC (por tramo y proyecto, esta semana
 y la anterior) en consumo/<PC>.json, lo sube, y suma lo que dejó la otra. Lo de hoy, los subagentes y los chats por
-tamaño son solo de esta PC. El hook de arranque (check-symlink.ps1) lo corre de fondo si pasaron más de 2 días.
+tamaño son solo de esta PC. El hook de arranque (check-symlink.ps1) lo corre de fondo en el primer chat de cada día.
 La línea de base (semana 9/9 -> 16/9, 97 %): 33 USD y 48,6M tokens por punto; 292 subagentes (37 %);
 chats (todos los proyectos): consulta n=30 0,09 pt · chico n=42 0,44 · mediano n=19 1,46 (4,1 agentes)
 · grande n=11 4,37 (13,6 agentes; 48 de los 97 puntos).
@@ -143,6 +144,7 @@ def main():
     total = tokens = 0.0
     por_dia, por_proy = defaultdict(float), defaultdict(float)
     tramo_tok, tramo_sub = defaultdict(float), defaultdict(float)
+    tramo_pc = defaultdict(lambda: defaultdict(float))  # tramo -> PC -> USD
     chats = defaultdict(lambda: {"chat": 0.0, "sub": 0.0, "subs": set(), "ini": None, "ctx": 0})
     for f in glob.glob(os.path.join(RAIZ, "**", "*.jsonl"), recursive=True):
         if os.path.getmtime(f) < e0.timestamp():
@@ -193,6 +195,7 @@ def main():
             n = int((ts - t0) // timedelta(days=1))  # tramo de 24 h contado desde el reinicio
             por_dia[n] += usd
             tramo_tok[n] += a + b + r + o
+            tramo_pc[n][nombre_pc(PC)] += usd
             if es_sub:
                 tramo_sub[n] += usd
             por_proy[proy] += usd
@@ -229,6 +232,7 @@ def main():
                 por_dia[n] += v["usd"]
                 tramo_tok[n] += v["tok"]
                 tramo_sub[n] += v["usd_sub"]
+                tramo_pc[n][nom] += v["usd"]
                 por_proy[proy] += v["usd"]
                 proy_pc[proy][nom] = proy_pc[proy].get(nom, 0.0) + v["usd"]
         total += usd_pc
@@ -259,7 +263,9 @@ def main():
         acum += cuota
         print(f"  día {n+1}  {ini:%a %d/%m %H:%M} -> {ini + timedelta(days=1):%a %d/%m %H:%M}"
               f"  {cuota:5.1f} %  {tramo_tok[n]/1e6:4.0f}M tok  agentes {tramo_sub[n]/por_dia[n]*100:3.0f} %"
-              f"  acumulado {acum:5.1f} / línea {linea[min(n, 6)]}")
+              f"  acumulado {acum:5.1f} / línea {linea[min(n, 6)]}"
+              + ("  (" + ", ".join(f"{nom} {x / por_dia[n] * cuota:.1f}" for nom, x in sorted(tramo_pc[n].items()))
+                 + ")" if len(por_pc) > 1 else ""))
     print("\nPor proyecto (los worktrees van aparte):")
     for k, v in sorted(por_proy.items(), key=lambda x: -x[1]):
         if pt(v) >= 0.5:

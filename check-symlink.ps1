@@ -253,11 +253,11 @@ if (Get-Command git -ErrorAction SilentlyContinue) {
 }
 
 # Consumo de esta PC para la otra (las dos comparten la cuota): medir-consumo-semanal.py lo deja en
-# consumo/<PC>.json y lo sube. De fondo, para no demorar el arranque, y solo si el ultimo tiene mas de
-# 2 dias: queda al dia 2-3 veces por semana sin que nadie lo pida.
+# consumo/<PC>.json y lo sube. De fondo, para no demorar el arranque, y solo en el primer chat del dia
+# (el archivo no es de hoy): queda al dia cada dia que se usa la PC sin que nadie lo pida.
 $consumoPc = Join-Path $PSScriptRoot (Join-Path 'consumo' "$env:COMPUTERNAME.json")
 $py = Get-Command python -ErrorAction SilentlyContinue
-if ($py -and ((-not (Test-Path $consumoPc)) -or (Get-Item $consumoPc).LastWriteTime -lt (Get-Date).AddDays(-2))) {
+if ($py -and ((-not (Test-Path $consumoPc)) -or (Get-Item $consumoPc).LastWriteTime.Date -lt (Get-Date).Date)) {
     $medidor = Join-Path $PSScriptRoot 'medir-consumo-semanal.py'
     Start-Process -FilePath $py.Source -ArgumentList @('-I', "`"$medidor`"") -WindowStyle Hidden
 }
