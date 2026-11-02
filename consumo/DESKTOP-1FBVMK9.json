@@ -1,5 +1,5 @@
 {
- "actualizado": "2026-11-01T19:00-03:00",
+ "actualizado": "2026-11-02T10:04-03:00",
  "pc": "DESKTOP-1FBVMK9",
  "tramos": {
   "2026-10-15": {
@@ -150,10 +150,10 @@
   },
   "2026-11-01": {
    "C--GitHub-Monitoreo-clinicas": {
-    "subs": 1,
-    "tok": 724416,
-    "usd": 0.39,
-    "usd_sub": 0.05
+    "subs": 4,
+    "tok": 32599970,
+    "usd": 13.79,
+    "usd_sub": 6.03
    }
   }
  }
