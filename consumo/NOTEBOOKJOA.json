@@ -1,5 +1,5 @@
 {
- "actualizado": "2026-10-30T17:44-03:00",
+ "actualizado": "2026-11-02T11:02-03:00",
  "pc": "NOTEBOOKJOA",
  "tramos": {
   "2026-10-14": {
@@ -366,10 +366,16 @@
     "usd_sub": 0.0
    },
    "C--GitHub-skyone": {
-    "subs": 16,
-    "tok": 516883667,
-    "usd": 212.23,
-    "usd_sub": 133.66
+    "subs": 20,
+    "tok": 606306550,
+    "usd": 247.86,
+    "usd_sub": 161.54
+   },
+   "C--GitHub-skyone--claude-worktrees-asistente-instantaneas-y-lo-propio": {
+    "subs": 1,
+    "tok": 41342308,
+    "usd": 14.31,
+    "usd_sub": 14.31
    },
    "C--GitHub-skyone--claude-worktrees-mcp-seguimiento-agenda": {
     "subs": 1,
@@ -382,6 +388,20 @@
     "tok": 29292357,
     "usd": 11.32,
     "usd_sub": 4.25
+   }
+  },
+  "2026-10-30": {
+   "C--GitHub-skyone": {
+    "subs": 0,
+    "tok": 10478429,
+    "usd": 3.14,
+    "usd_sub": 0.0
+   },
+   "C--GitHub-skyone--claude-worktrees-asistente-instantaneas-y-lo-propio": {
+    "subs": 5,
+    "tok": 130030507,
+    "usd": 38.07,
+    "usd_sub": 38.07
    }
   }
  }
