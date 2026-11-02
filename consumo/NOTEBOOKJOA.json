@@ -1,5 +1,5 @@
 {
- "actualizado": "2026-11-02T11:02-03:00",
+ "actualizado": "2026-11-02T15:43-03:00",
  "pc": "NOTEBOOKJOA",
  "tramos": {
   "2026-10-14": {
@@ -402,6 +402,20 @@
     "tok": 130030507,
     "usd": 38.07,
     "usd_sub": 38.07
+   }
+  },
+  "2026-11-01": {
+   "C--GitHub-skyia-web-qa": {
+    "subs": 1,
+    "tok": 23618384,
+    "usd": 10.39,
+    "usd_sub": 3.12
+   },
+   "C--GitHub-skyone": {
+    "subs": 19,
+    "tok": 293019055,
+    "usd": 116.46,
+    "usd_sub": 48.17
    }
   }
  }
