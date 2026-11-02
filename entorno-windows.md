@@ -123,6 +123,10 @@ incluidos— y no necesita que el comando borre nada**: los falsos positivos son
   (además `CREATE_NO_WINDOW` se ignora junto con `DETACHED_PROCESS`). Va **`CREATE_NO_WINDOW` +
   `CREATE_NEW_PROCESS_GROUP`, sin `DETACHED_PROCESS`**: la consola oculta la heredan los hijos. Lo mismo para
   cualquier proceso de fondo que lance otros (2026-10-30, SkyOne: la auditoría de dependencias del arranque).
+  **En Node, `spawn(..., { detached: true })` es lo mismo** (`windowsHide` no lo salva): Playwright cierra Chrome
+  con `taskkill` por cmd y salta un cmd negro en cada cierre (2026-11-02, `skyia-web-qa/scripts/vivo.mjs`). Node
+  no deja pedir `CREATE_NEW_PROCESS_GROUP` y sin `detached` mata al hijo cuando termina el padre → un guardián
+  suelto lanza al de verdad con `windowsHide` y sin `detached`, y lo espera.
 * **Algo largo va con `run_in_background`, nunca con un `&` a mano en Bash**: ese proceso queda sin dueño en el
   acto y nadie lo puede cerrar después.
 * **Entrar a una copia aparte (`EnterWorktree`) con agentes corriendo les bloquea todos los comandos**: la sesión
