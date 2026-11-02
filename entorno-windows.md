@@ -140,7 +140,7 @@ hablado, no es un problema). Cuál es cuál: `$env:COMPUTERNAME`.
   parte del trabajo (SkyOne y la empresa). Ya no viaja a la casa: queda en la oficina, a veces trabajando de noche.
   Las rarezas de la sección siguiente son de esta PC salvo que digan otra cosa. Su nombre de equipo: anotarlo la
   primera vez que se corra ahí.
-* **Escritorio de la casa** (`PC-JOA-CASA`, antes `DESKTOP-1FBVMK9`: renombrada el 30/10/2026; Ryzen 5 3600 de 6 núcleos/12 hilos, 32 GB en 4 placas, Radeon
+* **Escritorio de la casa** (`DESKTOP-1FBVMK9`; el 30/10/2026 se anotó renombrada a `PC-JOA-CASA` pero el 02/11 seguía con el nombre viejo: el cambio no se aplicó. Lo hace el dueño con `Rename-Computer` como administrador + reinicio; el medidor de consumo ya trata los dos nombres como «casa»; Ryzen 5 3600 de 6 núcleos/12 hilos, 32 GB en 4 placas, Radeon
   RX 6600, dos SSD y un disco): noches, madrugadas y fines de semana; proyectos personales (Ocaso) y otras cosas.
   El tope de 2 agentes con tests pesados o navegadores se midió en la notebook; acá no se midió y rige el mismo.
   🔴 **El procesador calienta: nada al 100 % sostenido** (01/11/2026: 96 °C con un análisis largo de video; frecuencia
