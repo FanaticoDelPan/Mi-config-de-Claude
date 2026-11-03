@@ -127,6 +127,9 @@ incluidos— y no necesita que el comando borre nada**: los falsos positivos son
   con `taskkill` por cmd y salta un cmd negro en cada cierre (2026-11-02, `skyia-web-qa/scripts/vivo.mjs`). Node
   no deja pedir `CREATE_NEW_PROCESS_GROUP` y sin `detached` mata al hijo cuando termina el padre → un guardián
   suelto lanza al de verdad con `windowsHide` y sin `detached`, y lo espera.
+  **Y un script suelto de Playwright corrido desde la consola de Claude también** (no tiene consola propia): el
+  arreglo general es que la librería común se relance a sí misma con `spawnSync(process.execPath, argv,
+  { windowsHide: true, stdio: 'inherit' })` y una variable que corte la vuelta (2026-11-03, `skyia-web-qa/scripts/lib.mjs`).
 * **Algo largo va con `run_in_background`, nunca con un `&` a mano en Bash**: ese proceso queda sin dueño en el
   acto y nadie lo puede cerrar después.
 * **Entrar a una copia aparte (`EnterWorktree`) con agentes corriendo les bloquea todos los comandos**: la sesión
