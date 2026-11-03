@@ -71,7 +71,12 @@ def _llamar(funcion):
 
 
 def _encabezados(payload: dict) -> dict:
-    return {h["name"].lower(): h["value"] for h in payload.get("headers", [])}
+    # Se queda con el PRIMERO de cada nombre: Google agrega su Authentication-Results arriba de todo, y uno más
+    # abajo puede venir escrito por el remitente para hacerse pasar por verificado.
+    encabezados: dict = {}
+    for h in payload.get("headers", []):
+        encabezados.setdefault(h["name"].lower(), h["value"])
+    return encabezados
 
 
 def _fecha(valor: str | None) -> str:
