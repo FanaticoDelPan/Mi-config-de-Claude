@@ -200,6 +200,12 @@ hablado, no es un problema). Cuál es cuál: `$env:COMPUTERNAME`.
 
 ## Rarezas conocidas de la máquina y de la app (contestar sin re-investigar)
 
+* **Un chat compacta ANTES del 60 % si quedó más de una hora quieto** (desde la 2.1.308, 2026-10-27): al volver,
+  la app cambia la charla por un resumen ya armado (`compactMetadata.precomputed: true`, ~50 ms, entre 200k y
+  330k en la primera semana) en vez de reescribir el caché vencido. No es el umbral roto: las que no tuvieron
+  pausa siguen cortando a los ~600k. Se deja así: ahorra el turno más caro y lo que importa ya vive en tickets
+  y docs. Si un chat tiene un acuerdo a medio cerrar solo en la charla, se escribe antes de dejarlo quieto.
+
 * **El Explorador se cae solo** desde el 2026-08-13 (barra de tareas y escritorio), solo en la NOTEBOOK. Firma
   fija: 0xc0000409, fail-fast código 7 dentro de Explorer.EXE, desplazamiento 0x6698e; siempre el proceso
   PRINCIPAL. 🔑 **Mecanismo (28/10, con los símbolos públicos y el depurador de la tienda, `Microsoft.WinDbg`):**
