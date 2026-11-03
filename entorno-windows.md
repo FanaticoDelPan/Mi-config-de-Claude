@@ -130,6 +130,11 @@ incluidos— y no necesita que el comando borre nada**: los falsos positivos son
   **Y un script suelto de Playwright corrido desde la consola de Claude también** (no tiene consola propia): el
   arreglo general es que la librería común se relance a sí misma con `spawnSync(process.execPath, argv,
   { windowsHide: true, stdio: 'inherit' })` y una variable que corte la vuelta (2026-11-03, `skyia-web-qa/scripts/lib.mjs`).
+* **Windows está en CASTELLANO: un script de instalación no puede depender del idioma.** `takeown /D Y` falla (espera
+  `S`): el dueño se cambia con `icacls /setowner *<SID>`. **`icacls` con `/C` devuelve 0 aunque no haya podido
+  hacer nada**: sin `/C` cuando el resultado importa, y verificado después leyendo la ACL. Nunca leer la salida de
+  texto de `icacls`/`net`/`whoami` (cambia con el idioma); los grupos, por SID. `New-LocalUser -Description`
+  admite hasta 48 caracteres (2026-11-03, `Migracion-SkyIA/automatico`).
 * **Algo largo va con `run_in_background`, nunca con un `&` a mano en Bash**: ese proceso queda sin dueño en el
   acto y nadie lo puede cerrar después.
 * **Entrar a una copia aparte (`EnterWorktree`) con agentes corriendo les bloquea todos los comandos**: la sesión
