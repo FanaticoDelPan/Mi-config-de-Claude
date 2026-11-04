@@ -1,5 +1,5 @@
 {
- "actualizado": "2026-11-03T10:18-03:00",
+ "actualizado": "2026-11-04T00:20-03:00",
  "pc": "PC-JOA-CASA",
  "tramos": {
   "2026-10-21": {
@@ -141,10 +141,24 @@
    }
   },
   "2026-11-02": {
+   "C--GitHub-Monitoreo-clinicas": {
+    "subs": 0,
+    "tok": 104831,
+    "usd": 0.34,
+    "usd_sub": 0.0
+   },
    "C--GitHub-ZZ-Sin-repo-todavia-Nada": {
     "subs": 0,
     "tok": 5867956,
     "usd": 2.57,
+    "usd_sub": 0.0
+   }
+  },
+  "2026-11-03": {
+   "C--GitHub-ZZ-Sin-repo-todavia-Nada": {
+    "subs": 0,
+    "tok": 2387004,
+    "usd": 1.76,
     "usd_sub": 0.0
    }
   }
