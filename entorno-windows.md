@@ -280,8 +280,10 @@ hablado, no es un problema). Cuál es cuál: `$env:COMPUTERNAME`.
   confirmó todavía si la usa. **(2)** El login de la terminal es aparte del de la app y vence: `claude` → `/login`
   (cuenta con suscripción) → `/exit`. Sin `origin/HEAD` local los chats remotos van a una rama inventada:
   `git remote set-head origin -a`. **(3, 02/11/2026)** La app conecta sus chats a Remote Control sola (ajuste
-  «Connect new sessions to Remote Control», prendido): si un chat de la app en esa carpeta lo tiene activo, el
-  servidor falla con «already served by the Claude app»; se apaga Remote Control en ese chat y se vuelve a correr.
+  «Connect new sessions to Remote Control», prendido) y además ofrece ella misma la carpeta al teléfono: con la app
+  abierta el servidor se niega con «already served by the Claude app» aunque ningún chat tenga Remote Control, y los
+  chats nuevos desde el teléfono andan igual (por la app). No es falla: el script lo muestra en verde (04/11/2026) y
+  solo lo demás en rojo; tarda ~1 minuto en decirlo porque el comando espera antes de salir.
   El nombre que ve el teléfono es el de la PC, leído al arrancar (renombrarla no rompe nada). El script se guarda
   en UTF-8 con BOM o PowerShell 5.1 rompe los acentos. Plantilla: `Monitoreo-clinicas/scripts/remoto.ps1` (la de Ocaso no está clonada en la PC de la casa). Cerrar la ventana NO frena el
   proceso: queda de fondo (buscar `claude.exe remote-control` y frenarlo).
