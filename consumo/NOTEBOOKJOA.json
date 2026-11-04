@@ -1,5 +1,5 @@
 {
- "actualizado": "2026-11-04T11:24-03:00",
+ "actualizado": "2026-11-04T13:16-03:00",
  "pc": "NOTEBOOKJOA",
  "tramos": {
   "2026-10-14": {
@@ -458,16 +458,22 @@
   },
   "2026-11-03": {
    "C--GitHub-skyone": {
-    "subs": 1,
-    "tok": 39148718,
-    "usd": 26.77,
-    "usd_sub": 20.06
+    "subs": 20,
+    "tok": 382860434,
+    "usd": 162.92,
+    "usd_sub": 131.19
    },
    "C--GitHub-skyone--claude-worktrees-circuito-franja": {
     "subs": 1,
     "tok": 14717785,
     "usd": 4.31,
     "usd_sub": 4.31
+   },
+   "C--GitHub-skyone--claude-worktrees-clave-nombre-archivo": {
+    "subs": 1,
+    "tok": 16561373,
+    "usd": 6.69,
+    "usd_sub": 1.49
    }
   }
  }
