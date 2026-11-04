@@ -215,6 +215,12 @@ hablado, no es un problema). Cuál es cuál: `$env:COMPUTERNAME`.
   compacta** (0 de 8 por encima de 200k, hasta 528k; el 04/11 la app se había actualizado a la 2.1.317 en el
   medio): el resumen armado parece vivir solo mientras la app sigue abierta. Ese primer turno de la mañana paga
   el caché entero. Medirlo de nuevo: pausas >1 h en los `.jsonl` contra las líneas con `compactMetadata`.
+* **`get_usage` dice «compacta al 95 %» y está bien:** es el 95 % de la ventana de cuenta (633k) = ~600k, el
+  60 % del millón. No es el umbral roto. **Los subagentes heredan el mismo umbral** (la variable es del
+  proceso): medido 04/11, de ~124 agentes de la semana el único que llegó compactó a los 603k y ninguno pasó
+  de 600k. **Decidido que no: bajarlo solo para agentes.** No hay perilla aparte, bajar la global también achica
+  los chats, y un constructor que compacta a mitad de obra pierde el detalle de lo que ya tocó. Leer contexto
+  por encima de 250k costó ~3 puntos de la semana. La palanca de calidad es el ENCARGO: piezas más chicas.
 
 * **El Explorador se cae solo** desde el 2026-08-13 (barra de tareas y escritorio), solo en la NOTEBOOK. Firma
   fija: 0xc0000409, fail-fast código 7 dentro de Explorer.EXE, desplazamiento 0x6698e; siempre el proceso
