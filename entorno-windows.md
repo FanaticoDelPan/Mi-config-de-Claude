@@ -210,6 +210,11 @@ hablado, no es un problema). Cuál es cuál: `$env:COMPUTERNAME`.
   330k en la primera semana) en vez de reescribir el caché vencido. No es el umbral roto: las que no tuvieron
   pausa siguen cortando a los ~600k. Se deja así: ahorra el turno más caro y lo que importa ya vive en tickets
   y docs. Si un chat tiene un acuerdo a medio cerrar solo en la charla, se escribe antes de dejarlo quieto.
+  🔑 **No es siempre (medido 04/11 sobre 6 días de chats):** solo pasa con el chat por encima de ~200k (debajo,
+  nunca) y con la pausa DENTRO de la misma sesión de la app (1-14 h). **Al retomar a la mañana siguiente no
+  compacta** (0 de 8 por encima de 200k, hasta 528k; el 04/11 la app se había actualizado a la 2.1.317 en el
+  medio): el resumen armado parece vivir solo mientras la app sigue abierta. Ese primer turno de la mañana paga
+  el caché entero. Medirlo de nuevo: pausas >1 h en los `.jsonl` contra las líneas con `compactMetadata`.
 
 * **El Explorador se cae solo** desde el 2026-08-13 (barra de tareas y escritorio), solo en la NOTEBOOK. Firma
   fija: 0xc0000409, fail-fast código 7 dentro de Explorer.EXE, desplazamiento 0x6698e; siempre el proceso
