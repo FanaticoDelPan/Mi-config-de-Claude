@@ -1,4 +1,4 @@
-"""¿Los subagentes rinden peor con la memoria llena? Señales de los registros de 14 días, por tramo de contexto:
+﻿"""¿Los subagentes rinden peor con la memoria llena? Señales de los registros de 14 días, por tramo de contexto:
 - herramienta que falla (is_error), y en particular Edit que no encuentra el texto (se acordaba mal del archivo);
 - relectura de un archivo que ya había leído y no tocó desde entonces.
 Más una simulación de cuánto se ahorra partir un agente largo en dos."""
@@ -9,7 +9,7 @@ from datetime import datetime, timedelta, timezone
 sys.stdout.reconfigure(encoding="utf-8")
 RAIZ = os.path.expanduser("~/.claude/projects")
 desde = (datetime.now(timezone.utc) - timedelta(days=14)).timestamp()
-TRAMOS = [(0, 100e3), (100e3, 200e3), (200e3, 300e3), (300e3, 400e3), (400e3, 1e9)]
+TRAMOS = [(i * 50e3, (i + 1) * 50e3) for i in range(10)] + [(500e3, 1e9)]
 LEER = 0.20 / 1e6  # Opus 5.5, lectura de caché, USD por token
 ESCRIBIR = 4 * 1.25 / 1e6
 PT = 1769 / 66.5

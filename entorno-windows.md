@@ -320,14 +320,19 @@ Lo que sostiene una regla, cuando el porqué no entra en el renglón que la enun
   puede dar como contexto, nunca como conclusión ni como «ojo, mucho en agentes». Lo que sí es un hallazgo, con el
   caso concreto: agentes que releen lo mismo, que se lanzaron para algo chico, o cuyo resultado se rehízo; y la
   palanca de fondo, cuando la cuota no alcanza, es cuánto trabajo se encara, no cuántos agentes.
-* **Encargo que termine antes de ~250k (2026-11-04, regla 5):** medido sobre 277 agentes de 14 días en la
+* **Encargo que termine antes de ~350k (2026-11-04, regla 5):** medido sobre 277 agentes de 14 días en la
   oficina (33.000 usos de herramientas). Volver a leer EXACTAMENTE el mismo pedazo de archivo sin haberlo
-  editado: 0,4 % de las lecturas bajo 100k, 6 % entre 100k y 200k, 31 % entre 200k y 300k, 69 % entre 300k y
-  400k, 83 % arriba de 400k. Las fallas de herramientas no suben (6,6 % → 2,4 %) y los Edit que no encuentran el
-  texto quedan en ~0,1 %: no se equivoca más, **se olvida y relee**, y esa relectura es la que lo agranda.
-  Duda abierta: no cuenta lo cambiado por consola, por git o por otro agente, que justifica parte de las
-  relecturas. Partir cada agente al pasar 250k-350k, con 50k-100k de relectura en el que sigue, ahorra 1-3,5
-  puntos por semana: la razón es la calidad, no la cuota. Volver a medir: `medir-relecturas-agentes.py` (este
+  editado, por tramo de 50k: <2 % hasta 150k, 9 % a 150-200k, 23 % a 200-250k, 43 % a 250-300k, 63 % a
+  300-350k, 77 % a 350-400k y meseta de 81-85 % arriba de 400k (sube parejo, sin quiebre). Las fallas de
+  herramientas no suben (8 % → 2-3 %) y los Edit que no encuentran el texto quedan en ~0,1 %: no se equivoca
+  más, **se olvida y relee**, y esa relectura es la que lo agranda. Duda abierta: no cuenta lo cambiado por
+  consola, por git o por otro agente, que justifica parte de las relecturas.
+  **Por qué 350k y no 250k (dueño):** el COSTO FIJO de un agente. Arranca con ~71k de memoria y un constructor
+  llega a su primer cambio con ~170k (mediana), habiendo gastado ~0,05-0,07 puntos en orientarse; con 250k le
+  quedaban solo ~80k para trabajar. Con 350k pasa el 23 % de los agentes (31 % pasa 300k, 14 % pasa 400k):
+  lo normal es partir en DOS, tres solo si es enorme. La memoria no se suma: un agente que llegaría a 600k
+  partido en dos da ~350k cada uno, porque los dos cargan su orientación. En cuota da casi lo mismo (partir
+  ahorra 1-3,5 puntos por semana de memoria y paga el arranque del nuevo): la razón es la calidad. Volver a medir: `medir-relecturas-agentes.py` (este
   repo, sin argumentos, 14 días de esta PC); si la curva se aplana, el tope de 250k se revisa.
 * **Fable no es superior (2026-10-19):** en Artificial Analysis Opus 5.5 rinde más que Fable 5.1 y cuesta la
   mitad en cada nivel de esfuerzo, y en tres publicaciones de SkyOne trajo más hallazgos reales y menos falsas alarmas.
