@@ -1,5 +1,5 @@
 {
- "actualizado": "2026-11-03T11:05-03:00",
+ "actualizado": "2026-11-04T11:24-03:00",
  "pc": "NOTEBOOKJOA",
  "tramos": {
   "2026-10-14": {
@@ -422,6 +422,52 @@
     "tok": 397230716,
     "usd": 149.26,
     "usd_sub": 54.92
+   }
+  },
+  "2026-11-02": {
+   "C--GitHub-Migracion-SkyIA": {
+    "subs": 0,
+    "tok": 12401176,
+    "usd": 6.45,
+    "usd_sub": 0.0
+   },
+   "C--GitHub-skyia-web-qa": {
+    "subs": 4,
+    "tok": 314917230,
+    "usd": 100.14,
+    "usd_sub": 80.72
+   },
+   "C--GitHub-skyone": {
+    "subs": 17,
+    "tok": 409413250,
+    "usd": 187.99,
+    "usd_sub": 96.8
+   },
+   "C--GitHub-skyone--claude-worktrees-circuito-del-cliente": {
+    "subs": 1,
+    "tok": 13002269,
+    "usd": 7.06,
+    "usd_sub": 7.06
+   },
+   "C--GitHub-skyone--claude-worktrees-circuito-franja": {
+    "subs": 3,
+    "tok": 100050291,
+    "usd": 32.78,
+    "usd_sub": 32.78
+   }
+  },
+  "2026-11-03": {
+   "C--GitHub-skyone": {
+    "subs": 1,
+    "tok": 39148718,
+    "usd": 26.77,
+    "usd_sub": 20.06
+   },
+   "C--GitHub-skyone--claude-worktrees-circuito-franja": {
+    "subs": 1,
+    "tok": 14717785,
+    "usd": 4.31,
+    "usd_sub": 4.31
    }
   }
  }
