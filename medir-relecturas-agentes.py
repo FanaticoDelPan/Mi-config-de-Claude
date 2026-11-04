@@ -1,6 +1,7 @@
 ﻿"""¿Los subagentes rinden peor con la memoria llena? Señales de los registros de 14 días, por tramo de contexto:
 - herramienta que falla (is_error), y en particular Edit que no encuentra el texto (se acordaba mal del archivo);
-- relectura de un archivo que ya había leído y no tocó desde entonces.
+- relectura de un archivo de TEXTO que ya había leído y no tocó desde entonces. Las imágenes y lo temporal se
+  descartan: contándolos, una tarea que mira cuadros de cámara inventaba una curva de 0 % a 83 %.
 Más una simulación de cuánto se ahorra partir un agente largo en dos."""
 import glob, json, os, sys
 from collections import defaultdict
@@ -54,7 +55,7 @@ for f in glob.glob(os.path.join(RAIZ, "**", "subagents", "*.jsonl"), recursive=T
                 usos[b["id"]] = (b.get("name"), ruta, ctx_act)
                 t = tramo(ctx_act)
                 est[t]["usos"] += 1
-                if b.get("name") == "Read" and ruta:
+                if b.get("name") == "Read" and ruta and not ruta.endswith((".png", ".jpg", ".jpeg", ".gif", ".webp")) and "\\temp\\" not in ruta and "/tmp/" not in ruta:
                     est[t]["lecturas"] += 1
                     pedazo = (ruta, inp.get("offset"), inp.get("limit"))  # otra parte del mismo archivo no cuenta
                     if pedazo in leidos:

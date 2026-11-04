@@ -220,7 +220,8 @@ hablado, no es un problema). Cuál es cuál: `$env:COMPUTERNAME`.
   proceso): medido 04/11, de ~124 agentes de la semana el único que llegó compactó a los 603k y ninguno pasó
   de 600k. **Decidido que no: bajarlo solo para agentes.** No hay perilla aparte, bajar la global también achica
   los chats, y un constructor que compacta a mitad de obra pierde el detalle de lo que ya tocó. Leer contexto
-  por encima de 250k costó ~3 puntos de la semana. La palanca de calidad es el ENCARGO: piezas más chicas.
+  por encima de 250k costó ~3 puntos de la semana. (Ojo: los chats abiertos antes del cambio del 27/10 compactaron
+  a ~368k, agentes incluidos, así que una medición que cruce esa fecha mezcla los dos umbrales.)
 
 * **El Explorador se cae solo** desde el 2026-08-13 (barra de tareas y escritorio), solo en la NOTEBOOK. Firma
   fija: 0xc0000409, fail-fast código 7 dentro de Explorer.EXE, desplazamiento 0x6698e; siempre el proceso
@@ -320,20 +321,20 @@ Lo que sostiene una regla, cuando el porqué no entra en el renglón que la enun
   puede dar como contexto, nunca como conclusión ni como «ojo, mucho en agentes». Lo que sí es un hallazgo, con el
   caso concreto: agentes que releen lo mismo, que se lanzaron para algo chico, o cuyo resultado se rehízo; y la
   palanca de fondo, cuando la cuota no alcanza, es cuánto trabajo se encara, no cuántos agentes.
-* **Encargo que termine antes de ~350k (2026-11-04, regla 5):** medido sobre 277 agentes de 14 días en la
-  oficina (33.000 usos de herramientas). Volver a leer EXACTAMENTE el mismo pedazo de archivo sin haberlo
-  editado, por tramo de 50k: <2 % hasta 150k, 9 % a 150-200k, 23 % a 200-250k, 43 % a 250-300k, 63 % a
-  300-350k, 77 % a 350-400k y meseta de 81-85 % arriba de 400k (sube parejo, sin quiebre). Las fallas de
-  herramientas no suben (8 % → 2-3 %) y los Edit que no encuentran el texto quedan en ~0,1 %: no se equivoca
-  más, **se olvida y relee**, y esa relectura es la que lo agranda. Duda abierta: no cuenta lo cambiado por
-  consola, por git o por otro agente, que justifica parte de las relecturas.
-  **Por qué 350k y no 250k (dueño):** el COSTO FIJO de un agente. Arranca con ~71k de memoria y un constructor
-  llega a su primer cambio con ~170k (mediana), habiendo gastado ~0,05-0,07 puntos en orientarse; con 250k le
-  quedaban solo ~80k para trabajar. Con 350k pasa el 23 % de los agentes (31 % pasa 300k, 14 % pasa 400k):
-  lo normal es partir en DOS, tres solo si es enorme. La memoria no se suma: un agente que llegaría a 600k
-  partido en dos da ~350k cada uno, porque los dos cargan su orientación. En cuota da casi lo mismo (partir
-  ahorra 1-3,5 puntos por semana de memoria y paga el arranque del nuevo): la razón es la calidad. Volver a medir: `medir-relecturas-agentes.py` (este
-  repo, sin argumentos, 14 días de esta PC); si la curva se aplana, el tope de 250k se revisa.
+* **Decidido que no: un tope de memoria por encargo (2026-11-04, regla 5).** Se partió de que un agente con la
+  memoria llena «se olvida y relee», y una medición de 277 agentes de 14 días pareció confirmarlo: 0 % → 83 % de
+  relecturas del mismo pedazo de archivo. **Era un artefacto (lo cazó la refutación adversarial):** el 99 % eran
+  IMÁGENES (cuadros de cámara del contador de ocupación, capturas que un script regenera con el mismo nombre),
+  y dos agentes decidían la curva. **Solo texto: 0-0,8 % en TODOS los tramos, de 0 a 500k**, y en dos semanas
+  hay entre 0 y 3 casos que parezcan olvido. Las fallas de herramientas bajan con la memoria (8 % → 2-3 %) y los
+  Edit que no encuentran el texto quedan en ~0,1 %. Además, releer un texto que no cambió no agranda nada: la
+  herramienta contesta «file unchanged». **Lo que vale:** se parte por PIEZAS que se revisan por separado, y el
+  único tope defendible es que un constructor no llegue a compactar (~600k), porque ahí sí pierde el detalle
+  de lo que tocó. El COSTO FIJO de un agente nuevo: arranca con ~71k y un constructor llega a su primer cambio
+  con ~170k (mediana), gastando ~0,05-0,07 puntos en orientarse. Partir de más, por eso, se paga dos veces.
+  Volver a medir con `medir-relecturas-agentes.py` (este repo, 14 días de esta PC; ya descarta las imágenes y lo
+  temporal). Para saber de verdad si rinde peor, hay que medir el RESULTADO por agente según su memoria final
+  (hallazgos del revisor, trabajo rehecho, tests rojos), no las relecturas.
 * **Fable no es superior (2026-10-19):** en Artificial Analysis Opus 5.5 rinde más que Fable 5.1 y cuesta la
   mitad en cada nivel de esfuerzo, y en tres publicaciones de SkyOne trajo más hallazgos reales y menos falsas alarmas.
 * **Piso para delegar construcción (2026-10-29, regla 3):** sale de Gentle-AI (`internal/assets/claude/orchestrator.md`
