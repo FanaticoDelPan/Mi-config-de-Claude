@@ -320,6 +320,15 @@ Lo que sostiene una regla, cuando el porqué no entra en el renglón que la enun
   puede dar como contexto, nunca como conclusión ni como «ojo, mucho en agentes». Lo que sí es un hallazgo, con el
   caso concreto: agentes que releen lo mismo, que se lanzaron para algo chico, o cuyo resultado se rehízo; y la
   palanca de fondo, cuando la cuota no alcanza, es cuánto trabajo se encara, no cuántos agentes.
+* **Encargo que termine antes de ~250k (2026-11-04, regla 5):** medido sobre 277 agentes de 14 días en la
+  oficina (33.000 usos de herramientas). Volver a leer EXACTAMENTE el mismo pedazo de archivo sin haberlo
+  editado: 0,4 % de las lecturas bajo 100k, 6 % entre 100k y 200k, 31 % entre 200k y 300k, 69 % entre 300k y
+  400k, 83 % arriba de 400k. Las fallas de herramientas no suben (6,6 % → 2,4 %) y los Edit que no encuentran el
+  texto quedan en ~0,1 %: no se equivoca más, **se olvida y relee**, y esa relectura es la que lo agranda.
+  Duda abierta: no cuenta lo cambiado por consola, por git o por otro agente, que justifica parte de las
+  relecturas. Partir cada agente al pasar 250k-350k, con 50k-100k de relectura en el que sigue, ahorra 1-3,5
+  puntos por semana: la razón es la calidad, no la cuota. Volver a medir: `medir-relecturas-agentes.py` (este
+  repo, sin argumentos, 14 días de esta PC); si la curva se aplana, el tope de 250k se revisa.
 * **Fable no es superior (2026-10-19):** en Artificial Analysis Opus 5.5 rinde más que Fable 5.1 y cuesta la
   mitad en cada nivel de esfuerzo, y en tres publicaciones de SkyOne trajo más hallazgos reales y menos falsas alarmas.
 * **Piso para delegar construcción (2026-10-29, regla 3):** sale de Gentle-AI (`internal/assets/claude/orchestrator.md`
