@@ -1,5 +1,5 @@
 {
- "actualizado": "2026-11-04T00:20-03:00",
+ "actualizado": "2026-11-05T10:28-03:00",
  "pc": "PC-JOA-CASA",
  "tramos": {
   "2026-10-21": {
@@ -155,10 +155,16 @@
    }
   },
   "2026-11-03": {
+   "C--GitHub-Monitoreo-clinicas": {
+    "subs": 0,
+    "tok": 1169912,
+    "usd": 1.36,
+    "usd_sub": 0.0
+   },
    "C--GitHub-ZZ-Sin-repo-todavia-Nada": {
     "subs": 0,
-    "tok": 2387004,
-    "usd": 1.76,
+    "tok": 4373369,
+    "usd": 3.07,
     "usd_sub": 0.0
    }
   }
