@@ -1,5 +1,5 @@
 {
- "actualizado": "2026-11-04T13:16-03:00",
+ "actualizado": "2026-11-05T11:16-03:00",
  "pc": "NOTEBOOKJOA",
  "tramos": {
   "2026-10-14": {
@@ -458,10 +458,16 @@
   },
   "2026-11-03": {
    "C--GitHub-skyone": {
-    "subs": 20,
-    "tok": 382860434,
-    "usd": 162.92,
-    "usd_sub": 131.19
+    "subs": 42,
+    "tok": 1067287580,
+    "usd": 405.13,
+    "usd_sub": 310.46
+   },
+   "C--GitHub-skyone--claude-worktrees-agent-a55cec379ce3d615c": {
+    "subs": 5,
+    "tok": 63177897,
+    "usd": 24.65,
+    "usd_sub": 18.05
    },
    "C--GitHub-skyone--claude-worktrees-circuito-franja": {
     "subs": 1,
@@ -474,6 +480,38 @@
     "tok": 16561373,
     "usd": 6.69,
     "usd_sub": 1.49
+   },
+   "C--GitHub-skyone--claude-worktrees-gh715-limite-oferta-baja": {
+    "subs": 4,
+    "tok": 28429352,
+    "usd": 10.89,
+    "usd_sub": 10.89
+   },
+   "C--GitHub-skyone--claude-worktrees-guardia-consola-python": {
+    "subs": 1,
+    "tok": 3566833,
+    "usd": 2.47,
+    "usd_sub": 2.47
+   },
+   "C--GitHub-skyone--claude-worktrees-mcp-clave-cifrada": {
+    "subs": 5,
+    "tok": 29720382,
+    "usd": 10.98,
+    "usd_sub": 10.98
+   },
+   "C--GitHub-skyone--claude-worktrees-qa-uso-tanda-2": {
+    "subs": 7,
+    "tok": 105788817,
+    "usd": 36.04,
+    "usd_sub": 36.04
+   }
+  },
+  "2026-11-04": {
+   "C--GitHub-skyone": {
+    "subs": 17,
+    "tok": 187385924,
+    "usd": 67.19,
+    "usd_sub": 52.24
    }
   }
  }
