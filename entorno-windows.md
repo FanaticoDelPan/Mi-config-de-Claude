@@ -386,7 +386,10 @@ Lo que sostiene una regla, cuando el porqué no entra en el renglón que la enun
   claude.com, 14/08/2026; Thariq sugiere que en los modelos nuevos no — sin resolver). **Cómo se valida** (en la PC de
   SkyOne, con encargos reales, unos 5-10 de cada tipo): constructores en `medium` sin más trabajo rehecho ni más
   hallazgos del revisor atribuibles al constructor que antes; revisores en `xhigh` con más hallazgos reales sin más
-  falsas alarmas; anotar el tiempo por encargo y la cuota de la semana (`medir-consumo-semanal.py`). Un constructor en
+  falsas alarmas; anotar el tiempo por encargo y la cuota de la semana (`medir-consumo-semanal.py`). **Dónde se
+  anota:** `prueba-esfuerzo-agentes.tsv` (al lado de este archivo), una fila por agente al volver, sea encargo real
+  o de una tanda controlada (caso viejo con resultado conocido corrido a dos niveles: en SkyOne, los hallazgos ya
+  clasificados de `docs/revisiones/hallazgos.tsv` son la vara de los revisores). Un constructor en
   `medium` que entrega peor → ese tipo de encargo vuelve a `high` y se anota el caso. **Al cerrar la prueba:** cambiar
   «EN PRUEBA» por «validado el <fecha>» acá y en la regla 5, con lo medido.
 * **Piso para delegar construcción (2026-10-29, regla 3):** sale de Gentle-AI (`internal/assets/claude/orchestrator.md`

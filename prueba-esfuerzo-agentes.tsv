@@ -1,0 +1,8 @@
+# Prueba del nivel de esfuerzo por agente (regla 5; contexto y criterio de cierre: entorno-windows.md §Subagentes).
+# UNA fila por agente lanzado, en el MISMO trabajo en que vuelve. Solo se agregan filas al final (las dos PC escriben aca).
+# origen: real (encargo del dia) | tanda (caso viejo con resultado conocido, corrido a dos niveles para comparar).
+# tipo: barrido | construir | arreglar | revisar.  nivel: low | medium | high | xhigh | max.
+# minutos y tokens: los que informa la herramienta al volver el agente.
+# resultado: ok | rehecho (hubo que corregirlo o rehacerlo) | fallo.  reales / falsas: hallazgos (solo revisores).
+# rehecho_por: que hubo que corregir y quien lo vio (yo, el revisor, un test); vacio si nada.
+fecha	pc	proyecto	origen	tipo	nivel	modelo	caso	minutos	tokens	resultado	reales	falsas	rehecho_por	nota
