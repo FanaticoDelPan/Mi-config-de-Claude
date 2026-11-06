@@ -5,8 +5,8 @@ no sirve. Viven en el perfil (LOCALAPPDATA), nunca en el repo.
 
 Dos pases, en archivos separados, para que el conector de lectura nunca tenga en la mano el de mandar:
 - `lectura` (`llave.dpapi`): permiso `gmail.readonly`. Lo usan el conector MCP y el vigilante de migraciones.
-- `envio` (`llave-envio.dpapi`): permiso `gmail.send` y nada más. Lo usa SOLO el vigilante de migraciones
-  (Migracion-SkyIA), que manda a un destinatario fijo en su código.
+- `envio` (`llave-envio.dpapi`): permiso `gmail.send` y nada más. Lo usan el vigilante de migraciones
+  (Migracion-SkyIA, destinatario fijo en su código) y `mandar_correo` del conector (lista blanca en su código).
 
 Dónde se buscan: la app de escritorio de Claude es un paquete MSIX y virtualiza AppData para todo lo que lanza,
 así que un pase guardado desde un chat queda en `LOCALAPPDATA\\Packages\\Claude_*\\LocalCache\\Local\\...` y una

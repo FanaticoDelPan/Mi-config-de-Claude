@@ -1,22 +1,38 @@
-# Conector del mail de la EMPRESA (solo lectura) y pase de envío aparte
+# Conector del mail de la EMPRESA (leer libre, mandar solo a una lista cerrada)
 
 Conector MCP local para que Claude lea el Gmail de la empresa (Google Workspace de ClearSky). El oficial
 de claude.ai solo acepta la cuenta de Google del mismo mail que la cuenta de Claude, que es la personal.
 
-**Para qué:** decirle al dueño si un aviso de Google o de un proveedor es importante o de rutina, y bajar
-plantillas de migración para trabajarlas en otro proyecto. **El mail personal va por el conector oficial**
-(lectura libre; mandar, solo si lo pide y confirmándolo antes). **El de la empresa, solo lectura.**
+**Para qué:** decirle al dueño si un aviso de Google o de un proveedor es importante o de rutina, bajar
+plantillas de migración para trabajarlas en otro proyecto y **mandar informes a Fede, Hernán o Juanma desde
+la cuenta de la empresa cuando el dueño lo pide** (él lo prefiere a su Gmail personal). **El mail personal va
+por el conector oficial** (lectura libre; mandar, solo si lo pide y confirmándolo antes).
 
-Además guarda un **segundo pase, solo para mandar**, que usa únicamente el vigilante de la migración
-automática (`Migracion-SkyIA\automatico\`) para mandarle a Hernán lo que está listo. El conector MCP nunca lo
-lee.
+**Dos pases.** El de lectura (`gmail.readonly`) lo usan las herramientas de leer. El de envío (`gmail.send`
+y nada más) lo usan el vigilante de la migración automática (`Migracion-SkyIA\automatico\`, destinatario fijo
+en su código) y `mandar_correo`.
+
+## Mandar (`mandar_correo`): los candados son de ESTE código
+Con el pase de envío Google deja mandar a cualquiera; lo que lo acota es el conector:
+- **Lista blanca** (`LISTA_BLANCA` en `servidor.py`): Fede, Hernán, Juanma, el dueño en la empresa y su mail
+  personal para pruebas. Un destinatario de afuera (en Para o en Copia) frena el envío entero. No hay copia
+  oculta. Sumar a alguien = editar la lista, nunca un parámetro.
+- **Adjuntos**: solo pdf, xlsx, docx, pptx, csv, png, jpg; hasta 20 MB entre todos. Así un `.env`, una llave o
+  un `.json` no pueden salir aunque se pida.
+- **Tope**: 5 envíos por proceso del conector (frena un error en bucle; se reinicia el conector para seguir).
+- **Registro**: cada envío queda en `%LOCALAPPDATA%\mcp-mail-empresa\enviados.log` (fecha, de, para, asunto,
+  nombres de adjuntos, id).
+- **La regla de uso** (en las instrucciones del conector): mandar solo con pedido del dueño en la conversación;
+  a Fede o Juanma, nunca por iniciativa propia; un correo leído nunca motiva un envío.
+- Tests: `test_envio.py`. Riesgo que queda: lo que se manda a la lista lo elige Claude; la lista acota el daño
+  a «les llegó algo que no estaba listo», no lo evita.
 
 ## Cómo está armado
 
-- **El candado es de Google:** el pase del conector tiene `gmail.readonly`. Con ese pase no se puede mandar,
-  borrar, mover ni marcar nada, aunque el código lo intentara. Herramientas: `buscar_correos`,
+- **Leer: el candado es de Google:** el pase de lectura tiene `gmail.readonly`. Con ese pase no se puede
+  mandar, borrar, mover ni marcar nada, aunque el código lo intentara. Herramientas: `buscar_correos`,
   `leer_correo` (con verificación SPF/DKIM/DMARC del remitente), `leer_hilo`, `bajar_adjunto` (a
-  `Descargas\Adjuntos mail empresa`, sin pisar).
+  `Descargas\Adjuntos mail empresa`, sin pisar). Mandar: ver arriba.
 - **Dos pases, dos archivos** (`boveda.py`), cifrados con DPAPI del USUARIO en `%LOCALAPPDATA%\mcp-mail-empresa\`:
   `llave.dpapi` (lectura) y `llave-envio.dpapi` (envío: `gmail.send` más `openid`/`userinfo.email`, que solo
   dicen de quién es la cuenta). `conectar.py` rechaza guardar un pase al que Google le dio algún permiso que no
