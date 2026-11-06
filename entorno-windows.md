@@ -389,7 +389,15 @@ Lo que sostiene una regla, cuando el porqué no entra en el renglón que la enun
   falsas alarmas; anotar el tiempo por encargo y la cuota de la semana (`medir-consumo-semanal.py`). **Dónde se
   anota:** `prueba-esfuerzo-agentes.tsv` (al lado de este archivo), una fila por agente al volver, sea encargo real
   o de una tanda controlada (caso viejo con resultado conocido corrido a dos niveles: en SkyOne, los hallazgos ya
-  clasificados de `docs/revisiones/hallazgos.tsv` son la vara de los revisores). Un constructor en
+  clasificados de `docs/revisiones/hallazgos.tsv` son la vara de los revisores). **Primera tanda (06/11/2026, 17
+  agentes, ~2 puntos de cuota semanal):** barridos `low` = `high` (3 de 3 y 38 de 38), a menos tiempo; constructores
+  `medium` = `high` en los tres casos (pasan la prueba oculta o el test caza la mutación), `medium` igual o más
+  rápido; revisores `xhigh` mejores en 2 de 3 ángulos (uno claramente: 7 hallazgos reales contra 3) y empate en el
+  tercero, sin falsas alarmas en ninguno, a 1,4-2 veces el tiempo. Sostiene la regla; una muestra por brazo no la
+  cierra. **Cómo se arma una tanda sin que mienta:** copias SIN historial (`git archive <commit>`, más `git init` si
+  el agente edita) para que no pueda espiar el arreglo; la prueba oculta y la verdad fuera de su alcance; cada
+  revisor con su PROPIA carpeta de mutación (dos que comparten una se pisan); un juez ciego al nivel que puntúe contra
+  la UNIÓN adjudicada (la verdad histórica sola castiga al que encuentra más) y por causa raíz, no por renglón. Un constructor en
   `medium` que entrega peor → ese tipo de encargo vuelve a `high` y se anota el caso. **Al cerrar la prueba:** cambiar
   «EN PRUEBA» por «validado el <fecha>» acá y en la regla 5, con lo medido.
 * **Piso para delegar construcción (2026-10-29, regla 3):** sale de Gentle-AI (`internal/assets/claude/orchestrator.md`

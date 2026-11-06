@@ -6,3 +6,20 @@
 # resultado: ok | rehecho (hubo que corregirlo o rehacerlo) | fallo.  reales / falsas: hallazgos (solo revisores).
 # rehecho_por: que hubo que corregir y quien lo vio (yo, el revisor, un test); vacio si nada.
 fecha	pc	proyecto	origen	tipo	nivel	modelo	caso	minutos	tokens	resultado	reales	falsas	rehecho_por	nota
+2026-11-06	NoteBookJoa	skyone	tanda	barrido	low	opus	S1 docs fuera del indice (0.10.87)	0.35	42977	ok			3 de 3, 2 herramientas
+2026-11-06	NoteBookJoa	skyone	tanda	barrido	high	opus	S1 docs fuera del indice (0.10.87)	0.44	46205	ok			3 de 3, 4 herramientas
+2026-11-06	NoteBookJoa	skyone	tanda	barrido	low	opus	S2 fecha de hoy sin fechas.py (0.10.87)	0.49	48235	ok			38 de 38; sumo mal el total (39)
+2026-11-06	NoteBookJoa	skyone	tanda	barrido	high	opus	S2 fecha de hoy sin fechas.py (0.10.87)	1.19	62477	ok			38 de 38; total bien
+2026-11-06	NoteBookJoa	skyone	tanda	arreglar	medium	opus	B1 tapado de claves aflojado (0.10.86)	2.10	114584	ok			prueba oculta 225 de 225
+2026-11-06	NoteBookJoa	skyone	tanda	arreglar	high	opus	B1 tapado de claves aflojado (0.10.86)	5.06	133245	ok			prueba oculta 225 de 225; corrio 491 tests vecinos
+2026-11-06	NoteBookJoa	skyone	tanda	construir	medium	opus	B2 test que falta en list_notes (0.10.87)	1.52	94609	ok			rojo con la mutacion
+2026-11-06	NoteBookJoa	skyone	tanda	construir	high	opus	B2 test que falta en list_notes (0.10.87)	2.22	95979	ok			rojo con la mutacion
+2026-11-06	NoteBookJoa	skyone	tanda	construir	medium	opus	B3 test que falta en circuito (0.10.86)	2.26	106707	ok			rojo con la mutacion
+2026-11-06	NoteBookJoa	skyone	tanda	construir	high	opus	B3 test que falta en circuito (0.10.86)	1.63	102488	ok			rojo con la mutacion
+2026-11-06	NoteBookJoa	skyone	tanda	revisar	high	opus	vuelta 1 0.10.87 textos	10.55	221146	ok	13	0		7 historicos; juez: el xhigh algo mejor
+2026-11-06	NoteBookJoa	skyone	tanda	revisar	xhigh	opus	vuelta 1 0.10.87 textos	16.64	308205	ok	15	0		11 historicos, 2 menores que el high no vio
+2026-11-06	NoteBookJoa	skyone	tanda	revisar	high	opus	vuelta 1 0.10.87 datos	11.15	193209	ok	3	0		corrio 13 mutaciones
+2026-11-06	NoteBookJoa	skyone	tanda	revisar	xhigh	opus	vuelta 1 0.10.87 datos	22.22	322766	ok	7	0		juez: claramente mejor (5 menores mas); la guarda le freno la mutacion
+2026-11-06	NoteBookJoa	skyone	tanda	revisar	high	opus	vuelta 1 0.10.87 bot-nube	16.04	212415	ok	3	0		1 no concluyente; mutaciones pisadas por el otro revisor
+2026-11-06	NoteBookJoa	skyone	tanda	revisar	xhigh	opus	vuelta 1 0.10.87 bot-nube	25.48	265066	ok	2	0		empate; analisis de despliegue mas preciso
+2026-11-06	NoteBookJoa	skyone	tanda	revisar	xhigh	opus	juez de los 6 informes	12.21	172560	ok				ciego al nivel; puntuo contra la union adjudicada
