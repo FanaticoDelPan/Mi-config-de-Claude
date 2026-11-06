@@ -1,5 +1,5 @@
 {
- "actualizado": "2026-11-05T11:16-03:00",
+ "actualizado": "2026-11-06T11:20-03:00",
  "pc": "NOTEBOOKJOA",
  "tramos": {
   "2026-10-14": {
@@ -459,8 +459,8 @@
   "2026-11-03": {
    "C--GitHub-skyone": {
     "subs": 42,
-    "tok": 1067287580,
-    "usd": 405.13,
+    "tok": 1081153816,
+    "usd": 410.32,
     "usd_sub": 310.46
    },
    "C--GitHub-skyone--claude-worktrees-agent-a55cec379ce3d615c": {
@@ -477,8 +477,8 @@
    },
    "C--GitHub-skyone--claude-worktrees-clave-nombre-archivo": {
     "subs": 1,
-    "tok": 16561373,
-    "usd": 6.69,
+    "tok": 2695137,
+    "usd": 1.49,
     "usd_sub": 1.49
    },
    "C--GitHub-skyone--claude-worktrees-gh715-limite-oferta-baja": {
@@ -508,10 +508,18 @@
   },
   "2026-11-04": {
    "C--GitHub-skyone": {
-    "subs": 17,
-    "tok": 187385924,
-    "usd": 67.19,
-    "usd_sub": 52.24
+    "subs": 34,
+    "tok": 767365260,
+    "usd": 280.79,
+    "usd_sub": 201.68
+   }
+  },
+  "2026-11-05": {
+   "C--GitHub-skyone": {
+    "subs": 16,
+    "tok": 177495576,
+    "usd": 72.83,
+    "usd_sub": 58.7
    }
   }
  }
