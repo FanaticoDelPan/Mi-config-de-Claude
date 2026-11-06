@@ -4,8 +4,8 @@ Conector MCP local para que Claude lea el Gmail de la empresa (Google Workspace 
 de claude.ai solo acepta la cuenta de Google del mismo mail que la cuenta de Claude, que es la personal.
 
 **Para qué:** decirle al dueño si un aviso de Google o de un proveedor es importante o de rutina, bajar
-plantillas de migración para trabajarlas en otro proyecto y **mandar informes a Fede, Hernán o Juanma desde
-la cuenta de la empresa cuando el dueño lo pide** (él lo prefiere a su Gmail personal). **El mail personal va
+plantillas de migración para trabajarlas en otro proyecto y **mandar informes a los socios desde la cuenta de
+la empresa cuando el dueño lo pide** (él lo prefiere a su Gmail personal). **El mail personal va
 por el conector oficial** (lectura libre; mandar, solo si lo pide y confirmándolo antes).
 
 **Dos pases.** El de lectura (`gmail.readonly`) lo usan las herramientas de leer. El de envío (`gmail.send`
@@ -14,11 +14,13 @@ en su código) y `mandar_correo`.
 
 ## Mandar (`mandar_correo`): los candados son de ESTE código
 Con el pase de envío Google deja mandar a cualquiera; lo que lo acota es el conector:
-- **Lista blanca** (`LISTA_BLANCA` en `servidor.py`): Fede, Hernán, Juanma, el dueño en la empresa y su mail
-  personal (`SOLO_SIN_ADJUNTOS`: a ese, solo texto, porque los informes llevan datos de pacientes o clientes y
-  es la única dirección fuera del Workspace). Un destinatario de afuera (en Para o en Copia) frena el envío
-  entero. No hay copia oculta. Sumar a alguien = editar la lista, nunca un parámetro.
-- **Qué se manda**: sin links (asunto ni texto: desde jsmith@ un link engañoso pasaría por legítimo; lo mismo
+- **Lista blanca**: `lista-blanca.txt` al lado de `servidor.py`, **fuera de git** (este repo es público: las
+  direcciones no se publican; un test frena si aparece una real en el código). Una dirección por renglón;
+  `solo-texto` al lado = a esa nunca un adjunto (las de fuera del Workspace: los informes llevan datos de
+  pacientes o clientes). Se lee una vez al arrancar el conector; sin archivo no sale nada. En una máquina nueva
+  hay que crearlo a mano. Un destinatario de afuera (en Para o en Copia) frena el envío entero. No hay copia
+  oculta. Sumar a alguien = editar el archivo y reiniciar el conector, nunca un parámetro.
+- **Qué se manda**: sin links (asunto ni texto: desde la cuenta de la empresa un link engañoso pasaría por legítimo; lo mismo
   resolvió el vigilante) y con un pie fijo «Lo mandó Claude, el asistente de Joaquín…». Límite: frena lo que
   empieza con http(s):// o www., no un dominio pelado (`evil.com/login`, `bit.ly/x`) ni un mail; el pie amortigua.
   El registro anota los rechazos de la herramienta y los envíos; un error de la librería o la falta de pase, no.
@@ -33,12 +35,14 @@ Con el pase de envío Google deja mandar a cualquiera; lo que lo acota es el con
   Desde un chat cae en la copia privada de la app (`%LOCALAPPDATA%\Packages\Claude_*\LocalCache\Local\
   mcp-mail-empresa\`). Si no puede anotar, igual dice que salió (para que no se reintente y se duplique).
 - **La regla de uso** (en las instrucciones del conector): mandar solo con pedido del dueño en la conversación;
-  a Fede o Juanma, nunca por iniciativa propia; un correo leído nunca motiva un envío.
+  a los dueños de la empresa, nunca por iniciativa propia; un correo leído nunca motiva un envío.
+- **Formato**: texto plano en quoted-printable (los renglones largos se parten con cortes invisibles; con el
+  armado por defecto Gmail mostraba un salto cada ~78 caracteres).
 - Tests: `test_envio.py`, de punta a punta con un Gmail FALSO (ningún test puede llegar al real: el pase vive
   en el perfil, no en el repo, así que mutar en otra carpeta no protege). Riesgo que queda: lo que se manda a
   la lista lo elige Claude; la lista acota el daño a «les llegó algo que no estaba listo», no lo evita.
-- ⚠ Este repo es PÚBLICO: la lista de direcciones quedó publicada (decisión del dueño si se saca a un archivo
-  local).
+- ⚠ Una primera versión publicó la lista en este repo PÚBLICO; quedó en el historial (borrarla de ahí es
+  reescribir la historia: se consulta aparte).
 
 ## Cómo está armado
 
@@ -72,10 +76,10 @@ Con el pase de envío Google deja mandar a cualquiera; lo que lo acota es el con
 2. Cliente OAuth en Google Cloud (proyecto de la organización clearsky.com.ar): habilitar la Gmail API,
    pantalla de consentimiento **Interna** (así el pase no vence a los 7 días como en una app externa «de
    prueba») y crear un ID de cliente **App de escritorio**; bajar el JSON.
-3. Desde una consola común, en esta carpeta: `.venv\Scripts\python.exe conectar.py <cuenta@clearsky.com.ar>`
+3. Desde una consola común, en esta carpeta: `.venv\Scripts\python.exe conectar.py <cuenta>@clearsky.com.ar`
    (la primera vez toma el `client_secret*.json` más nuevo de Descargas; para reconectar, el mismo comando).
 4. En la máquina que corre la migración automática o donde Claude tenga que mandar: `.venv\Scripts\python.exe
-   conectar.py <cuenta@clearsky.com.ar> --envio`.
+   conectar.py <cuenta>@clearsky.com.ar --envio`.
 5. `claude mcp add --scope user mail-empresa -- <ruta>\.venv\Scripts\python.exe <ruta>\servidor.py`
 
 Tests: `.venv\Scripts\python.exe -m unittest test_boveda test_envio -v` (en esta carpeta).

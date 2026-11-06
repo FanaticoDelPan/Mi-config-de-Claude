@@ -28,10 +28,24 @@ def _nunca():
     raise _Prohibido("un test intentó usar el Gmail real")
 
 
+LISTA_DE_PRUEBA = """\
+# comentario
+socio@empresa.test        # un socio
+colega@empresa.test
+yo@empresa.test
+yo.personal@personal.test   solo-texto
+renglon sin arroba
+"""
+
+
 def setUpModule():
     tmp = tempfile.mkdtemp()
+    lista = Path(tmp) / "lista-blanca.txt"
+    lista.write_text(LISTA_DE_PRUEBA, encoding="utf-8")
+    todas, solo_texto = s.cargar_lista(lista)
     for p in (mock.patch.dict(os.environ, {"LOCALAPPDATA": tmp}), mock.patch.object(s, "_gmail_envio", _nunca),
-              mock.patch.object(s, "_mandar", lambda *a: _nunca())):
+              mock.patch.object(s, "_mandar", lambda *a: _nunca()),
+              mock.patch.object(s, "LISTA_BLANCA", todas), mock.patch.object(s, "SOLO_SIN_ADJUNTOS", solo_texto)):
         p.start()
         _parches.append(p)
 
@@ -49,7 +63,7 @@ class _Falso:
 
     def __enter__(self):
         s._enviados = 0
-        self._p = [mock.patch.object(s, "_gmail_envio", lambda: ("jsmith@clearsky.com.ar", object())),
+        self._p = [mock.patch.object(s, "_gmail_envio", lambda: ("yo@empresa.test", object())),
                    mock.patch.object(s, "_mandar", self._mandar)]
         for p in self._p:
             p.start()
@@ -80,58 +94,58 @@ def _pdf(nombre="informe.pdf", tam=10):
 class PuntaAPunta(unittest.TestCase):
     def test_uno_de_afuera_no_llega_a_mandar(self):
         with _Falso() as g:
-            r = s.mandar_correo(["fzajur@clearsky.com.ar", "otro@gmail.com"], "Asunto", "Hola")
+            r = s.mandar_correo(["socio@empresa.test", "otro@afuera.test"], "Asunto", "Hola")
         self.assertIn("no está en la lista", r)
         self.assertEqual(g.mandados, [])
 
     def test_afuera_en_copia_tampoco(self):
         with _Falso() as g:
-            s.mandar_correo(["fzajur@clearsky.com.ar"], "Asunto", "Hola", copia=["Fede <otro@gmail.com>"])
+            s.mandar_correo(["socio@empresa.test"], "Asunto", "Hola", copia=["Socio <otro@afuera.test>"])
         self.assertEqual(g.mandados, [])
 
     def test_manda_a_la_direccion_normalizada_con_pie(self):
         with _Falso() as g:
-            r = s.mandar_correo([" JSmith@ClearSky.com.ar "], "Prueba", "Hola", copia=["hliguoro@clearsky.com.ar"])
-        self.assertIn("Mandado desde jsmith@clearsky.com.ar", r)
+            r = s.mandar_correo([" Yo@Empresa.test "], "Prueba", "Hola", copia=["colega@empresa.test"])
+        self.assertIn("Mandado desde yo@empresa.test", r)
         (m,) = g.mandados
-        self.assertEqual((m["To"], m["Cc"], m["Bcc"]), ("jsmith@clearsky.com.ar", "hliguoro@clearsky.com.ar", None))
+        self.assertEqual((m["To"], m["Cc"], m["Bcc"]), ("yo@empresa.test", "colega@empresa.test", None))
         self.assertIn("Lo mandó Claude", m.get_body().get_content())
 
     def test_adjunto_no_permitido_no_manda(self):
         with _Falso() as g:
-            r = s.mandar_correo(["jsmith@clearsky.com.ar"], "a", "b", adjuntos=[_pdf("secreto.env")])
+            r = s.mandar_correo(["yo@empresa.test"], "a", "b", adjuntos=[_pdf("secreto.env")])
         self.assertIn("solo", r)
         self.assertEqual(g.mandados, [])
 
     def test_adjunto_va(self):
         with _Falso() as g:
-            s.mandar_correo(["jsmith@clearsky.com.ar"], "a", "b", adjuntos=[_pdf()])
+            s.mandar_correo(["yo@empresa.test"], "a", "b", adjuntos=[_pdf()])
         self.assertEqual([a.get_filename() for a in g.mandados[0].iter_attachments()], ["informe.pdf"])
 
     def test_personal_solo_texto(self):
         with _Falso() as g:
-            r = s.mandar_correo(["smithjoaquin170@gmail.com"], "a", "b", adjuntos=[_pdf()])
+            r = s.mandar_correo(["yo.personal@personal.test"], "a", "b", adjuntos=[_pdf()])
             self.assertIn("sin adjuntos", r)
             self.assertEqual(g.mandados, [])
-            s.mandar_correo(["smithjoaquin170@gmail.com"], "a", "b")
+            s.mandar_correo(["yo.personal@personal.test"], "a", "b")
         self.assertEqual(len(g.mandados), 1)
 
     def test_link_no_sale(self):
         with _Falso() as g:
-            r = s.mandar_correo(["jsmith@clearsky.com.ar"], "a", "Entrá a https://evil.example")
+            r = s.mandar_correo(["yo@empresa.test"], "a", "Entrá a https://evil.example")
         self.assertIn("links", r)
         self.assertEqual(g.mandados, [])
 
     def test_el_sexto_se_frena(self):
         with _Falso() as g:
             for _ in range(s.TOPE_ENVIOS + 1):
-                r = s.mandar_correo(["jsmith@clearsky.com.ar"], "a", "b")
+                r = s.mandar_correo(["yo@empresa.test"], "a", "b")
         self.assertIn("frené", r)
         self.assertEqual(len(g.mandados), s.TOPE_ENVIOS)
 
     def test_en_paralelo_tampoco_pasa_el_tope(self):
         with _Falso(demora=0.2) as g:
-            hilos = [threading.Thread(target=s.mandar_correo, args=(["jsmith@clearsky.com.ar"], "a", "b"))
+            hilos = [threading.Thread(target=s.mandar_correo, args=(["yo@empresa.test"], "a", "b"))
                      for _ in range(12)]
             for h in hilos:
                 h.start()
@@ -142,8 +156,8 @@ class PuntaAPunta(unittest.TestCase):
     def test_registra_mandados_y_rechazados(self):
         antes = len(_registro())
         with _Falso():
-            s.mandar_correo(["jsmith@clearsky.com.ar"], "Uno", "b")
-            s.mandar_correo(["otro@gmail.com"], "Dos", "b")
+            s.mandar_correo(["yo@empresa.test"], "Uno", "b")
+            s.mandar_correo(["otro@afuera.test"], "Dos", "b")
         nuevas = _registro()[antes:]
         self.assertEqual(len(nuevas), 2)
         self.assertIn('"mandado"', nuevas[0])
@@ -151,7 +165,7 @@ class PuntaAPunta(unittest.TestCase):
 
     def test_si_el_registro_falla_igual_dice_que_salio(self):
         with _Falso() as g, mock.patch.object(s.boveda, "carpeta", side_effect=OSError("disco lleno")):
-            r = s.mandar_correo(["jsmith@clearsky.com.ar"], "a", "b")
+            r = s.mandar_correo(["yo@empresa.test"], "a", "b")
         self.assertIn("Mandado", r)
         self.assertIn("no pude anotarlo", r)
         self.assertEqual(len(g.mandados), 1)
@@ -189,14 +203,45 @@ class Adjuntos(unittest.TestCase):
             s.validar_adjuntos([_pdf("a.pdf"), _pdf("b.pdf")])
 
 
+class Lista(unittest.TestCase):
+    def test_lee_direcciones_y_marca(self):
+        self.assertEqual(s.LISTA_BLANCA, {"socio@empresa.test", "colega@empresa.test", "yo@empresa.test",
+                                          "yo.personal@personal.test"})
+        self.assertEqual(s.SOLO_SIN_ADJUNTOS, {"yo.personal@personal.test"})
+
+    def test_sin_archivo_no_sale_nada(self):
+        self.assertEqual(s.cargar_lista(Path(tempfile.mkdtemp()) / "no.txt"), (frozenset(), frozenset()))
+        with mock.patch.object(s, "LISTA_BLANCA", frozenset()), _Falso() as g:
+            r = s.mandar_correo(["yo@empresa.test"], "a", "b")
+        self.assertIn("No hay destinatarios permitidos", r)
+        self.assertEqual(g.mandados, [])
+
+    def test_el_repo_no_trae_las_direcciones_de_la_lista_local(self):
+        reales, _ = s.cargar_lista(s.ARCHIVO_LISTA)   # el archivo verdadero, fuera de git
+        if not reales:
+            self.skipTest("no hay lista-blanca.txt en esta máquina")
+        carpeta = Path(s.__file__).parent
+        for archivo in [*carpeta.glob("*.py"), *carpeta.glob("*.md")]:
+            texto = archivo.read_text(encoding="utf-8").lower()
+            for d in reales:
+                self.assertNotIn(d, texto, f"{d} aparece en {archivo.name}, que va al repo público")
+
+
 class Mensaje(unittest.TestCase):
+    def test_renglon_largo_no_se_parte_al_leerlo(self):
+        largo = "palabra " * 40
+        m = s.armar_mensaje("a@b", ["yo@empresa.test"], [], "Asunto", largo, [])
+        leido = email.message_from_bytes(m.as_bytes(), policy=policy.default).get_body().get_content()
+        self.assertIn(largo.rstrip(), leido)
+
+
     def test_asunto_con_salto_de_linea(self):
         with self.assertRaises(s._Rechazado):
-            s.armar_mensaje("a@b", ["jsmith@clearsky.com.ar"], [], "Hola\nBcc: otro@gmail.com", "x", [])
+            s.armar_mensaje("a@b", ["yo@empresa.test"], [], "Hola\nBcc: otro@afuera.test", "x", [])
 
     def test_sin_texto(self):
         with self.assertRaises(s._Rechazado):
-            s.armar_mensaje("a@b", ["jsmith@clearsky.com.ar"], [], "Asunto", "  ", [])
+            s.armar_mensaje("a@b", ["yo@empresa.test"], [], "Asunto", "  ", [])
 
 
 if __name__ == "__main__":
