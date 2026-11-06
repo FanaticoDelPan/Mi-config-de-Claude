@@ -307,6 +307,12 @@ hablado, no es un problema). Cuál es cuál: `$env:COMPUTERNAME`.
 
 Lo que sostiene una regla, cuando el porqué no entra en el renglón que la enuncia.
 
+* **Porqués que salieron del `CLAUDE.md` por su tope de tamaño (05/11/2026):** regla 3, no preguntar «¿seguimos?»:
+  a esa altura cada turno cuesta hasta 7 veces uno del principio. Regla 5, construir en paralelo: en fila o en
+  paralelo cuesta casi lo mismo, el paralelo compra tiempo. Regla 12, cierre corto: el largo con auditor se llevaba
+  el 15-20 % de la cuota semanal y en 8 semanas no mejoró la doc. Regla 15: ya pasó que «la semana pasada» era unos
+  turnos más arriba. Las máquinas, dos agentes pesados como máximo: con once, la RAM llegó al 99 % y hubo que reiniciar.
+
 ### Subagentes: de dónde salen los números
 
 * **Equivalencia vigente para estimar:** 1 punto de cuota ≈ **67M tokens ≈ 26,6 USD de lista** (cierre de la
@@ -337,12 +343,30 @@ Lo que sostiene una regla, cuando el porqué no entra en el renglón que la enun
   (hallazgos del revisor, trabajo rehecho, tests rojos), no las relecturas.
 * **Fable no es superior (2026-10-19):** en Artificial Analysis Opus 5.5 rinde más que Fable 5.1 y cuesta la
   mitad en cada nivel de esfuerzo, y en tres publicaciones de SkyOne trajo más hallazgos reales y menos falsas alarmas.
+* **Nivel de esfuerzo por agente — EN PRUEBA desde 05/11/2026 (regla 5).** Sale de «Spending your effort» (Thariq
+  Shihipar, claude.dev, 25/09/2026) y de la doc oficial (`code.claude.com/docs/en/model-config`), verificados ese día.
+  **Lo que lo sostiene:** un agente sin nivel propio corre al nivel del chat si va en el mismo modelo, así que todos los
+  Opus heredaban `high` (o `xhigh` cuando se subía el chat). Opus 5.5 trae `medium` por defecto y Anthropic lo da para
+  «implementar algo con alcance claro»; `high` para arreglar en código existente. Subir de nivel rinde más en seguridad
+  (64 → 87 % de acierto) que en software (43 → 56 %) o en tareas de reglas (12 → 22 %), y del más bajo al más alto se
+  triplica el gasto por intento. **Lo que no cambia:** el chat principal sigue en `high` (es el que verifica y el dueño
+  no lee código; `low` pregunta más y corta antes); `low` en el chat solo si el dueño está presente retocando. El nivel
+  del chat se elige al abrirlo: cambiarlo a mitad de un chat largo puede obligar a releerlo entero (Lydia Hallie,
+  claude.com, 14/08/2026; Thariq sugiere que en los modelos nuevos no — sin resolver). **Cómo se valida** (en la PC de
+  SkyOne, con encargos reales, unos 5-10 de cada tipo): constructores en `medium` sin más trabajo rehecho ni más
+  hallazgos del revisor atribuibles al constructor que antes; revisores en `xhigh` con más hallazgos reales sin más
+  falsas alarmas; anotar el tiempo por encargo y la cuota de la semana (`medir-consumo-semanal.py`). Un constructor en
+  `medium` que entrega peor → ese tipo de encargo vuelve a `high` y se anota el caso. **Al cerrar la prueba:** cambiar
+  «EN PRUEBA» por «validado el <fecha>» acá y en la regla 5, con lo medido.
 * **Piso para delegar construcción (2026-10-29, regla 3):** sale de Gentle-AI (`internal/assets/claude/orchestrator.md`
   y la tabla «Measured» de su README): un arreglo de 3 líneas costó 0,339 USD delegado contra 0,105 directo, porque
   un subagente pasa 1-2 min leyendo antes de escribir. Es UNA corrida y en otro entorno: se recalibra con
   `medir-consumo-semanal.py` si aparece un caso propio que lo contradiga.
 * **Otro chat en vez de subagentes (decidido que no, 2026-10-16):** se revisa si la app mejora cómo un chat
-  muestra lo que hizo el que lanzó.
+  muestra lo que hizo el que lanzó. El porqué: un chat nuevo ocupa lugar en la pantalla, obliga a cerrar dos chats y
+  el que lo lanzó no trae su detalle. Las herramientas de abrir y traspasar chats están bloqueadas en
+  `~/.claude/settings.json` (`permissions.deny`, lo escribe `setup-symlink.ps1` en cada máquina). El techo de
+  agentes antes del 2026-10-21 era 3 a la vez / 6 en total.
 
 * **La regla 5 tal como estaba hasta el 2026-09-22** (la reemplazó la versión corta del `CLAUDE.md`: techo de 10, el tiempo por sobre los tokens). Queda acá por las mediciones que trae:
 
