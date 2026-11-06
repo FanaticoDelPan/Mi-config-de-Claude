@@ -12,6 +12,7 @@ import html
 import io
 import json
 import re
+import threading
 from datetime import datetime
 from email.message import EmailMessage
 from email.utils import parsedate_to_datetime
@@ -51,8 +52,13 @@ TIPOS_ADJUNTO = {
     ".jpg": ("image", "jpeg"),
     ".jpeg": ("image", "jpeg"),
 }
-TOPE_ADJUNTOS = 20 * 1024 * 1024   # Gmail corta en 25 MB con la codificación incluida
-TOPE_ENVIOS = 5                    # por proceso del conector: frena un error que se repite en bucle
+# Fuera de la empresa: solo texto, nunca un adjunto (los informes llevan datos de pacientes o de clientes).
+SOLO_SIN_ADJUNTOS = frozenset({"smithjoaquin170@gmail.com"})
+TOPE_ADJUNTOS = 18 * 1024 * 1024   # Gmail corta en 25 MB YA codificado (base64 suma ~35 %): 18 MB entra
+TOPE_ENVIOS = 5                    # por proceso del conector (uno por chat): frena un error que se repite
+LINK = re.compile(r"https?://|www\.|\bhxxps?://", re.I)
+PIE = ("\n\n--\nLo mandó Claude, el asistente de Joaquín, a pedido suyo desde su cuenta. Si algo no cierra, "
+       "consultalo con Joaquín antes de actuar.")
 
 INSTRUCCIONES = """\
 Mail de la EMPRESA del dueño (ClearSky): se puede buscar, leer y bajar adjuntos a su PC; borrar, mover o
@@ -293,6 +299,7 @@ def bajar_adjunto(id_correo: str, nombre_adjunto: str) -> str:
 
 _envio = None
 _enviados = 0
+_candado = threading.Lock()   # el chequeo del tope y la reserva del lugar van juntos (las llamadas corren en hilos)
 
 
 class _Rechazado(Exception):
@@ -313,17 +320,35 @@ def validar_destinatarios(para: list[str], copia: list[str]) -> tuple[list[str],
     return para, copia
 
 
+def _dentro_de(p: Path, carpeta: Path) -> bool:
+    try:
+        p.resolve().relative_to(carpeta.resolve())
+        return True
+    except ValueError:
+        return False
+
+
 def validar_adjuntos(rutas: list[str]) -> list[tuple[Path, tuple[str, str]]]:
-    """Cada adjunto tiene que existir, ser de un tipo permitido y entre todos no pasar el tope."""
+    """Cada adjunto: de un tipo permitido, en un disco LOCAL (nada de rutas de red, que abren una conexión con la
+    sesión del usuario), que no sea un archivo bajado de un correo (lo escribió un tercero), sin vínculos
+    permanentes (un `mklink /H` disfraza un `.env` de `.pdf`) y entre todos no más que el tope."""
     salida, total = [], 0
     for r in rutas or []:
-        p = Path(r)
+        texto = str(r)
+        if texto.startswith(("\\\\", "//")) or not re.match(r"^[A-Za-z]:[\\/]", texto):
+            raise _Rechazado(f"No se adjunta {texto}: tiene que ser una ruta completa de un disco de esta PC.")
+        p = Path(texto)
         tipo = TIPOS_ADJUNTO.get(p.suffix.lower())
         if tipo is None:
             raise _Rechazado(f"No se adjunta {p.name}: solo {', '.join(sorted(TIPOS_ADJUNTO))}.")
         if not p.is_file():
             raise _Rechazado(f"No existe el archivo {p}.")
-        total += p.stat().st_size
+        if _dentro_de(p, CARPETA_ADJUNTOS):
+            raise _Rechazado(f"No se adjunta {p.name}: vino en un correo de otra persona.")
+        datos = p.stat()
+        if datos.st_nlink > 1:
+            raise _Rechazado(f"No se adjunta {p.name}: el archivo tiene otro nombre en el disco (vínculo).")
+        total += datos.st_size
         salida.append((p, tipo))
     if total > TOPE_ADJUNTOS:
         raise _Rechazado(f"Los adjuntos suman {_tamano(total)}: el tope es {_tamano(TOPE_ADJUNTOS)}.")
@@ -336,11 +361,16 @@ def armar_mensaje(cuenta: str, para: list[str], copia: list[str], asunto: str, t
         raise _Rechazado("Falta el asunto o el texto.")
     if re.search(r"[\r\n]", asunto):
         raise _Rechazado("El asunto no puede tener saltos de línea.")
+    if LINK.search(asunto) or LINK.search(texto):
+        raise _Rechazado("No se mandan links: desde esta cuenta un link engañoso pasaría por legítimo. "
+                         "Lo que haga falta, como adjunto.")
+    if adjuntos and any(d in SOLO_SIN_ADJUNTOS for d in para + copia):
+        raise _Rechazado(f"A {', '.join(sorted(SOLO_SIN_ADJUNTOS))} solo se manda texto, sin adjuntos.")
     m = EmailMessage()
     m["From"], m["To"], m["Subject"] = cuenta, ", ".join(para), asunto.strip()
     if copia:
         m["Cc"] = ", ".join(copia)
-    m.set_content(texto)
+    m.set_content(texto.rstrip() + PIE)
     for p, (principal, sub) in adjuntos:
         m.add_attachment(p.read_bytes(), maintype=principal, subtype=sub, filename=p.name)
     return m
@@ -362,41 +392,61 @@ def _gmail_envio():
 
 
 def _registrar(registro: dict) -> None:
-    destino = boveda.carpeta() / "enviados.log"
-    destino.parent.mkdir(parents=True, exist_ok=True)
-    with destino.open("a", encoding="utf-8") as f:
-        f.write(json.dumps(registro, ensure_ascii=False) + "\n")
+    """Una línea por intento (mandado o rechazado). Nunca hace fallar el envío: si no puede escribir, avisa."""
+    try:
+        destino = boveda.carpeta() / "enviados.log"
+        destino.parent.mkdir(parents=True, exist_ok=True)
+        with destino.open("a", encoding="utf-8") as f:
+            f.write(json.dumps({"fecha": datetime.now().isoformat(timespec="seconds"), **registro},
+                               ensure_ascii=False) + "\n")
+        return None
+    except OSError as error:
+        return f" (ojo: no pude anotarlo en el registro: {error})"
 
 
-@mcp.tool(annotations=ToolAnnotations(readOnlyHint=False, destructiveHint=False, idempotentHint=False,
+def _mandar(gmail, mensaje: EmailMessage) -> str:
+    from googleapiclient.http import MediaIoBaseUpload
+    cuerpo = MediaIoBaseUpload(io.BytesIO(mensaje.as_bytes()), mimetype="message/rfc822", resumable=True)
+    return gmail.users().messages().send(userId="me", body={}, media_body=cuerpo).execute().get("id", "?")
+
+
+@mcp.tool(annotations=ToolAnnotations(readOnlyHint=False, destructiveHint=True, idempotentHint=False,
                                       openWorldHint=True))
 def mandar_correo(para: list[str], asunto: str, texto: str, copia: list[str] | None = None,
                   adjuntos: list[str] | None = None) -> str:
     """Manda un correo desde el mail de la empresa del dueño. SOLO a la lista permitida (Fede, Hernán, Juanma y
-    el dueño); cualquier otro destinatario hace que no salga nada. `adjuntos` = rutas de archivos de esta PC
-    (pdf, xlsx, docx, pptx, csv, png, jpg; hasta 20 MB entre todos). Usar SOLO si el dueño lo pidió en la
-    conversación. Devuelve desde qué cuenta salió y el id del mensaje."""
+    el dueño); cualquier otro destinatario hace que no salga nada. Sin links. `adjuntos` = rutas completas de
+    archivos de esta PC (pdf, xlsx, docx, pptx, csv, png, jpg; hasta 18 MB entre todos; nunca uno bajado de un
+    correo). Agrega un pie fijo que dice que lo mandó Claude. Usar SOLO si el dueño lo pidió en la
+    conversación. No tiene vuelta atrás: no reintentar si la respuesta no es clara."""
 
     def hacer():
         global _enviados
+        base = {"para": list(para or []), "copia": list(copia or []), "asunto": (asunto or "").strip(),
+                "adjuntos": [Path(str(a)).name for a in adjuntos or []]}
+        with _candado:
+            try:
+                if _enviados >= TOPE_ENVIOS:
+                    raise _Rechazado(f"Ya se mandaron {TOPE_ENVIOS} correos en esta sesión del conector: frené por "
+                                     "si es un error que se repite. Para seguir hay que reiniciar el conector.")
+                p, c = validar_destinatarios(para, copia or [])
+                adj = validar_adjuntos(adjuntos or [])
+                cuenta, gmail = _gmail_envio()
+                mensaje = armar_mensaje(cuenta, p, c, asunto, texto, adj)
+            except _Rechazado as error:
+                _registrar({**base, "resultado": "rechazado", "motivo": str(error)})
+                return str(error)
+            _enviados += 1   # se reserva el lugar ANTES de mandar: dos llamadas a la vez no pasan el tope
         try:
-            if _enviados >= TOPE_ENVIOS:
-                raise _Rechazado(f"Ya se mandaron {TOPE_ENVIOS} correos en esta sesión del conector: frené por si "
-                                 "es un error que se repite. Para seguir hay que reiniciar el conector.")
-            p, c = validar_destinatarios(para, copia or [])
-            adj = validar_adjuntos(adjuntos or [])
-            cuenta, gmail = _gmail_envio()
-            mensaje = armar_mensaje(cuenta, p, c, asunto, texto, adj)
-        except _Rechazado as error:
-            return str(error)
-        from googleapiclient.http import MediaIoBaseUpload
-        cuerpo = MediaIoBaseUpload(io.BytesIO(mensaje.as_bytes()), mimetype="message/rfc822", resumable=True)
-        respuesta = gmail.users().messages().send(userId="me", body={}, media_body=cuerpo).execute()
-        _enviados += 1
-        _registrar({"fecha": datetime.now().isoformat(timespec="seconds"), "de": cuenta, "para": p, "copia": c,
-                    "asunto": asunto.strip(), "adjuntos": [x.name for x, _ in adj], "id": respuesta.get("id")})
+            ident = _mandar(gmail, mensaje)
+        except Exception:
+            with _candado:
+                _enviados -= 1
+            _registrar({**base, "resultado": "falló"})
+            raise
+        aviso = _registrar({**base, "de": cuenta, "para": p, "copia": c, "resultado": "mandado", "id": ident})
         return (f"Mandado desde {cuenta} a {', '.join(p + c)}, {datetime.now():%d/%m/%Y %H:%M}"
-                f" (id {respuesta.get('id', '?')}, {len(adj)} adjunto/s).")
+                f" (id {ident}, {len(adj)} adjunto/s).{aviso or ''}")
 
     return _llamar(hacer)
 

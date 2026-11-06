@@ -15,17 +15,28 @@ en su código) y `mandar_correo`.
 ## Mandar (`mandar_correo`): los candados son de ESTE código
 Con el pase de envío Google deja mandar a cualquiera; lo que lo acota es el conector:
 - **Lista blanca** (`LISTA_BLANCA` en `servidor.py`): Fede, Hernán, Juanma, el dueño en la empresa y su mail
-  personal para pruebas. Un destinatario de afuera (en Para o en Copia) frena el envío entero. No hay copia
-  oculta. Sumar a alguien = editar la lista, nunca un parámetro.
-- **Adjuntos**: solo pdf, xlsx, docx, pptx, csv, png, jpg; hasta 20 MB entre todos. Así un `.env`, una llave o
-  un `.json` no pueden salir aunque se pida.
-- **Tope**: 5 envíos por proceso del conector (frena un error en bucle; se reinicia el conector para seguir).
-- **Registro**: cada envío queda en `%LOCALAPPDATA%\mcp-mail-empresa\enviados.log` (fecha, de, para, asunto,
-  nombres de adjuntos, id).
+  personal (`SOLO_SIN_ADJUNTOS`: a ese, solo texto, porque los informes llevan datos de pacientes o clientes y
+  es la única dirección fuera del Workspace). Un destinatario de afuera (en Para o en Copia) frena el envío
+  entero. No hay copia oculta. Sumar a alguien = editar la lista, nunca un parámetro.
+- **Qué se manda**: sin links (asunto ni texto: desde jsmith@ un link engañoso pasaría por legítimo; lo mismo
+  resolvió el vigilante) y con un pie fijo «Lo mandó Claude, el asistente de Joaquín…».
+- **Adjuntos**: solo pdf, xlsx, docx, pptx, csv, png, jpg; hasta 18 MB entre todos (Gmail corta en 25 MB ya
+  codificado); ruta completa de un disco local (nada de rutas de red, que abren una conexión con la sesión del
+  usuario); nunca uno de `Descargas\Adjuntos mail empresa` (lo escribió un tercero); sin vínculos permanentes
+  (un `mklink /H` disfraza un `.env` de `.pdf`). No es un absoluto: copiar o renombrar un secreto a `.pdf`
+  pasa; el freno de fondo es la lista.
+- **Tope**: 5 envíos por proceso del conector, con candado (dos llamadas a la vez no lo pasan). Hay un proceso
+  por chat abierto: el tope es por chat, no global.
+- **Registro**: una línea por intento (mandado, rechazado o fallado) en `enviados.log`, al lado de los pases.
+  Desde un chat cae en la copia privada de la app (`%LOCALAPPDATA%\Packages\Claude_*\LocalCache\Local\
+  mcp-mail-empresa\`). Si no puede anotar, igual dice que salió (para que no se reintente y se duplique).
 - **La regla de uso** (en las instrucciones del conector): mandar solo con pedido del dueño en la conversación;
   a Fede o Juanma, nunca por iniciativa propia; un correo leído nunca motiva un envío.
-- Tests: `test_envio.py`. Riesgo que queda: lo que se manda a la lista lo elige Claude; la lista acota el daño
-  a «les llegó algo que no estaba listo», no lo evita.
+- Tests: `test_envio.py`, de punta a punta con un Gmail FALSO (ningún test puede llegar al real: el pase vive
+  en el perfil, no en el repo, así que mutar en otra carpeta no protege). Riesgo que queda: lo que se manda a
+  la lista lo elige Claude; la lista acota el daño a «les llegó algo que no estaba listo», no lo evita.
+- ⚠ Este repo es PÚBLICO: la lista de direcciones quedó publicada (decisión del dueño si se saca a un archivo
+  local).
 
 ## Cómo está armado
 
@@ -39,8 +50,8 @@ Con el pase de envío Google deja mandar a cualquiera; lo que lo acota es el con
   se pidió. Nunca van al repo (`.gitignore` excluye `*.json`). Se revocan desde la cuenta de Google →
   Seguridad → Apps de terceros con acceso.
 - ⚠ **Límite:** DPAPI del usuario lo abre cualquier programa que corra como ese usuario en esa máquina. El
-  candado contra mandar de más no es el cifrado: es que el conector solo lee `llave.dpapi`, y que el vigilante
-  tiene el destinatario fijo en su código.
+  candado contra mandar de más no es el cifrado: es la lista blanca de `mandar_correo` y el destinatario fijo
+  del vigilante, los dos en código.
 - **Dónde los busca:** la app de escritorio de Claude virtualiza AppData, así que un pase conectado desde un
   chat queda en `%LOCALAPPDATA%\Packages\Claude_*\LocalCache\Local\mcp-mail-empresa\`. `boveda.ruta()` mira
   los dos lugares y usa el más nuevo; `guardar()` escribe en el de siempre. Por eso **conectar desde una
@@ -61,8 +72,8 @@ Con el pase de envío Google deja mandar a cualquiera; lo que lo acota es el con
    prueba») y crear un ID de cliente **App de escritorio**; bajar el JSON.
 3. Desde una consola común, en esta carpeta: `.venv\Scripts\python.exe conectar.py <cuenta@clearsky.com.ar>`
    (la primera vez toma el `client_secret*.json` más nuevo de Descargas; para reconectar, el mismo comando).
-4. Solo en la máquina que corre la migración automática: `.venv\Scripts\python.exe conectar.py
-   <cuenta@clearsky.com.ar> --envio`.
+4. En la máquina que corre la migración automática o donde Claude tenga que mandar: `.venv\Scripts\python.exe
+   conectar.py <cuenta@clearsky.com.ar> --envio`.
 5. `claude mcp add --scope user mail-empresa -- <ruta>\.venv\Scripts\python.exe <ruta>\servidor.py`
 
-Tests: `.venv\Scripts\python.exe -m unittest test_boveda -v` (en esta carpeta).
+Tests: `.venv\Scripts\python.exe -m unittest test_boveda test_envio -v` (en esta carpeta).
