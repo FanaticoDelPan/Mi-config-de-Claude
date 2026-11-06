@@ -14,6 +14,7 @@ import json
 import re
 import threading
 from datetime import datetime
+from email import policy
 from email.message import EmailMessage
 from email.utils import parsedate_to_datetime
 from html.parser import HTMLParser
@@ -385,9 +386,14 @@ def armar_mensaje(cuenta: str, para: list[str], copia: list[str], asunto: str, t
     m["From"], m["To"], m["Subject"] = cuenta, ", ".join(para), asunto.strip()
     if copia:
         m["Cc"] = ", ".join(copia)
-    # quoted-printable: los renglones largos se parten con cortes INVISIBLES; con el armado por defecto Gmail
-    # mostraba un salto de línea cada ~78 caracteres.
-    m.set_content(texto.rstrip() + PIE, cte="quoted-printable")
+    # Gmail RE-PARTE el texto plano que llega por la API cada ~76 caracteres (probado: con quoted-printable y con
+    # CRLF igual). Por eso va también una versión HTML, que es la que muestra: párrafos y renglones como los
+    # escribió Claude. El HTML sale del texto escapado (sin links: el filtro de arriba ya los frenó).
+    cuerpo = texto.rstrip() + PIE
+    m.set_content(cuerpo, cte="quoted-printable")
+    parrafos = [html.escape(p).replace("\n", "<br>") for p in re.split(r"\n\s*\n", cuerpo)]
+    m.add_alternative("<html><body>" + "".join(f"<p>{p}</p>" for p in parrafos) + "</body></html>",
+                      subtype="html", cte="quoted-printable")
     for p, (principal, sub) in adjuntos:
         m.add_attachment(p.read_bytes(), maintype=principal, subtype=sub, filename=p.name)
     return m
@@ -423,7 +429,10 @@ def _registrar(registro: dict) -> None:
 
 def _mandar(gmail, mensaje: EmailMessage) -> str:
     from googleapiclient.http import MediaIoBaseUpload
-    cuerpo = MediaIoBaseUpload(io.BytesIO(mensaje.as_bytes()), mimetype="message/rfc822", resumable=True)
+    # Fin de renglón CRLF (el de los mails): con LF suelto Gmail no reconoce los cortes invisibles del
+    # quoted-printable y los convierte en saltos de línea de verdad en medio de la frase.
+    cuerpo = MediaIoBaseUpload(io.BytesIO(mensaje.as_bytes(policy=policy.SMTP)), mimetype="message/rfc822",
+                               resumable=True)
     return gmail.users().messages().send(userId="me", body={}, media_body=cuerpo).execute().get("id", "?")
 
 

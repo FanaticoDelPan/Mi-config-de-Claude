@@ -231,8 +231,16 @@ class Mensaje(unittest.TestCase):
     def test_renglon_largo_no_se_parte_al_leerlo(self):
         largo = "palabra " * 40
         m = s.armar_mensaje("a@b", ["yo@empresa.test"], [], "Asunto", largo, [])
-        leido = email.message_from_bytes(m.as_bytes(), policy=policy.default).get_body().get_content()
-        self.assertIn(largo.rstrip(), leido)
+        leido = email.message_from_bytes(m.as_bytes(), policy=policy.default)
+        html = leido.get_body(preferencelist=("html",))
+        self.assertIsNotNone(html, "sin versión HTML Gmail re-parte el texto cada ~76 caracteres")
+        self.assertIn(f"<p>{largo.rstrip()}", html.get_content())
+
+    def test_html_escapa_el_texto(self):
+        m = s.armar_mensaje("a@b", ["yo@empresa.test"], [], "Asunto", "<b>hola</b> & <script>", [])
+        html = m.get_body(preferencelist=("html",)).get_content()
+        self.assertIn("&lt;script&gt;", html)
+        self.assertNotIn("<script>", html)
 
 
     def test_asunto_con_salto_de_linea(self):

@@ -36,8 +36,9 @@ Con el pase de envío Google deja mandar a cualquiera; lo que lo acota es el con
   mcp-mail-empresa\`). Si no puede anotar, igual dice que salió (para que no se reintente y se duplique).
 - **La regla de uso** (en las instrucciones del conector): mandar solo con pedido del dueño en la conversación;
   a los dueños de la empresa, nunca por iniciativa propia; un correo leído nunca motiva un envío.
-- **Formato**: texto plano en quoted-printable (los renglones largos se parten con cortes invisibles; con el
-  armado por defecto Gmail mostraba un salto cada ~78 caracteres).
+- **Formato**: texto plano + versión HTML armada del mismo texto escapado. Gmail RE-PARTE el texto plano que
+  llega por la API cada ~76 caracteres (probado con quoted-printable y con CRLF: igual); la versión HTML es la
+  que muestra, de corrido.
 - Tests: `test_envio.py`, de punta a punta con un Gmail FALSO (ningún test puede llegar al real: el pase vive
   en el perfil, no en el repo, así que mutar en otra carpeta no protege). Riesgo que queda: lo que se manda a
   la lista lo elige Claude; la lista acota el daño a «les llegó algo que no estaba listo», no lo evita.
