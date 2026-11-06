@@ -390,7 +390,8 @@ Lo que sostiene una regla, cuando el porqué no entra en el renglón que la enun
   anota:** `prueba-esfuerzo-agentes.tsv` (al lado de este archivo), una fila por agente al volver, sea encargo real
   o de una tanda controlada (caso viejo con resultado conocido corrido a dos niveles: en SkyOne, los hallazgos ya
   clasificados de `docs/revisiones/hallazgos.tsv` son la vara de los revisores). **Primera tanda (06/11/2026, 17
-  agentes, ~2 puntos de cuota semanal):** barridos `low` = `high` (3 de 3 y 38 de 38), a menos tiempo; constructores
+  agentes, 2,5 M de tokens de agentes; el % semanal subió 2 puntos pero eso incluye otros chats y la otra PC, así
+  que el costo real de la tanda es menor):** barridos `low` = `high` (3 de 3 y 38 de 38), a menos tiempo; constructores
   `medium` = `high` en los tres casos (pasan la prueba oculta o el test caza la mutación), `medium` igual o más
   rápido; revisores `xhigh` mejores en 2 de 3 ángulos (uno claramente: 7 hallazgos reales contra 3) y empate en el
   tercero, sin falsas alarmas en ninguno, a 1,4-2 veces el tiempo. Sostiene la regla; una muestra por brazo no la
