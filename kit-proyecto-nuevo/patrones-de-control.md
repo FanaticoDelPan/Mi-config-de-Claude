@@ -205,5 +205,10 @@ con 0-1 defecto real, y las pantallas de lo tocado se llevaron ~5,6 h de PC en 9
   registrado con `command` + `args` (con `command` suelto pasa por bash), `-S` si solo usa la biblioteca
   estándar, y UN proceso por evento que corre adentro los controles de ese evento. Detalle y números:
   `entorno-windows.md` §Aviso de contexto.
+- **Antes de lanzar agentes que dependen de una sesión o credencial, comprobarla en 30 s** (abrir la pantalla y ver
+  que no cae en el login). En el origen dos agentes arrancaron con la sesión vencida.
+- **Un «ya no pasa» se mide sobre el problema, no sobre el caso de la foto:** el mismo botón en las otras pantallas
+  del mismo tipo, todos los registros del tipo, otras duraciones y vistas. En el origen la revisión adversarial
+  tumbó 4 de 15 cierres medidos así. Lo que se cierra con confianza es «la función ya existe, está en X».
 - **El texto que un freno reemplaza se borra en el mismo commit** (en el origen, el commit que sumó unos
   pocos frenos borró ~130 renglones de instrucciones).
