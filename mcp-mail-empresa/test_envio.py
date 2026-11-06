@@ -164,7 +164,9 @@ class Adjuntos(unittest.TestCase):
                 s.validar_adjuntos([_pdf(nombre)])
 
     def test_rutas_de_red_y_relativas(self):
-        for ruta in (r"\\host\share\x.pdf", r"\\?\C:\x.pdf", r"\\.\C:\x.pdf", "//host/x.pdf", "informe.pdf"):
+        # `.invalid` nunca resuelve: si el chequeo se rompe, Windows no sale a buscar el host a la red.
+        for ruta in (r"\\nadie.invalid\share\x.pdf", r"\\?\C:\x.pdf", r"\\.\C:\x.pdf", "//nadie.invalid/x.pdf",
+                     "informe.pdf"):
             with self.assertRaises(s._Rechazado, msg=ruta):
                 s.validar_adjuntos([ruta])
 

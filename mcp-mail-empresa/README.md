@@ -19,7 +19,9 @@ Con el pase de envío Google deja mandar a cualquiera; lo que lo acota es el con
   es la única dirección fuera del Workspace). Un destinatario de afuera (en Para o en Copia) frena el envío
   entero. No hay copia oculta. Sumar a alguien = editar la lista, nunca un parámetro.
 - **Qué se manda**: sin links (asunto ni texto: desde jsmith@ un link engañoso pasaría por legítimo; lo mismo
-  resolvió el vigilante) y con un pie fijo «Lo mandó Claude, el asistente de Joaquín…».
+  resolvió el vigilante) y con un pie fijo «Lo mandó Claude, el asistente de Joaquín…». Límite: frena lo que
+  empieza con http(s):// o www., no un dominio pelado (`evil.com/login`, `bit.ly/x`) ni un mail; el pie amortigua.
+  El registro anota los rechazos de la herramienta y los envíos; un error de la librería o la falta de pase, no.
 - **Adjuntos**: solo pdf, xlsx, docx, pptx, csv, png, jpg; hasta 18 MB entre todos (Gmail corta en 25 MB ya
   codificado); ruta completa de un disco local (nada de rutas de red, que abren una conexión con la sesión del
   usuario); nunca uno de `Descargas\Adjuntos mail empresa` (lo escribió un tercero); sin vínculos permanentes
