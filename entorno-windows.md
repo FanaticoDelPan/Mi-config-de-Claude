@@ -307,11 +307,42 @@ hablado, no es un problema). Cuál es cuál: `$env:COMPUTERNAME`.
 
 Lo que sostiene una regla, cuando el porqué no entra en el renglón que la enuncia.
 
-* **Porqués que salieron del `CLAUDE.md` por su tope de tamaño (05/11/2026):** regla 3, no preguntar «¿seguimos?»:
-  a esa altura cada turno cuesta hasta 7 veces uno del principio. Regla 5, construir en paralelo: en fila o en
-  paralelo cuesta casi lo mismo, el paralelo compra tiempo. Regla 12, cierre corto: el largo con auditor se llevaba
-  el 15-20 % de la cuota semanal y en 8 semanas no mejoró la doc. Regla 15: ya pasó que «la semana pasada» era unos
-  turnos más arriba. Las máquinas, dos agentes pesados como máximo: con once, la RAM llegó al 99 % y hubo que reiniciar.
+* **Porqués, fechas e historia que salieron del `CLAUDE.md` al adelgazarlo (05/11/2026; ninguna regla se sacó).**
+  Se movieron para que el archivo que se carga en cada chat y en cada agente tenga sobre todo instrucciones (la doc
+  de Anthropic: lo largo se cumple peor; ya tenía menos de 200 líneas, pero eran párrafos) y para dejar margen bajo
+  el tope del pre-commit: de 22 497 a ~20,5 KB (−9 %). Las marcas 🔑, 🔔 y 📊 pasaron a negrita común o se fueron:
+  las 🔴 (las innegociables) ya no compiten con otras ocho. Los porqués cortos que deciden casos dudosos se quedaron
+  adentro (p. ej. «en paralelo no cuesta más»). **Método para la próxima:** la revisión independiente encontró cinco
+  cambios de sentido (calificadores como «antes de continuar», «dentro del techo», «a la vez» que se corrieron) y
+  todos salieron de REESCRIBIR o FUSIONAR frases que quedaban, no de mover porqués: en lo que se queda, solo se
+  borra. **Ahora no (gatillo: que vuelva a chocar con el tope):** pasar a skills los procedimientos con disparador
+  propio (cierre de chat, «tokens» y ritmo, costo de oportunidad, formatos locales; ~3 KB), dejando en el
+  `CLAUDE.md` una línea con su disparador, porque una skill se activa con menos seguridad que un texto siempre cargado.
+  * **Regla 2, silencio con agentes** (2026-09-22; «silencio no es quedarse quieto», 2026-10-26): mientras el chat
+    trabaja el dueño se va a hacer otra cosa y no lee lo del medio; los parciales son tokens al pedo y lo obligan a
+    leer dos veces lo mismo.
+  * **Regla 3:** no preguntar «¿seguimos?» porque a esa altura cada turno cuesta hasta 7 veces uno del principio.
+    Contexto (2026-10-27): pasar del 40 % cuesta cuota y el modelo rinde peor; la compactación al 60 % la fija
+    `setup-symlink.ps1`; el piso para delegar se explica abajo (§Subagentes, «Piso para delegar construcción»).
+  * **Regla 5:** «tiempo y cuota» y «cómo se gastan», 2026-09-24; techo 5/8, 2026-10-21; Fable no es superior,
+    2026-10-19; nunca otro chat, 2026-10-16 (su porqué y dónde está el bloqueo: «Otro chat en vez de subagentes»,
+    abajo); ritmo de la cuota, 2026-09-23. En fila o en paralelo cuesta casi lo mismo: el paralelo compra tiempo. Lo
+    que infla la cuota son los agentes que repiten lectura, no los que construyen. Delegar lo que se va a releer o
+    rehacer entero se paga dos veces.
+  * **Regla 6:** costo de oportunidad, 2026-09-28.
+  * **Regla 9:** frenar por algo técnico obliga al dueño a contestar «dale» sin aportar nada; «sin preguntar nunca»,
+    2026-09-22; el squash deja `main` legible y el desarrollo granular vive en `dev`.
+  * **Regla 11:** es el mismo control de antes de un merge, movido al momento de máxima exposición.
+  * **Regla 12:** el cierre largo con auditor se llevaba el 15-20 % de la cuota semanal y en 8 semanas no mejoró la
+    doc. El chequeo de cierre no es el único momento de escribir.
+  * **Regla 13:** ninguno de esos errores tira un error: la pantalla simplemente queda mal.
+  * **Regla 14:** un TXT en el escritorio lo sube OneDrive a la nube y queda olvidado; pegado en el chat queda en el
+    historial.
+  * **Regla 15:** diez segundos o tres días se presentan igual; ya pasó que «la semana pasada» era unos turnos más
+    arriba.
+  * **Las máquinas:** dos agentes pesados como máximo porque con once la RAM llegó al 99 % y hubo que reiniciar.
+    Reintentar un comando que frenó el guardia de rutas es lo que hace perder el rato. Las trampas de Windows mandan
+    a buscar el problema al lugar equivocado.
 
 ### Subagentes: de dónde salen los números
 
@@ -405,8 +436,8 @@ Lo que sostiene una regla, cuando el porqué no entra en el renglón que la enun
   al de «5 por tanda, una tanda por fase» del 2026-09-10. Con ese techo la cuota semanal llegó al 60 % a
   mitad de semana: contar por tanda dejaba abierto tres, después tres, después tres, que cuesta lo mismo
   que nueve juntos. El costo de un agente es casi todo FIJO (arranque, instrucciones, relectura), así que
-  lo único que ahorra es lanzar menos. Excepciones que no cuentan: revisión antes de escribir en una base
-  y el cierre de chat.
+  lo único que ahorra es lanzar menos. Excepciones que no cuentan (**VENCIDO** al 05/11/2026: hoy todo cuenta
+  dentro del techo y el cierre de chat va sin subagentes): revisión antes de escribir en una base y el cierre de chat.
 * La ventana que se cuida es la SEMANAL: de 100 a 200 dólares de plan, la de 5 horas se cuadruplica, pero
   la semanal Anthropic no la publica y las mediciones de terceros van de **1,6x a 3,5x** (la más seria: 3
   cuentas, Classmethod/DevelopersIO, ago-2026). Con semanas de 77-97 % del de 200, **el de 100 no alcanza en
