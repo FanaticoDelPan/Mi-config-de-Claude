@@ -374,7 +374,8 @@ Lo que sostiene una regla, cuando el porqué no entra en el renglón que la enun
   (hallazgos del revisor, trabajo rehecho, tests rojos), no las relecturas.
 * **Fable no es superior (2026-10-19):** en Artificial Analysis Opus 5.5 rinde más que Fable 5.1 y cuesta la
   mitad en cada nivel de esfuerzo, y en tres publicaciones de SkyOne trajo más hallazgos reales y menos falsas alarmas.
-* **Nivel de esfuerzo por agente — EN PRUEBA desde 05/11/2026 (regla 5).** Sale de «Spending your effort» (Thariq
+* **Nivel de esfuerzo por agente — aprobado el 06/11/2026 tras la primera tanda (regla 5); el 13/11/2026 se
+  revisa con los casos reales de la planilla** (recordatorio en SkyOne) y, si un tipo entregó peor, vuelve a `high`. Sale de «Spending your effort» (Thariq
   Shihipar, claude.dev, 25/09/2026) y de la doc oficial (`code.claude.com/docs/en/model-config`), verificados ese día.
   **Lo que lo sostiene:** un agente sin nivel propio corre al nivel del chat si va en el mismo modelo, así que todos los
   Opus heredaban `high` (o `xhigh` cuando se subía el chat). Opus 5.5 trae `medium` por defecto y Anthropic lo da para
@@ -399,8 +400,8 @@ Lo que sostiene una regla, cuando el porqué no entra en el renglón que la enun
   el agente edita) para que no pueda espiar el arreglo; la prueba oculta y la verdad fuera de su alcance; cada
   revisor con su PROPIA carpeta de mutación (dos que comparten una se pisan); un juez ciego al nivel que puntúe contra
   la UNIÓN adjudicada (la verdad histórica sola castiga al que encuentra más) y por causa raíz, no por renglón. Un constructor en
-  `medium` que entrega peor → ese tipo de encargo vuelve a `high` y se anota el caso. **Al cerrar la prueba:** cambiar
-  «EN PRUEBA» por «validado el <fecha>» acá y en la regla 5, con lo medido.
+  `medium` que entrega peor → ese tipo de encargo vuelve a `high` y se anota el caso. **En la revisión del 13/11:** si los
+  casos reales confirman la tanda, «aprobado» pasa a «validado el <fecha>» acá y en la regla 5, con lo medido.
 * **Piso para delegar construcción (2026-10-29, regla 3):** sale de Gentle-AI (`internal/assets/claude/orchestrator.md`
   y la tabla «Measured» de su README): un arreglo de 3 líneas costó 0,339 USD delegado contra 0,105 directo, porque
   un subagente pasa 1-2 min leyendo antes de escribir. Es UNA corrida y en otro entorno: se recalibra con
